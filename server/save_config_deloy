@@ -1,0 +1,32 @@
+{
+  "development": {
+    "username": "post_like_comment_user",
+    "password": "afRKPt8i6lkrSbaFjNuMlsMtG4SVMBe0",
+    "database": "data_facebook",
+    "host": "dpg-ch93ehrhp8u0vh9jpgf0-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "logging" : false,
+    "dialectOptions" : {
+      "ssl" : {
+        "require" :true,
+        "rejectUnauthorized" : false
+      }
+    }
+  },
+
+  "production": {
+    "username": "post_like_comment_user",
+    "password": "afRKPt8i6lkrSbaFjNuMlsMtG4SVMBe0",
+    "database": "post_like_comment",
+    "host": "dpg-ch93ehrhp8u0vh9jpgf0-a.oregon-postgres.render.com",
+    "dialect": "postgres",
+    "logging" : false,
+    "dialectOptions" : {
+      "ssl" : {
+        "require" :true,
+        "rejectUnauthorized" : false
+      }
+    }
+
+  }
+}

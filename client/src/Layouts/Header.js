@@ -1,0 +1,37 @@
+import "./Header.css";
+import logoImage from "../img/nhatro.png";
+import { Link } from "react-router-dom";
+function Header() {
+  return (
+    <>
+      <header>
+        <a href="" class="logo">
+          <img src={logoImage} alt="Shenlik Tech Logo" />
+        </a>
+        <input className="searchPT" placeholder="" />
+        <ul class="navbarr">
+          <Link to="/" className="">
+            Căn hộ chung cư
+          </Link>
+          <Link to="/" className="">
+            Căn hộ mini
+          </Link>
+          <Link to="/" className="">
+            Ở ghép
+          </Link>
+        </ul>
+
+        <div class="mainn">
+          <div className="Person">
+            <img
+              src="https://cdnphoto.dantri.com.vn/lWbNf1jAm5A1aQriE5UO0SAuuYg=/2024/01/15/co-gai-xinh-dep2-edited-edited-1705310658178.jpeg"
+              alt=""
+            />
+          </div>
+        </div>
+      </header>
+    </>
+  );
+}
+
+export default Header;

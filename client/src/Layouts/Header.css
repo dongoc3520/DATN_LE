@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+    --main-color: #6200f3;
+}
+
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    list-style: none;
+    font-family: "Poppins", sans-serif;
+    text-decoration: none;
+}
+
+body,
+html {
+    height: 100vh;
+    font-family: Poppins-Regular, sans-serif;
+}
+
+body a {
+    text-decoration: none;
+    color: #000;
+}
+
+header {
+    /* position: fixed; */
+    width: 100%;
+    /* left: 0; */
+    top: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #fff;
+    padding:  0;
+    padding-left: 50px;
+    transition: all .50s ease;
+    height: 80px;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        /* Tạo bóng mờ */
+}
+
+.logo {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    height: 100%;
+}
+
+.searchPT{
+    flex: 1;
+    outline: none;
+    border: 1px solid #5200cd;
+    padding: 5px;
+    font-size: 16px;
+}
+.searchPT:focus {
+    outline: none;
+    /* Loại bỏ viền mặc định */
+    box-shadow: none;
+    /* Loại bỏ hiệu ứng bóng (nếu có) */
+    background-color: transparent;
+    /* Đảm bảo màu nền không thay đổi */
+}
+
+.logo img {
+    /* width: 300px !important; */
+    margin-right: 3px;
+    transition: all .50 ease;
+    height: 100%;
+}
+
+.logo span {
+    color: #000;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transition: all .50 ease;
+}
+
+.navbarr {
+    display: flex;
+    flex: 2;
+   
+}
+
+.navbarr a {
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 5px 0;
+    margin: 0px 30px;
+    transition: all .50s ease;
+}
+
+.navbarr a:hover {
+    color: var(--main-color);
+}
+
+.navbarr a.active {
+    color: var(--main-color);
+}
+
+.mainn {
+    display: flex;
+    flex: 0.6;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
+}
+
+.mainn a {
+    margin-right: 25px;
+    margin-left: 10px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all .50s ease;
+}
+
+.mainn a:hover {
+    color: var(--main-color);
+}
+
+#menu-icon {
+    font-size: 35px;
+    color: #000;
+    cursor: pointer;
+    z-index: 10001;
+    display: none;
+}
+
+@media only screen and (max-width: 1350px) {
+
+    /* MOBILE MENU */
+
+    header {
+        padding: 14px 2%;
+        transition: .2s;
+    }
+
+    .navbarr a {
+        padding: 5px 0;
+        margin: 0px 20px;
+    }
+
+}
+
+@media only screen and (max-width: 1090px) {
+
+    /* MOBILE MENU */
+
+    #menu-icon {
+        display: block;
+    }
+
+    .navbarr {
+        position: absolute;
+        top: 60%;
+        right: -100%;
+        width: 270px;
+        height: 29vh;
+        background-color: var(--main-color);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        transition: all .50s ease;
+    }
+
+    .navbarr a {
+        display: block;
+        margin: 12px 0;
+        padding: 0 25px;
+        color: #fff;
+        transition: all .50 ease;
+    }
+
+    .navbarr a:hover {
+        color: wheat;
+        transform: translateX(7px);
+    }
+
+    .navbarr a.active {
+        color: wheat;
+    }
+
+    .navbarr.open {
+        right: 2%;
+    }
+
+    .logo img {
+        margin-left: 10px;
+        width: 30px;
+        transition: all .50s ease;
+    }
+
+    .logo span {
+        font-size: 1.1rem;
+        transition: all .50s ease;
+    }
+
+    .mainn a {
+        margin-right: 15px;
+        margin-left: 5px;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all .50s ease;
+    }
+}
+
+.Person{
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.Person img{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+}
