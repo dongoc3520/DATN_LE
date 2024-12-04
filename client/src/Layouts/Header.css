@@ -25,7 +25,7 @@ body a {
 }
 
 header {
-    /* position: fixed; */
+    position: fixed;
     width: 100%;
     /* left: 0; */
     top: 0;
@@ -49,6 +49,7 @@ header {
 
 .logo {
     display: flex;
+    justify-content: center;
     flex: 1;
     align-items: center;
     height: 100%;
@@ -225,4 +226,44 @@ header {
     height: 60px;
     width: 60px;
     border-radius: 50%;
+}
+
+.navbarr {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-link {
+    position: relative;
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    padding: 5px 0;
+    transition: color 0.3s ease;
+    /* Hiệu ứng mờ khi đổi màu chữ */
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: #1f3aeb;
+    transition: width 0.3s ease;
+    /* Làm mượt hiệu ứng xuất hiện */
+}
+
+.nav-link:hover {
+    color: #007BFF;
+    /* Đổi màu chữ khi hover */
+}
+
+.nav-link:hover::after {
+    width: 100%;
+    /* Hiển thị đầy đủ gạch chân khi hover */
 }

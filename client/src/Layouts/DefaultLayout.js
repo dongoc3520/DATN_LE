@@ -1,3 +1,4 @@
+import Footer from "./Footer";
 import Header from "./Header";
 import "./layout.css";
 import { Link } from "react-router-dom";
@@ -18,6 +19,7 @@ function DefaultLayout({ children }) {
       >
         <Header />
         {children}
+        <Footer />
       </div>
     </div>
   );

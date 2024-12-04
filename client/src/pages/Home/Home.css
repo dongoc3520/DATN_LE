@@ -1,46 +1,180 @@
-.logo{
-    /* height: 50px; */
-    width: 100px;
-}
-.home{
-    margin-top: 100px;
-    width: 100%;
-    justify-content: center;
-}
-.home_header{
-    padding: 5px;
-}
-.home_list{
-    margin: 10px 20px;
+
+.homePage {
+    /* height: 100vh; */
+    /* overflow-y: auto; */
     padding: 10px;
-    justify-content: space-evenly;
-}
-.home_item{
-    background-color: rgb(10, 86, 185);
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    transition: 0.3s ease, color 0.3s ease;
-}
-.home_item:hover{
-    transition: 0.3s ease, color 0.3s ease;
-    transform: scale(1.1);
-    cursor: pointer;
-}
-.home_image{
-    width: 300px;
-    height: 200px;
-}
-.home_image_img{
-    width: 100%;
-    height: 100%;
-}
-/* .home_image_img:hover {
-    transform: scale(1.05);
-} */
-.home_text{
-    color: #ddd;
+    margin-top: 150px;
 }
 
-.home_note{
-    text-align: center;
-    margin-top: 120px;
+.homePage_search {
+    display: flex;
+    justify-content: center;
+    /* flex-direction: column; */
+    gap: 20px;
+    padding-top: 10px;
+    margin: 30px;
+    position: sticky;
+        top: 80px;
+        /* Giữ phần tử ở đầu trang khi cuộn */
+        z-index: 10;
+        /* Đảm bảo rằng nó sẽ nằm trên các phần tử khác */
+        background-color: #fff;
+        /* Tạo nền trắng cho phần tử khi cuộn */
+        padding: 10px;
+        /* Tùy chọn, để tạo khoảng cách xung quanh */
+        /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); */
+        /* Tạo bóng đổ nhẹ cho phần tử */
+}
+
+.filter-group {
+    position: relative;
+}
+
+.filter-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+    display: block;
+}
+.filter-label i {
+    padding-right: 5px;
+    color: rgb(42, 64, 176);
+}
+
+.filter-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.slider-container {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    z-index: 10;
+}
+
+.slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #666;
+}
+
+.homePage{
+    padding: 0px 100px 0px 100px;
+}
+.location-selector{
+    width: 350px;
+    
+}
+
+.homePage_btn{
+    padding: 5px 10px;
+    margin-top: 32px;
+    cursor: pointer;
+    font-size: 15px;
+    
+}
+.homePage_btn:hover{
+    color: rgb(48, 100, 234);
+}
+.homePage_btn i{
+    padding-right: 5px;
+}
+
+.homePage_body{
+    display: flex;
+    padding: 0px 150px;
+    flex-wrap: wrap;
+}
+.homePage_body_content{
+    flex: 3;
+}
+
+.homePage_body_goiy {
+    position: sticky;
+    top: 200px;
+    bottom: 100px;
+    width: 300px;
+    height: 379px;
+    background-color: white;
+    padding: 10px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    border-radius: 8px;
+    z-index: 10;
+    flex: 1;
+}
+
+/**/
+
+/* src/components/Leaderboard.css */
+.leaderboard {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.leaderboard-rank {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.leaderboard-user-info {
+    display: flex;
+    align-items: center;
+}
+
+.leaderboard-user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    overflow: hidden;
+}
+
+.leaderboard-user-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.leaderboard-user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.leaderboard-user-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.leaderboard-likes {
+    font-size: 14px;
+    color: #777;
+}
+.moigioi{
+text-align: center;
+font-size: 18px;
+border-bottom: 2px solid #444;
+padding: 10px;
 }

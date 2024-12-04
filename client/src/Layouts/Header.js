@@ -10,13 +10,13 @@ function Header() {
         </a>
         <input className="searchPT" placeholder="" />
         <ul class="navbarr">
-          <Link to="/" className="">
-            Căn hộ chung cư
+          <Link to="/" className="nav-link">
+            Căn hộ 
           </Link>
-          <Link to="/" className="">
-            Căn hộ mini
+          <Link to="/" className="nav-link">
+            Chung cư mini
           </Link>
-          <Link to="/" className="">
+          <Link to="/" className="nav-link">
             Ở ghép
           </Link>
         </ul>

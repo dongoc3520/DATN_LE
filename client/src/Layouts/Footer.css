@@ -1,0 +1,65 @@
+/* src/components/Footer.css */
+.footer {
+    background-color: #fff;
+    /* Đổi thành màu trắng */
+    color: #333;
+    /* Thay đổi màu chữ cho dễ đọc trên nền trắng */
+    padding: 20px;
+    /* padding-top: 100px; */
+    margin-top: 100px;
+    
+    padding-left: 200px;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.1);
+    border-top: 1px solid #1737a1;
+    /* Thêm một chút bóng đổ để footer nổi bật hơn */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.footer-section {
+    flex: 1;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.footer-section h4 {
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    color: #333;
+    /* Màu tiêu đề đậm hơn để dễ nhìn */
+}
+
+.footer-section p {
+    font-size: 0.9rem;
+    color: #666;
+    /* Màu chữ nhẹ hơn cho phần nội dung */
+}
+
+.social-links a {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    /* Màu chữ của liên kết xã hội */
+    font-size: 1rem;
+    text-decoration: none;
+}
+
+.social-links a:hover {
+    color: #007bff;
+    /* Màu sắc khi hover lên các liên kết */
+}
+
+.footer-bottom {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.footer-bottom p {
+    color: #666;
+    /* Màu chữ cho phần bản quyền */
+}

@@ -4,14 +4,16 @@
 }
 .layout_navbar{
     /* width: 50px; */
-    flex: 0.3;
+    position: fixed;
+    flex: 0.5;
     background: #1773ea;
+    z-index: 10000;
     height: 100vh;
     box-shadow: rgba(136, 165, 191, 0.48) 6px 2px 16px 0px, rgba(255, 255, 255, 0.8) -6px -2px 16px 0px;
-    transition:  0.3s ease, color 0.3s ease;
+    transition:  0.1s ease, color 0.1s ease;
 }
 .layout_navbar:hover{
-    transition: 0.3s ease, color 0.3s ease;
+    transition: 0.1s ease, color 0.1s ease;
     /* width: 200px; */
     flex: 1;
 }
@@ -19,7 +21,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 8px 0px ;
+    padding: 8px 10px ;
     margin: 5px 0px;
     transition: 0.3s ease, color 0.3s ease;
 

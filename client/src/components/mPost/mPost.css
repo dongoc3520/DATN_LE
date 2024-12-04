@@ -1,0 +1,118 @@
+/* Bố cục chính */
+.homePage_post {
+    display: flex;
+    width: 100%;
+    border-radius: 10px;
+    /* Bo góc cho toàn bộ box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Thêm bóng cho phần tử */
+    background-color: #fff;
+    /* Màu nền sáng cho box */
+    /* overflow: hidden; */
+    /* Đảm bảo không bị tràn */
+    margin: 10px 0;
+    /* Khoảng cách giữa các post */
+}
+
+/* Hình ảnh của bài đăng */
+.homePage_post_img {
+    height: 200px;
+    width: 200px;
+    /* overflow: hidden; */
+    border-radius: 10px 0 0 10px;
+    /* Bo góc cho hình ảnh */
+}
+
+.homePage_post_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Cắt hình ảnh để giữ tỷ lệ và che đầy khung */
+}
+
+/* Nội dung của bài đăng */
+.homePage_post_cnt {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Tiêu đề bài đăng */
+.homePage_post_title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    /* Màu chữ tối */
+    margin-bottom: 10px;
+    line-height: 1.4;
+    /* text-overflow: ellipsis; */
+    /* overflow: hidden; */
+    white-space: nowrap;
+}
+
+/* Giá bài đăng */
+.homePage_post_price {
+    font-size: 16px;
+    font-weight: 500;
+    color: #f39c12;
+    /* Màu vàng cho giá */
+    margin-bottom: 5px;
+}
+
+/* Quận */
+.homePage_post_quan {
+    font-size: 14px;
+    color: #7f8c8d;
+    /* Màu xám cho thông tin thêm */
+    margin-bottom: 10px;
+}
+
+/* Thông tin người đăng bài */
+.homePage_post_user {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.home_post_user_img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+    /* overflow: hidden; */
+    /* Đảm bảo ảnh hình tròn */
+}
+
+.home_post_user_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Cắt ảnh để giữ tỷ lệ và che đầy khung */
+    border-radius: 50%;
+}
+
+/* Tên người đăng bài */
+.homePage_post_user div {
+    font-size: 14px;
+    font-weight: 500;
+    color: #34495e;
+    /* Màu chữ người đăng */
+}
+
+.home_post_heart{
+    margin-left: 200px;
+   
+}
+.home_post_heart i{
+font-size: 20px;
+cursor: pointer;
+padding: 5px;
+border: 1px solid #737171;
+border-radius: 5px;
+}
+.home_post_heart i:hover{
+    color: rgb(210, 5, 5);
+    border: 1px solid red;
+}
