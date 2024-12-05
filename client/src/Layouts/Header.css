@@ -267,3 +267,36 @@ header {
     width: 100%;
     /* Hiển thị đầy đủ gạch chân khi hover */
 }
+.linkBox{
+    position: absolute;
+    height: 120px;
+    width: 190px;
+    background: #d6e0e6;
+    top: 70px;
+    margin-right: 150px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    border-radius: 4px;
+    
+}
+.linkBox i{
+    padding-right: 5px;
+}
+.linkBox div{
+    padding: 10px 0px;
+    
+}
+.linkBox div a{
+    color: #151212;
+}
+
+.linkBox div:hover{
+    background: #1765d9;
+}
+
+.linkBox div:hover a{
+    color: #fff;
+    cursor: pointer;
+}

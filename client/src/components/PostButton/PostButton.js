@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import "./PostButton.css";
+import VrImage360 from "../RoomVR/RoomVR"; // Import component xem ảnh 360 độ
+
 const PostButton = ({ onSubmit }) => {
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     images: [],
+    vrImage: null, // Thêm trường VR
     title: "",
     price: 500000,
     area: 20,
@@ -20,13 +23,39 @@ const PostButton = ({ onSubmit }) => {
     setFormData({ ...formData, images: files });
   };
 
+  const handleVRChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      console.log("this is a data", URL.createObjectURL(file));
+      setFormData({ ...formData, vrImage: file });
+    }
+  };
+
   const handleSubmit = () => {
     if (onSubmit) {
-      onSubmit(formData); // Gửi dữ liệu lên qua prop
+      // Tạo một đối tượng FormData để gửi dữ liệu bao gồm tệp
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("price", formData.price);
+      data.append("area", formData.area);
+      data.append("type", formData.type);
+
+      // Thêm hình ảnh
+      formData.images.forEach((image, index) => {
+        data.append(`images[${index}]`, image);
+      });
+
+      // Thêm VR image
+      if (formData.vrImage) {
+        data.append("vrImage", formData.vrImage);
+      }
+
+      onSubmit(data); // Gửi dữ liệu lên qua prop
     }
     setShowModal(false);
     setFormData({
       images: [],
+      vrImage: null,
       title: "",
       price: 500000,
       area: 20,
@@ -49,7 +78,7 @@ const PostButton = ({ onSubmit }) => {
             <form>
               {/* Chọn hình ảnh */}
               <div className="form-group">
-                <label>Hình ảnh</label>
+               
                 <div
                   className="image-uploader"
                   onClick={() => document.getElementById("imageInput").click()}
@@ -81,9 +110,46 @@ const PostButton = ({ onSubmit }) => {
                 />
               </div>
 
+              {/* Chọn VR hình ảnh */}
+              <div className="form-group">
+               
+                <div
+                  className="vr-uploader"
+                  onClick={() => document.getElementById("vrInput").click()}
+                >
+                  {formData.vrImage ? (
+                    <></>
+                  ) : (
+                    <div className="vr-placeholder">
+                      <span>+</span>
+                      <p>Thêm hình ảnh VR</p>
+                    </div>
+                  )}
+                </div>
+                <input
+                  id="vrInput"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleVRChange}
+                  style={{ display: "none" }}
+                />
+              </div>
+
+              {/* Xem trước VR */}
+              {formData.vrImage && (
+                <div className="form-group">
+                  <label>Xem trước VR</label>
+                  <div className="vr-viewer">
+                    <VrImage360
+                      imageUrl={URL.createObjectURL(formData.vrImage)}
+                    />{" "}
+                    {/* Hiển thị ảnh 360 */}
+                  </div>
+                </div>
+              )}
+
               {/* Tiêu đề */}
               <div className="form-group">
-                
                 <textarea
                   name="title"
                   value={formData.title}
@@ -95,7 +161,7 @@ const PostButton = ({ onSubmit }) => {
 
               {/* Giá (Slider) */}
               <div className="form-group">
-                <label>Giá 1 triệu - 5 triệu (VNĐ)</label>
+               
                 <input
                   type="range"
                   name="price"
@@ -112,7 +178,7 @@ const PostButton = ({ onSubmit }) => {
 
               {/* Diện tích (Slider) */}
               <div className="form-group">
-                <label>Diện tích (m²)</label>
+              
                 <input
                   type="range"
                   name="area"
@@ -133,9 +199,10 @@ const PostButton = ({ onSubmit }) => {
                   value={formData.type}
                   onChange={handleInputChange}
                 >
-                  <option value="1">Căn hộ</option>
-                  <option value="2">Chung cư mini</option>
-                  <option value="3">Ở ghép</option>
+                  <option value="Phòng trọ">Phòng trọ</option>
+                  <option value="Căn hộ">Căn hộ</option>
+                  <option value="Chung cư mini">Chung cư mini</option>
+                  <option value="Ở ghép">Ở ghép</option>
                 </select>
               </div>
             </form>

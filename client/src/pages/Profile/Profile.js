@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import Modal from "../../components/Modal/Modal";
 import { FaEdit, FaLock, FaUser } from "react-icons/fa";
 import PostButton from "../../components/PostButton/PostButton";
+
 import "./Profile.css";
 
 const Profile = () => {
+   
   const [profile, setProfile] = useState({
     name: "Nguyễn Văn A",
     age: 25,
@@ -129,7 +131,7 @@ const Profile = () => {
           ))}
         </div>
       </div>
-
+      
       {showModal && (
         <Modal
           type={modalType}

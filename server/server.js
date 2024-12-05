@@ -6,7 +6,8 @@ const socketIo = require("socket.io");
 const db = require("./src/models");
 const cors = require("cors");
 const app = express();
-
+const multer = require("multer");
+const path = require("path");
 // cors
 app.use(
   cors({
@@ -38,8 +39,36 @@ export const io = socketIo(server, {
   },
 });
 
-//quan tam
-//routes
+//
+// Cấu hình multer để lưu ảnh vào thư mục 'uploads'
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage: storage });
+
+// Đảm bảo thư mục 'uploads' tồn tại
+const fs = require("fs");
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
+// Route xử lý upload ảnh
+app.post("/upload", upload.single("image"), (req, res) => {
+  const imageUrl = `http://localhost:${port}/uploads/${req.file.filename}`;
+  res.json({ imageUrl });
+});
+
+// Cung cấp tệp ảnh qua đường dẫn
+app.use("/uploads", express.static("uploads"));
+
+//
+
 app.get("/hehe", (req, res) => {
   res.send("hello world");
 });

@@ -1,0 +1,11 @@
+.canvas-container {
+    width: 100%;
+    height: 100vh;
+    /* Hạn chế chiều cao bằng chiều cao của màn hình */
+    overflow: hidden;
+    /* Giới hạn không để quá chiều cao */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

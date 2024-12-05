@@ -2,8 +2,37 @@ import "./Header.css";
 import logoImage from "../img/nhatro.png";
 import { Link } from "react-router-dom";
 import { getCookie } from "../Cookie";
+import { useState, useEffect, useRef } from "react";
 const idUser = getCookie("idUser");
 function Header() {
+  const [showLinkBox, setShowLinkBox] = useState(false);
+  const personRef = useRef(null); // Sử dụng ref để tham chiếu tới thẻ .Person
+  const linkBoxRef = useRef(null); // Sử dụng ref để tham chiếu tới thẻ .linkBox
+
+  // Hàm toggle để mở/đóng box
+  const toggleLinkBox = () => {
+    setShowLinkBox(!showLinkBox);
+  };
+
+  // Hàm đóng box khi nhấn ra ngoài
+  const handleClickOutside = (event) => {
+    if (
+      personRef.current &&
+      !personRef.current.contains(event.target) &&
+      linkBoxRef.current &&
+      !linkBoxRef.current.contains(event.target)
+    ) {
+      setShowLinkBox(false); // Ẩn box khi nhấn ra ngoài
+    }
+  };
+
+  // Thêm event listener khi component mount và cleanup khi component unmount
+  useEffect(() => {
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
   return (
     <>
       <header>
@@ -23,12 +52,28 @@ function Header() {
           </Link>
         </ul>
 
-        <div class="mainn">
-          <div className="Person">
+        <div className="mainn">
+          <div className="Person" onClick={toggleLinkBox} ref={personRef}>
             <img
               src="https://cdnphoto.dantri.com.vn/lWbNf1jAm5A1aQriE5UO0SAuuYg=/2024/01/15/co-gai-xinh-dep2-edited-edited-1705310658178.jpeg"
-              alt=""
+              alt="Person"
             />
+            {showLinkBox && (
+              <div className="linkBox" ref={linkBoxRef}>
+                <div>
+                  <Link to="/profile" className="">
+                    <i class="fa-solid fa-user"></i>
+                    Trang cá nhân
+                  </Link>
+                </div>
+                <div>
+                  <Link to="" className="">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Đăng xuất
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </header>
