@@ -2,6 +2,7 @@
     font-family: Arial, sans-serif;
     background-color: #f7f9fc;
     padding: 20px;
+    padding: 100px 200px 0px 200px;
 }
 
 .post-page {
@@ -27,18 +28,20 @@
 
 .post-details {
     margin-bottom: 20px;
+    
 }
 
-.post-title {
-    font-size: 1.8rem;
+.post-title_ {
+    font-size: 30px;
     color: #333333;
     margin-bottom: 10px;
 }
 
-.post-price {
+.post-price_ {
     font-size: 1.2rem;
-    color: #007bff;
+    color: #ca3232;
     margin-bottom: 10px;
+    font-weight: 700;
 }
 
 .post-address,
@@ -58,7 +61,11 @@
     font-size: 1rem;
     color: #555555;
 }
-
+.contact-info i{
+    padding-right: 8px;
+    font-size: 18px;
+    color: rgb(44, 44, 169);
+}
 .post-right {
     flex: 1;
     background: #ffffff;
@@ -103,4 +110,134 @@
 .featured-post-item p {
     font-size: 0.9rem;
     color: #555555;
+}
+.post_person{
+    /* background: #ddd; */
+    
+}
+.post_call p{
+    margin-top: 10px;
+}
+.post_chat{
+    width: 100%;
+    background: #2d66e2;
+    font-size: 18px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    color: #ddd;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 35px;
+    margin-bottom: 25px;
+}
+.post_chat i{
+    padding: 0px 10px;
+    
+}
+.post_chat:hover{
+    background: #2759c6;
+}
+.post_canhan{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.post_canhan h4{
+    padding-left: 10px;
+    font-size: 18px;
+    font-weight: 500;
+}
+.post_canhan h4 div{
+    font-size: 16px;
+}
+.post_canhan h4 div i{
+    padding-right: 5px; 
+}
+.post_image{
+    height: 70px;
+    width: 70px;
+}
+.post_image img{
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.modal-overlay {
+    display: flex;
+    /* Bắt buộc phải có */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-left,
+.modal-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.modal-left {
+    left: 10px;
+}
+
+.modal-right {
+    right: 10px;
+}
+
+.modal-left:hover,
+.modal-right:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.post-image-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    position: relative;
+}
+
+.slider-left,
+.slider-right {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.image-list {
+    display: flex;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.thumbnail {
+    border: 2px solid transparent;
+}
+
+.thumbnail:hover {
+    border-color: #007bff;
+}
+
+.image-gallery-container {
+    display: flex;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    /* Tạo hiệu ứng mượt khi chuyển ảnh */
+}
+
+.thumbnail-list {
+    display: flex;
+    transform: translateX(0);
+    /* Điều chỉnh vị trí dựa trên logic */
 }

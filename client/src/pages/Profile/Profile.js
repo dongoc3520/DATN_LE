@@ -12,7 +12,7 @@ const Profile = () => {
     age: 25,
     likes: 250,
     image:
-      "https://artena.vn/wp-content/uploads/2024/09/anh-gai-xinh-124aqksz.jpg",
+      "https://th.bing.com/th/id/R.d930651664e60ab0a9873be8e2aa3e81?rik=EBlnjyuPTTRdNg&riu=http%3a%2f%2fwww.hdwallpapersfreedownload.com%2fuploads%2flarge%2fcartoons%2fdoraemon-full.jpg&ehk=bMkOVg25D1cJaXdXQdJOjvkUi5JVCeq9jQJw6sIeDKU%3d&risl=&pid=ImgRaw&r=0",
   });
 
   const [posts, setPosts] = useState([
