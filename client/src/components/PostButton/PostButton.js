@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
 import "./PostButton.css";
-import VrImage360 from "../RoomVR/RoomVR"; // Import component xem ảnh 360 độ
 
+import VrImage360 from "../RoomVR/RoomVR"; // Import component xem ảnh 360 độ
+import { storage } from "../../config";
 const PostButton = ({ onSubmit }) => {
+  const [img, setImg] = useState("");
+  const [imgUrl, setImgUrl] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     images: [],
@@ -13,6 +18,36 @@ const PostButton = ({ onSubmit }) => {
     type: "Phòng trọ",
   });
 
+  const handleUpload = () => {};
+
+  const handleVRChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setImg(file);
+      setFormData({ ...formData, vrImage: file });
+      const img = file;
+      if (img !== null) {
+        const imgRef = ref(storage, `files/${v4()}`);
+
+        const metadata = {
+          contentType: img.type,
+        };
+
+        uploadBytes(imgRef, img, metadata)
+          .then((snapshot) => {
+            console.log("Upload successful:", snapshot);
+            return getDownloadURL(snapshot.ref);
+          })
+          .then((url) => {
+            console.log("URL returned:", url);
+            setImgUrl((prevUrls) => [...prevUrls, url]);
+          })
+          .catch((error) => {
+            console.error("Error uploading file:", error);
+          });
+      }
+    }
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -23,13 +58,13 @@ const PostButton = ({ onSubmit }) => {
     setFormData({ ...formData, images: files });
   };
 
-  const handleVRChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      console.log("this is a data", URL.createObjectURL(file));
-      setFormData({ ...formData, vrImage: file });
-    }
-  };
+  // const handleVRChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     console.log("this is a data", URL.createObjectURL(file));
+  //     setFormData({ ...formData, vrImage: file });
+  //   }
+  // };
 
   const handleSubmit = () => {
     if (onSubmit) {
@@ -78,7 +113,6 @@ const PostButton = ({ onSubmit }) => {
             <form>
               {/* Chọn hình ảnh */}
               <div className="form-group">
-               
                 <div
                   className="image-uploader"
                   onClick={() => document.getElementById("imageInput").click()}
@@ -112,7 +146,6 @@ const PostButton = ({ onSubmit }) => {
 
               {/* Chọn VR hình ảnh */}
               <div className="form-group">
-               
                 <div
                   className="vr-uploader"
                   onClick={() => document.getElementById("vrInput").click()}
@@ -161,7 +194,6 @@ const PostButton = ({ onSubmit }) => {
 
               {/* Giá (Slider) */}
               <div className="form-group">
-               
                 <input
                   type="range"
                   name="price"
@@ -178,7 +210,6 @@ const PostButton = ({ onSubmit }) => {
 
               {/* Diện tích (Slider) */}
               <div className="form-group">
-              
                 <input
                   type="range"
                   name="area"
@@ -208,8 +239,8 @@ const PostButton = ({ onSubmit }) => {
             </form>
             {/* Nút lưu */}
             <div className="modal-actions">
-              <button className="save-button" onClick={handleSubmit}>
-                Lưu
+              <button className="save-button" onClick={handleUpload}>
+                Tiếp
               </button>
               <button
                 className="cancel-button"

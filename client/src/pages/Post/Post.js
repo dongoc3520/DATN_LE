@@ -1,11 +1,9 @@
 import "./Post.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
-import ImageGallery from "react-image-gallery"; // Thư viện slide ảnh
 import "react-image-gallery/styles/css/image-gallery.css";
-import ModalImage from "react-modal-image"; // Thư viện phóng to ảnh
 
 const PostPage = () => {
   const im = [
@@ -13,68 +11,73 @@ const PostPage = () => {
     "https://i.pinimg.com/736x/57/44/d5/5744d5dac67114a44ab42a07adf67dd6.jpg",
     "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
     "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
-    "https://i.pinimg.com/736x/57/44/d5/5744d5dac67114a44ab42a07adf67dd6.jpg",
     "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
     "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
-    "https://i.pinimg.com/736x/57/44/d5/5744d5dac67114a44ab42a07adf67dd6.jpg",
     "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
+    "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
+    "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
+    "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
   ]; // Thay bằng đường dẫn thực tế
-  const galleryImages = im.map((img) => ({
-    original: img,
-    thumbnail: img,
-  }));
-  const [isModalOpen, setIsModalOpen] = useState(false); // Quản lý trạng thái mở modal
-  const [selectedImage, setSelectedImage] = useState(null); // Ảnh được chọn
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Theo dõi ảnh hiện tại
+
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
-  const maxVisibleImages = 5; // Số ảnh tối đa hiển thị
+  const maxVisibleImages = 6;
 
-  const goToPreviousImages = () => {
-    setVisibleStartIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+  // const visibleImages = im.slice(visibleStartIndex, Math.min(9999, im.length));
+  const handleNext = () => {
+    setVisibleStartIndex((prevIndex) => {
+      if (im.length <= maxVisibleImages) {
+        return (prevIndex + 1) % im.length;
+      } else {
+        return (prevIndex + 1) % (im.length - maxVisibleImages + 1);
+      }
+    });
   };
 
-  const goToNextImages = () => {
-    setVisibleStartIndex((prevIndex) =>
-      Math.min(prevIndex + 1, im.length - maxVisibleImages)
-    );
+  // Hàm quay lại ảnh trước
+  const handlePrev = () => {
+    setVisibleStartIndex((prevIndex) => {
+      if (im.length <= maxVisibleImages) {
+        return (prevIndex - 1 + im.length) % im.length;
+      } else {
+        return (
+          (prevIndex - 1 + im.length - maxVisibleImages + 1) %
+          (im.length - maxVisibleImages + 1)
+        );
+      }
+    });
   };
-  const visibleImages = im.slice(
-    visibleStartIndex,
-    visibleStartIndex + maxVisibleImages
-  );
-
-  const openModal = (image) => {
-    const index = im.indexOf(im);
-    setCurrentImageIndex(index);
-    setSelectedImage(image);
+  useEffect(() => {
+    console.log('1');
+    setSelectedImage(im[currentImageIndex]);
+  }, [currentImageIndex]);
+  const openModal = (imageIndex) => {
     setIsModalOpen(true);
+    setCurrentImageIndex(imageIndex);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedImage(null);
   };
   const goToPrevious = () => {
-    setCurrentImageIndex((prevIndex) => {
-      const newIndex = (prevIndex - 1 + im.length) % im.length; // Quay vòng nếu cần
-      setSelectedImage(im[newIndex]);
-      return newIndex;
-    });
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex - 1 + im.length) % im.length
+    );
   };
 
   const goToNext = () => {
-    setCurrentImageIndex((prevIndex) => {
-      const newIndex = (prevIndex + 1) % im.length; // Quay vòng nếu cần
-      setSelectedImage(im[newIndex]);
-      return newIndex;
-    });
+    console.log("hi");
+    setCurrentImageIndex((prevIndex) => (prevIndex + 1) % im.length);
   };
+
   const post = {
     title: "Phòng trọ tiện nghi trung tâm quận 1",
     price: 3000000,
     address: "123 Nguyễn Trãi, Quận 1, TP.HCM",
     area: 25,
-    images: ["https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg"], // Thay bằng đường dẫn thực tế
+    images: ["https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg"],
     user: { name: "Nguyễn Văn A" },
     contact: { phone: "0901234567", email: "nva@gmail.com" },
   };
@@ -131,50 +134,70 @@ const PostPage = () => {
               </mesh>
             </Canvas>
           </div>
-          <div className="post-image-slider">
+          <div
+            className="post-image-slider"
+            style={{ display: "flex", alignItems: "center" }}
+          >
             <button
-              className="slider-left"
-              onClick={goToPreviousImages}
-              disabled={visibleStartIndex === 0}
-              style={{
-                cursor: visibleStartIndex === 0 ? "not-allowed" : "pointer",
-              }}
+              onClick={handlePrev}
+              style={{ position: "absolute", left: 0 }}
+              className="btnLeft_slide"
             >
-              &#8249;
+              <i class="fa-solid fa-chevron-left"></i>
             </button>
-
-            <div className="image-list">
-              {visibleImages.map((img, index) => (
-                <img
-                  key={index}
-                  src={img}
-                  alt={`Thumbnail ${index}`}
-                  className="thumbnail"
-                  onClick={() => openModal(img)}
-                  style={{
-                    cursor: "pointer",
-                    width: "100px",
-                    height: "100px",
-                    margin: "5px",
-                  }}
-                />
-              ))}
-            </div>
-
-            <button
-              className="slider-right"
-              onClick={goToNextImages}
-              disabled={visibleStartIndex + maxVisibleImages >= im.length}
+            <div
               style={{
-                cursor:
-                  visibleStartIndex + maxVisibleImages >= im.length
-                    ? "not-allowed"
-                    : "pointer",
+                position: "relative",
+                width: `${maxVisibleImages * 110}px`,
               }}
+              className="slider_im"
             >
-              &#8250;
+              <div
+                style={{
+                  overflow: "hidden",
+                  width: `${maxVisibleImages * 110}px`,
+                  display: "flex",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    transition: "transform 0.3s ease-in-out",
+                    transform: `translateX(-${
+                      (visibleStartIndex % im.length) * 110
+                    }px)`,
+                  }}
+                >
+                  {im.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Thumbnail ${index}`}
+                      onClick={() => openModal(index)}
+                      style={{
+                        cursor: "pointer",
+                        width: "100px",
+                        height: "100px",
+                        borderRadius: "8px",
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                        marginRight: "10px",
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Nút tiến */}
+            </div>
+            <button
+              onClick={handleNext}
+              style={{ position: "absolute", right: 0 }}
+              className="btnRight_slide"
+            >
+              <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
+
           {/* Post Details */}
           <div className="post-details">
             <h1 className="post-title_">{title}</h1>
@@ -232,7 +255,10 @@ const PostPage = () => {
                   style={{ fontSize: "7px", padding: "0px 10px" }}
                 ></i>{" "}
                 1000
-                <i class="fa-solid fa-heart" style={{ paddingLeft: "5px" }}></i>
+                <i
+                  class="fa-solid fa-heart"
+                  style={{ paddingLeft: "5px", color: "red" }}
+                ></i>
               </p>
               <div className="post_chat">
                 <i class="fa-brands fa-rocketchat"></i>Chat
@@ -256,20 +282,17 @@ const PostPage = () => {
       </div>
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content_" onClick={(e) => e.stopPropagation()}>
             <button className="modal-left" onClick={goToPrevious}>
-              &#8249; {/* Mũi tên trái */}
+              <i class="fa-solid fa-chevron-left"></i>
             </button>
             <img
-              src={selectedImage}
+              src={im[currentImageIndex]}
               alt="Phóng to"
               style={{ width: "100%", height: "auto" }}
             />
             <button className="modal-right" onClick={goToNext}>
-              &#8250; {/* Mũi tên phải */}
-            </button>
-            <button className="modal-close" onClick={closeModal}>
-              Đóng
+              <i class="fa-solid fa-chevron-right"></i>
             </button>
           </div>
         </div>

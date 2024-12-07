@@ -165,10 +165,17 @@
 }
 
 .modal-overlay {
-    display: flex;
-    /* Bắt buộc phải có */
-    justify-content: center;
-    align-items: center;
+    position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(100px);
 }
 
 .modal-left,
@@ -176,25 +183,25 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
     color: white;
     border: none;
-    font-size: 2rem;
+    font-size: 5rem;
     cursor: pointer;
     z-index: 1001;
+    background-color: transparent;
 }
 
 .modal-left {
-    left: 10px;
+    left: 100px;
 }
 
 .modal-right {
-    right: 10px;
+    right: 100px;
 }
 
 .modal-left:hover,
 .modal-right:hover {
-    background: rgba(0, 0, 0, 0.8);
+   color: #007bff;
 }
 
 .post-image-slider {
@@ -233,11 +240,74 @@
     display: flex;
     overflow: hidden;
     transition: transform 0.3s ease-in-out;
-    /* Tạo hiệu ứng mượt khi chuyển ảnh */
 }
 
 .thumbnail-list {
     display: flex;
     transform: translateX(0);
-    /* Điều chỉnh vị trí dựa trên logic */
+}
+.post-image-slider {
+    display: flex;
+    align-items: center;
+}
+
+.image-list {
+    display: flex;
+    overflow-x: hidden;
+    gap: 10px;
+    margin: 0 15px;
+}
+
+.thumbnail {
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.thumbnail:hover {
+    transform: scale(1.05);
+}
+
+button.slider-left,
+button.slider-right {
+    cursor: pointer;
+    background-color: #1e54c0;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+}
+.slider_im{
+    display: flex;
+    align-items: center;
+}
+.btnLeft_slide{
+    color: #007bff;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    margin-left: 20px;
+}
+.btnRight_slide{
+    color: #007bff;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    margin-right: 20px;
+}
+.btnLeft_slide:hover{
+    font-size: 32px;
+}
+.btnRight_slide:hover{
+    font-size: 32px;
+}
+.modal-content_{
+    width: 1000px;
+    height: 500px;
+}
+.modal-content_ img{
+    height: 100% !important;
+    width: 100% !important;
 }

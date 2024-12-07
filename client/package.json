@@ -11,6 +11,7 @@
     "aframe": "^1.6.0",
     "aframe-react": "^4.4.0",
     "axios": "^1.7.8",
+    "firebase": "^11.0.2",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
     "react-chartjs-2": "^5.2.0",
@@ -27,6 +28,7 @@
     "react-toastify": "^10.0.6",
     "socket.io-client": "^4.7.2",
     "three": "^0.171.0",
+    "uuid": "^11.0.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
