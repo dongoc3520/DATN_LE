@@ -87,8 +87,17 @@
     margin-bottom: 5px;
 }
 
+.image-preview{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .image-preview img {
-    max-width: 50px;
+    max-width: 85px;
+    height: 60%;
     margin: 5px;
     border-radius: 5px;
 }
@@ -113,6 +122,16 @@ input[type="range"] {
     cursor: pointer;
 }
 
+.cancel-button_ {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: not-allowed;
+    background-color: #555;
+    color: #ddd;
+}
+
 .save-button {
     background-color: #28a745;
     color: white;
@@ -123,12 +142,12 @@ input[type="range"] {
 }
 
 .cancel-button {
-    background-color: #dc3545;
+    background-color: #353ddc;
     color: white;
 }
 
 .cancel-button:hover {
-    background-color: #c82333;
+    background-color: #2d34b7;
 }
 
 textarea {
@@ -199,4 +218,108 @@ textarea:focus {
 .vr-viewer div {
     width: 100%;
     height: 100% !important;
+}
+
+.btn_deleteVR{
+    border: none;
+}
+
+.tag-input-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    min-height: 50px;
+}
+
+.tag {
+    display: flex;
+    align-items: center;
+    background-color: #3498db;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.tag .remove-tag {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 14px;
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+.available-tags {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.tag-option {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border-radius: 15px;
+    margin: 5px;
+    width: 140px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tag-option:hover {
+    background-color: #e1f5fe;
+    border-color: #3498db;
+    color: #3498db;
+}
+
+.tag-option.tag-selected {
+    background-color: #d0ebfc;
+    border-color: #3498db;
+    color: #3498db;
+    cursor: not-allowed;
+}
+.address-input {
+    margin-bottom: 15px;
+}
+
+.address-input label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.address-input input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.address-input input:focus {
+    outline: none;
+    /* Loại bỏ viền mặc định */
+    border-color: #3498db;
+    /* Thay đổi màu viền khi focus */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+    /* Tạo hiệu ứng ánh sáng */
+}
+
+.warning {
+    color: #e74c3c;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
 }

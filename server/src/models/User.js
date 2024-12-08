@@ -20,6 +20,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    avatar: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: "https://cdn-icons-png.flaticon.com/512/6681/6681221.png",
+    },
     work: {
       type: DataTypes.STRING,
       allowNull: false,
