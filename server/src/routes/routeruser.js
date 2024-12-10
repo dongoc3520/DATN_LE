@@ -36,6 +36,9 @@ userRouter.get("/profile/:id", userCotroller.userIdController);
 // api sửa đổi người dùng
 userRouter.post("/update", middlewareLogin, userCotroller.userUpdateController);
 
+// api đổi avatar
+userRouter.post("/avatar", middlewareLogin, userCotroller.userAvatarController);
+
 // lấy người dùng và tin nhắn sớm nhất của người dùng dành cho mình
 userRouter.get(
   "/userandmess",

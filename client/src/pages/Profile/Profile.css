@@ -2,15 +2,10 @@
     display: flex;
     justify-content: space-between;
     padding: 100px 150px 0px 150px;
-    /* background-color: #e8f0fe; */
-
-
 }
 
-/* Profile bên trái */
 .profile-container {
     flex: 1;
-    /* max-width: 40%; */
     padding: 20px;
     display: flex;
 }
@@ -27,9 +22,8 @@
 .profile-header img {
     width: 200px;
     height: 200px;
-    /* border-radius: 50%; */
-    margin-bottom: 15px;
-    border: 3px solid #4384db;
+    margin-bottom: 0px;
+    /* border: 3px solid #4384db; */
 }
 
 .profile-actions .btn {
@@ -38,14 +32,19 @@
     background: #298fce;
     color: white;
     border: none;
-    padding: 10px;
+    padding: 10px ;
     border-radius: 25px;
     font-size: 14px;
     cursor: pointer;
     width: 200px;
     transition: background-color 0.3s;
 }
-
+.cameraIcon{
+    font-size: 25px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    color: #114e81;
+}
 .profile-actions .btn:hover {
     background: #114e81;
     color: #ddd;
@@ -122,4 +121,58 @@
     font-size: 14px;
     color: #666;
     margin: 5px 0;
+}
+
+.avatar-container {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-icon {
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.tooltip {
+    position: absolute;
+    bottom: 15px;
+    left: 125px;
+    width: 200px;
+    transform: translateX(-40%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+
+.tooltip {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease;
+}
+
+.btn_button{
+    cursor: pointer;
+    padding: 5px;   
+    margin: 10px;
+    border: none;
+    font-size: 18px;
+}
+.btn_huy{
+    background: red;
+    color: #ddd;
+}
+
+.cancel_btn_2{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+   cursor: pointer;
+    background-color: #dd3838;
+    color: #ddd;
 }

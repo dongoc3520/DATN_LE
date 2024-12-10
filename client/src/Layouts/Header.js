@@ -61,7 +61,7 @@ function Header() {
             {showLinkBox && (
               <div className="linkBox" ref={linkBoxRef}>
                 <div>
-                  <Link to="/profile" className="">
+                  <Link to={`/profile/${idUser}`} className="">
                     <i class="fa-solid fa-user"></i>
                     Trang cá nhân
                   </Link>

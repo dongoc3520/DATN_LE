@@ -109,4 +109,7 @@ const { Posts, Users } = require("../models");
 //api tạo bài viết mới
 postRouter.post("/", middlewareLogin, postController.createPostController);
 
+//api lấy profile 
+// postRouter.post("/", middlewareLogin, postController.createPostController);
+
 module.exports = postRouter;

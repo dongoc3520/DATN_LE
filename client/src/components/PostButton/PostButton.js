@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { getDownloadURL, listAll, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import "./PostButton.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -7,6 +7,8 @@ import "react-toastify/dist/ReactToastify.css";
 import VrImage360 from "../RoomVR/RoomVR"; // Import component xem ảnh 360 độ
 import { storage } from "../../config";
 import { ClipLoader } from "react-spinners";
+import axios from "axios";
+import { url } from "../../url";
 
 const PostButton = ({ onSubmit }) => {
   const [page, setPage] = useState("1");
@@ -22,7 +24,7 @@ const PostButton = ({ onSubmit }) => {
     selectedTags: [],
     price: 500000,
     area: 20,
-    type: "Phòng trọ",
+    type: "1",
     address: "",
   });
   const isFormValid = () => {
@@ -124,8 +126,20 @@ const PostButton = ({ onSubmit }) => {
   const handlePrePage = () => {
     setPage("1");
   };
+
   const callAPI = () => {
     console.log(formData);
+    axios
+      .post(`${url}/post`, formData, { withCredentials: true })
+      .then((response) => {
+        // console.log(response);
+        if (response.data.errCode === 0) {
+          toast.success("Tạo bài viết thành công");
+        }
+      })
+      .catch((err) => {
+        toast.error("Tạo bài viết thất bại");
+      });
     setFormData({
       images: [],
       vrImage: null, // Thêm trường VR
@@ -136,6 +150,7 @@ const PostButton = ({ onSubmit }) => {
       type: "Phòng trọ",
       address: "",
     });
+    setShowModal(false);
   };
   const handleVRChange = (event) => {
     const file = event.target.files[0];
@@ -147,7 +162,6 @@ const PostButton = ({ onSubmit }) => {
 
       uploadBytes(imgRef, file, metadata)
         .then((snapshot) => {
-          console.log("Upload successful:", snapshot);
           return getDownloadURL(snapshot.ref);
         })
         .then((url) => {
@@ -432,9 +446,7 @@ const PostButton = ({ onSubmit }) => {
                   ) : (
                     <>
                       {" "}
-                      <button className="cancel-button_" onClick={callAPI}>
-                        Gửi
-                      </button>
+                      <button className="cancel-button_">Gửi</button>
                     </>
                   )}
                 </>

@@ -25,6 +25,7 @@ export const userRegisterService = (body) =>
           role: body.role,
           work: body.work,
           age: body.age,
+          avatar: "https://cdn-icons-png.flaticon.com/512/6681/6681221.png",
         });
         reslove({
           errCode: 0,
@@ -170,6 +171,7 @@ export const userGetprofileService = (id) =>
     try {
       const user = await Users.findOne({
         where: { id: id },
+        attributes: { exclude: ["pass"] },
         raw: true,
       });
       if (!user) {
@@ -188,6 +190,36 @@ export const userGetprofileService = (id) =>
       reject(error);
     }
   });
+
+export const userAvatarService = (body) =>
+  new Promise(async (reslove, reject) => {
+    try {
+      const user = await Users.findOne({
+        where: { id: body.idUser },
+      });
+      // console.log("user :",user);
+      if (!user) {
+        reslove({
+          errCode: 1,
+          message: "Tài khoản không tồn tại",
+        });
+      }
+      // console.log("111");
+      const [rowsUpdated] = await Users.update(
+        { avatar: body.avatar }, // Chỉ cập nhật trường avatar
+        { where: { id: body.idUser } }
+      );
+      // console.log("2333");
+      reslove({
+        errCode: 0,
+        message: "Update avatar thành công",
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+//userAvatarService
 
 //update user
 export const userUpdateService = (body) =>

@@ -1,13 +1,19 @@
 const postService = require("../services/postService");
 
 export const createPostController = async (req, res) => {
-  const { postText, postImage } = req.body;
+  const { title, address, price, area, images, vrImage, selectedTags, type } = req.body;
   const body = {
     id: req.idUser,
-    postText: postText,
-    postImage: postImage,
+    title: title,
+    address: address,
+    price:price,
+    area : area,
+    images : images,
+    vrImage : vrImage,
+    selectedTags : selectedTags,
+    type:type,
   };
-
+  console.log("body",body);
   try {
     const response = await postService.createPostService(body);
     return res.status(200).json(response);

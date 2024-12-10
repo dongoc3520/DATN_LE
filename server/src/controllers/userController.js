@@ -129,6 +129,36 @@ export const userUpdateController = async (req, res) => {
   }
 };
 
+// userAvatarController;
+
+export const userAvatarController = async (req, res) => {
+  const img = req.body.img;
+
+  // const token = req.cookies.token;
+  const idUser = req.idUser;
+
+  const body = {
+    avatar: img,
+    idUser: idUser,
+  };
+  // console.log(body);
+  try {
+    if (!img) {
+      return res.status(400).json({
+        errCode: 1,
+        message: "Cần điền đủ thông tin",
+      });
+    }
+    const response = await userService.userAvatarService(body);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(400).json({
+      errCode: -1,
+      message: "Lỗi server",
+      error: error,
+    });
+  }
+};
 export const userIdController = async (req, res) => {
   const id = req.params.id;
 

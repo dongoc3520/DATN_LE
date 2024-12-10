@@ -1,20 +1,97 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "../../components/Modal/Modal";
 import { FaEdit, FaLock, FaUser } from "react-icons/fa";
 import PostButton from "../../components/PostButton/PostButton";
-
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { getCookie } from "../../Cookie";
+import { url } from "../../url";
 import "./Profile.css";
+import { storage } from "../../config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { v4 } from "uuid";
+import { ClipLoader } from "react-spinners";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
-   
+  const { id } = useParams();
+  const idUser = getCookie("idUser");
+  const [isHovered, setIsHovered] = useState(false);
+  const [img, setImg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDisplay, setIsDisplay] = useState(false);
   const [profile, setProfile] = useState({
-    name: "Nguyễn Văn A",
-    age: 25,
-    likes: 250,
-    image:
-      "https://th.bing.com/th/id/R.d930651664e60ab0a9873be8e2aa3e81?rik=EBlnjyuPTTRdNg&riu=http%3a%2f%2fwww.hdwallpapersfreedownload.com%2fuploads%2flarge%2fcartoons%2fdoraemon-full.jpg&ehk=bMkOVg25D1cJaXdXQdJOjvkUi5JVCeq9jQJw6sIeDKU%3d&risl=&pid=ImgRaw&r=0",
+    name: "",
+    age: 0,
+    likes: 0,
+    image: "",
   });
 
+  const changeAvatar = (event) => {
+    const file = event.target.files[0];
+    setIsLoading(true);
+    console.log(file);
+    if (file) {
+      const imgRef = ref(storage, `files/${v4()}`);
+      const metadata = { contentType: file.type };
+
+      uploadBytes(imgRef, file, metadata)
+        .then((snapshot) => {
+          return getDownloadURL(snapshot.ref);
+        })
+        .then((url) => {
+          console.log("URL returned:", url);
+          setImg(url);
+          setIsLoading(false);
+          setIsDisplay(true);
+        })
+        .catch((error) => {
+          console.error("Error uploading file:", error);
+        });
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const res = await axios.get(`${url}/user/profilebyjwt`, {
+        withCredentials: true,
+      });
+      setProfile({
+        name: res.data.user.name,
+        age: res.data.user.age,
+        likes: 0,
+        image: res.data.user.avatar,
+      });
+      setImg(res.data.user.avatar);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const handleSave = () => {
+    console.log(img);
+    axios
+      .post(`${url}/user/avatar`, { img }, { withCredentials: true })
+      .then((res) => {
+        if (res.data.errCode === 0) {
+          console.log("huhu");
+          setIsDisplay(false);
+          fetchUsers();
+          toast.success("Update avatar thành công!");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleCancel = () => {
+    console.log("cancel");
+    setImg(profile.image);
+    setIsDisplay(false);
+  };
+  useEffect(() => {
+    fetchUsers();
+  }, []);
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -79,43 +156,102 @@ const Profile = () => {
 
   return (
     <div className="profile-posts-container">
-      {/* Bên trái: Profile */}
       <div className="profile-container">
         <div className="profile-card">
           <div className="profile-header">
-            <img src={profile.image} alt="Profile" className="profile-avatar" />
+            {isLoading ? (
+              <div className="profile-avatar">
+                {" "}
+                <ClipLoader color="#3498db" size={50} />{" "}
+              </div>
+            ) : (
+              <>
+                <img src={img} alt="Profile" className="profile-avatar" />
+              </>
+            )}
+            {isDisplay ? (
+              <>
+                <div>
+                  <button
+                    className="cancel_btn_2"
+                    style={{ marginRight: "5px", marginBottom: "5px" }}
+                    onClick={handleCancel}
+                  >
+                    Hủy
+                  </button>
+                  <button
+                    className="cancel-button"
+                    style={{ marginLeft: "5px", marginBottom: "5px" }}
+                    onClick={handleSave}
+                  >
+                    Lưu
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                {" "}
+                <div
+                  className="avatar-container"
+                  onMouseEnter={() => {
+                    setIsHovered(true);
+                    console.log("hehehe");
+                  }}
+                  onMouseLeave={() => setIsHovered(false)}
+                >
+                  <label htmlFor="avatar" class="file-label">
+                    <i class="fa-solid fa-camera cameraIcon avatar-icon"></i>
+                  </label>
+
+                  {isHovered && <div className="tooltip">Chỉnh sửa avatar</div>}
+                  <input
+                    type="file"
+                    class="file-input"
+                    id="avatar"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    onChange={changeAvatar}
+                  />
+                </div>
+              </>
+            )}
+
             <h2 className="profile-name">{profile.name}</h2>
             <p className="profile-age">Tuổi: {profile.age}</p>
             <p className="profile-likes">
               ❤️ <span>{profile.likes}</span> lượt thích
             </p>
           </div>
-
-          <div className="profile-actions">
-            <button
-              className="btn btn-info"
-              onClick={() => handleOpenModal("info")}
-            >
-              <FaUser /> Chỉnh sửa thông tin
-            </button>
-            <button
-              className="btn btn-username"
-              onClick={() => handleOpenModal("username")}
-            >
-              <FaEdit /> Đổi Username
-            </button>
-            <button
-              className="btn btn-password"
-              onClick={() => handleOpenModal("password")}
-            >
-              <FaLock /> Đổi Password
-            </button>
-            <PostButton />
-          </div>
+          {id === idUser ? (
+            <>
+              <div className="profile-actions">
+                <button
+                  className="btn btn-info"
+                  onClick={() => handleOpenModal("info")}
+                >
+                  <FaUser /> Chỉnh sửa thông tin
+                </button>
+                <button
+                  className="btn btn-username"
+                  onClick={() => handleOpenModal("username")}
+                >
+                  <FaEdit /> Đổi Username
+                </button>
+                <button
+                  className="btn btn-password"
+                  onClick={() => handleOpenModal("password")}
+                >
+                  <FaLock /> Đổi Password
+                </button>
+                <PostButton />
+              </div>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
 
-      {/* Bên phải: Danh sách bài đăng */}
       <div className="posts-container">
         <h2>Bài đăng của bạn</h2>
         <div className="posts-list">
@@ -131,7 +267,7 @@ const Profile = () => {
           ))}
         </div>
       </div>
-      
+
       {showModal && (
         <Modal
           type={modalType}
@@ -140,6 +276,7 @@ const Profile = () => {
           onSave={handleUpdateProfile}
         />
       )}
+      {/* <ToastContainer style={{ zIndex: "99999999999" }} /> */}
     </div>
   );
 };
