@@ -2,18 +2,6 @@ var jwt = require("jsonwebtoken");
 
 const { Posts, Users, Images, Interests } = require("../models");
 
-// const body = {
-//   id: req.idUser,
-//   title: title,
-//   address: address,
-//   price: price,
-//   area: area,
-//   images: images,
-//   vrImage: vrImage,
-//   selectedTags: selectedTags,
-//   type: type,
-// };
-
 export const createPostService = (body) =>
   new Promise(async (reslove, reject) => {
     try {
@@ -32,7 +20,7 @@ export const createPostService = (body) =>
       //   },
       // });
       const idPost = newpost.id;
-      console.log("len:",body.images.length);
+
       for (let index = 0; index < body.images.length; index++) {
         console.log(body.images[index]);
         const a = await Images.create({
@@ -40,19 +28,15 @@ export const createPostService = (body) =>
           url: body.images[index],
           type: "1",
         });
-       
       }
-      if(body.type === "3"){
-       
+      if (body.type === "3") {
         for (let index = 0; index < body.selectedTags.length; index++) {
-       
           await Interests.create({
             PostId: idPost,
             name: body.selectedTags[index],
           });
         }
       }
-      
 
       const b = await Images.create({
         PostId: idPost,

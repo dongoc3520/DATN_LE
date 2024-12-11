@@ -67,14 +67,36 @@ export const userLogoutController = async (req, res) => {
 export const userchangePasswordController = async (req, res) => {
   const idUser = req.idUser;
 
-  const { currentPass, newPass } = req.body;
+  const { oldPass, newPass , renewPass } = req.body;
   const body = {
     newPass,
-    currentPass,
+    oldPass,
     idUser,
   };
   try {
     const response = await userService.userchangePassservice(body);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(400).json({
+      errCode: -1,
+      message: "Lỗi server",
+      error: error,
+    });
+  }
+};
+
+//userchangeUserNameController
+export const userchangeUserNameController = async (req, res) => {
+  const idUser = req.idUser;
+
+  const { oldUsername, newUsername, renewUsername } = req.body;
+  const body = {
+    oldUsername,
+    newUsername,
+    idUser,
+  };
+  try {
+    const response = await userService.userchangeUserNameservice(body);
     return res.status(200).json(response);
   } catch (error) {
     return res.status(400).json({
@@ -100,19 +122,17 @@ export const userJwtController = async (req, res) => {
 };
 
 export const userUpdateController = async (req, res) => {
-  const { username, name, avatar } = req.body;
+  const { age, name } = req.body;
   // const token = req.cookies.token;
   const idUser = req.idUser;
   const body = {
-    username: username,
+    id: idUser,
     name: name,
-    avatar: avatar,
-    idUser: idUser,
-    // token: token,
+    age: age,
   };
 
   try {
-    if (!username || !name || !avatar) {
+    if (!age || !name) {
       return res.status(400).json({
         errCode: 1,
         message: "Cần điền đủ thông tin",

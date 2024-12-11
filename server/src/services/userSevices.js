@@ -122,7 +122,7 @@ export const userLogoutService = (body) =>
 export const userchangePassservice = (body) =>
   new Promise(async (reslove, reject) => {
     try {
-      if (!body.currentPass || !body.newPass) {
+      if (!body.oldPass || !body.newPass) {
         reslove({
           errCode: 1,
           message: "Cần điền đủ thông tin",
@@ -140,8 +140,8 @@ export const userchangePassservice = (body) =>
         });
       } else {
         const checkPassword = bcrypt.compareSync(
-          body.currentPass,
-          user.password
+          body.oldPass,
+          user.pass
         );
         if (!checkPassword) {
           reslove({
@@ -151,7 +151,7 @@ export const userchangePassservice = (body) =>
         } else {
           const hash = bcrypt.hashSync(body.newPass, 12);
           const userUpdated = await Users.update(
-            { password: hash },
+            { pass: hash },
             { where: { id: user.id } }
           );
           reslove({
@@ -166,6 +166,49 @@ export const userchangePassservice = (body) =>
     }
   });
 
+//userchangeUserNameservice
+export const userchangeUserNameservice = (body) =>
+  new Promise(async (reslove, reject) => {
+    try {
+      if (!body.oldUsername || !body.newUsername) {
+        reslove({
+          errCode: 1,
+          message: "Cần điền đủ thông tin",
+        });
+      }
+      const user = await Users.findOne({
+        where: { id: parseInt(body.idUser) },
+        raw: true,
+      });
+      if (!user) {
+        reslove({
+          errCode: 1,
+          isLogout: false,
+          message: "Tài khoản không tồn tại",
+        });
+      } else {
+        if (user.userName === body.oldUsername) {
+          await Users.update(
+            { userName: body.newUsername },
+            { where: { id: user.id } }
+          );
+          reslove({
+            errCode: 0,
+            message: "Đổi userName thành công",
+            reLogin: true,
+          });
+        } else {
+          reslove({
+            errCode: 1,
+            message: "userName không đúng",
+            reLogin: true,
+          });
+        }
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
 export const userGetprofileService = (id) =>
   new Promise(async (reslove, reject) => {
     try {
@@ -225,7 +268,7 @@ export const userAvatarService = (body) =>
 export const userUpdateService = (body) =>
   new Promise(async (reslove, reject) => {
     // const decode = jwt.verify(body.token, "MYKEY");
-    const idUser = body.idUser;
+    const idUser = body.id;
     try {
       const user = await Users.findOne({
         where: {
@@ -243,8 +286,7 @@ export const userUpdateService = (body) =>
       await Users.update(
         {
           name: body.name,
-          avatar: body.avatar,
-          username: body.username,
+          age: body.age,
         },
         { where: { id: idUser } }
       );

@@ -71,6 +71,8 @@ function Authen() {
       alert("Cần nhập đủ thông tin");
     } else if (reg.pass.length < 6) {
       alert("Password phải có ít nhất 6 phần tử");
+    } else if (reg.userName.length < 6) {
+      alert("userName phải có ít nhất 6 phần tử");
     } else {
       axios
         .post(`${url}/user/register`, reg) // Thay thế URL bằng URL của API bạn

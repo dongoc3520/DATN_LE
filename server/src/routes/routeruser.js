@@ -23,6 +23,12 @@ userRouter.post(
   userCotroller.userchangePasswordController
 );
 
+userRouter.post(
+  "/changeUsername",
+  middlewareLogin,
+  userCotroller.userchangeUserNameController
+);
+
 //api lấy người dùng bởi jwt để hiện thị ra trang cá nhân
 userRouter.get(
   "/profilebyjwt",
@@ -34,7 +40,9 @@ userRouter.get(
 userRouter.get("/profile/:id", userCotroller.userIdController);
 
 // api sửa đổi người dùng
-userRouter.post("/update", middlewareLogin, userCotroller.userUpdateController);
+userRouter.post("/infor", middlewareLogin, userCotroller.userUpdateController);
+
+
 
 // api đổi avatar
 userRouter.post("/avatar", middlewareLogin, userCotroller.userAvatarController);

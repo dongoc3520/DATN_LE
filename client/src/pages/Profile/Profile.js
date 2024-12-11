@@ -11,16 +11,20 @@ import { storage } from "../../config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { ClipLoader } from "react-spinners";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
+  const [f, setF] = useState(false);
   const { id } = useParams();
   const idUser = getCookie("idUser");
   const [isHovered, setIsHovered] = useState(false);
   const [img, setImg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDisplay, setIsDisplay] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [profile, setProfile] = useState({
     name: "",
     age: 0,
@@ -63,6 +67,7 @@ const Profile = () => {
         likes: 0,
         image: res.data.user.avatar,
       });
+
       setImg(res.data.user.avatar);
     } catch (err) {
       console.error(err);
@@ -74,7 +79,6 @@ const Profile = () => {
       .post(`${url}/user/avatar`, { img }, { withCredentials: true })
       .then((res) => {
         if (res.data.errCode === 0) {
-          console.log("huhu");
           setIsDisplay(false);
           fetchUsers();
           toast.success("Update avatar thành công!");
@@ -89,54 +93,32 @@ const Profile = () => {
     setImg(profile.image);
     setIsDisplay(false);
   };
+   const fetchPosts = async (page) => {
+     try {
+       const response = await axios.get(`${url}/post/posts/getbyuserid`, {
+         params: {
+           id: 1, // ID người dùng (ví dụ)
+           page: page, // Trang hiện tại
+           limit: 5, // Số bài đăng mỗi trang
+         },
+       });
+       const { posts, totalPages } = response.data;
+       console.log(response.data);
+       setPosts(posts); // Cập nhật danh sách bài đăng
+       setTotalPages(totalPages); // Cập nhật tổng số trang
+     } catch (error) {
+       console.error("Lỗi khi lấy danh sách bài đăng:", error);
+     }
+   };
   useEffect(() => {
+    fetchPosts(currentPage);
     fetchUsers();
-  }, []);
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title:
-        "Phòng trọ gần trường Đại học A Phòng trọ gần trường Đại học A Phòng trọ gần trường Đại học A Phòng trọ gần trường Đại học A ",
-      image: "https://feliz-home.com.vn/wp-content/uploads/2023/02/uecuhb.jpg",
-      description: "Phòng rộng 20m², giá 2.5 triệu/tháng, đầy đủ tiện nghi.",
-      area: "20",
-      price: "1000",
-    },
-    {
-      id: 2,
-      title: "Nhà nguyên căn tại trung tâm",
-      image:
-        "https://ecogreen-saigon.vn/uploads/phong-tro-la-loai-hinh-nha-o-pho-bien-gia-re-tien-loi-cho-sinh-vien-va-nguoi-di-lam.png",
-      description: "Nhà 3 tầng, 4 phòng ngủ, giá 10 triệu/tháng.",
-      area: "20",
-      price: "1000",
-    },
-    {
-      id: 3,
-      title: "Căn hộ mini quận B",
-      image:
-        "https://toancanhbatdongsan.com.vn/uploads/images/blog/hoangvy/2022/06/02/cho-thue-phong-tro-1654136735.jpeg",
-      description: "Căn hộ 1 phòng ngủ, giá 5 triệu/tháng, an ninh tốt.",
-      area: "20",
-      price: "1000",
-    },
-    {
-      id: 4,
-      title: "Căn hộ mini quận B",
-      image: "https://feliz-home.com.vn/wp-content/uploads/2023/02/uecuhb.jpg",
-      description: "Căn hộ 1 phòng ngủ, giá 5 triệu/tháng, an ninh tốt.",
-      area: "20",
-      price: "1000",
-    },
-    {
-      id: 5,
-      title: "Căn hộ mini quận B",
-      image: "https://feliz-home.com.vn/wp-content/uploads/2023/02/uecuhb.jpg",
-      description: "Căn hộ 1 phòng ngủ, giá 5 triệu/tháng, an ninh tốt.",
-      area: "20",
-      price: "1000",
-    },
-  ]);
+  }, [f, currentPage]);
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
 
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
@@ -150,8 +132,14 @@ const Profile = () => {
     setShowModal(false);
   };
 
-  const handleUpdateProfile = (newData) => {
-    setProfile({ ...profile, ...newData });
+  const handleUpdateProfile = () => {
+    // setProfile({ ...profile, ...newData });
+    if (modalType === "info") {
+      setF((prev) => !prev);
+      console.log(f);
+    }
+
+    setShowModal(false);
   };
 
   return (
@@ -265,6 +253,23 @@ const Profile = () => {
               </div>
             </div>
           ))}
+        </div>
+        <div className="pagination">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            Previous
+          </button>
+          <span>
+            Trang {currentPage} / {totalPages}
+          </span>
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
         </div>
       </div>
 

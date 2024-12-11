@@ -2,35 +2,58 @@ const express = require("express");
 const postRouter = express.Router();
 const postController = require("../controllers/postController");
 const { middlewareLogin } = require("../middware/middwareLogin");
-const { Posts, Users } = require("../models");
+const { Posts, Users, Images } = require("../models");
 
-//api lấy tất cả bài viết của khách ( người mình xem )
-// postRouter.get("/posts/getbyuserid", async (req, res) => {
-//   const { page, limit, id } = req.query;
-//   const iduser = parseInt(id);
-//   const options = {
-//     page: parseInt(page, 10) || 1,
-//     paginate: parseInt(limit, 10) || 3,
-//     order: [["createdAt", "DESC"]],
-//     where: {
-//       UserId: iduser,
-//     },
-//     include: {
-//       model: Users,
-//       as: "user",
-//       attributes: ["id", "avatar", "username", "name"],
-//     },
-//   };
+// api lấy tất cả bài viết của khách ( người mình xem )
+postRouter.get("/posts/getbyuserid", async (req, res) => {
+    // console.log(req.query);
+  const { page, limit, id } = req.query;
+  const iduser = parseInt(id);
+  const options = {
+    page: parseInt(page, 10) || 1,
+    paginate: parseInt(limit, 10) || 3,
+    order: [["createdAt", "DESC"]],
+    where: {
+      UserId: iduser,
+    },
+    include: {
+      model: Users,
+      as: "user",
+      attributes: ["id", "avatar", "username", "name"],
+    },
+  };
 
 //   const { docs, pages, total } = await Posts.paginate(options);
+  
+  try {
+    const { docs, pages, total } = await Posts.paginate(options);
 
-//   res.json({
-//     posts: docs,
-//     currentPage: options.page,
-//     totalPages: pages,
-//     totalPosts: total,
-//   });
-// });
+    // Tìm một ảnh bất kỳ cho từng bài viết
+    const postsWithImage = await Promise.all(
+      docs.map(async (post) => {
+        const image = await Images.findOne({
+          where: { PostId: post.id }, // Điều kiện lấy ảnh
+          attributes: ["url"], // Lấy cột "url" (hoặc các cột cần thiết)
+        });
+
+        return {
+          ...post.toJSON(), // Chuyển bài viết sang JSON
+          image: image ? image.url : null, // Gắn ảnh vào bài viết
+        };
+      })
+    );
+
+    res.json({
+      posts: postsWithImage,
+      currentPage: options.page,
+      totalPages: pages,
+      totalPosts: total,
+    });
+  } catch (error) {
+    console.error("Lỗi:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
 // //api lấy tất cả bài viết của tất cả mọi người load ra trang chủ
 // postRouter.get("/posts/home", async (req, res) => {

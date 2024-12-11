@@ -54,6 +54,7 @@
 .posts-container {
     margin-left: 100px;
     margin-top: 25px;
+    flex: 3;
 }
 
 .posts-container h2 {
@@ -175,4 +176,36 @@
    cursor: pointer;
     background-color: #dd3838;
     color: #ddd;
+}
+
+
+
+
+
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.pagination button {
+    padding: 8px 16px;
+    margin: 0 8px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination span {
+    margin: 0 16px;
 }
