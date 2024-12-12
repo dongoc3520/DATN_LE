@@ -13,8 +13,10 @@ import { v4 } from "uuid";
 import { ClipLoader } from "react-spinners";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [f, setF] = useState(false);
   const { id } = useParams();
   const idUser = getCookie("idUser");
@@ -67,7 +69,7 @@ const Profile = () => {
         likes: 0,
         image: res.data.user.avatar,
       });
-
+      console.log("ngocdo");
       setImg(res.data.user.avatar);
     } catch (err) {
       console.error(err);
@@ -93,27 +95,31 @@ const Profile = () => {
     setImg(profile.image);
     setIsDisplay(false);
   };
-   const fetchPosts = async (page) => {
-     try {
-       const response = await axios.get(`${url}/post/posts/getbyuserid`, {
-         params: {
-           id: 1, // ID người dùng (ví dụ)
-           page: page, // Trang hiện tại
-           limit: 5, // Số bài đăng mỗi trang
-         },
-       });
-       const { posts, totalPages } = response.data;
-       console.log(response.data);
-       setPosts(posts); // Cập nhật danh sách bài đăng
-       setTotalPages(totalPages); // Cập nhật tổng số trang
-     } catch (error) {
-       console.error("Lỗi khi lấy danh sách bài đăng:", error);
-     }
-   };
+  const fetchPosts = async (page) => {
+    try {
+      const response = await axios.get(`${url}/post/posts/getbyuserid`, {
+        params: {
+          id: 1, // ID người dùng (ví dụ)
+          page: page, // Trang hiện tại
+          limit: 5, // Số bài đăng mỗi trang
+        },
+      });
+      const { posts, totalPages } = response.data;
+      console.log(response.data);
+      setPosts(posts); // Cập nhật danh sách bài đăng
+      setTotalPages(totalPages); // Cập nhật tổng số trang
+      console.log(posts);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách bài đăng:", error);
+    }
+  };
   useEffect(() => {
     fetchPosts(currentPage);
     fetchUsers();
   }, [f, currentPage]);
+  const handleChildParent = () => {
+    setF(!f);
+  };
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
       setCurrentPage(newPage);
@@ -153,9 +159,13 @@ const Profile = () => {
                 <ClipLoader color="#3498db" size={50} />{" "}
               </div>
             ) : (
-              <>
-                <img src={img} alt="Profile" className="profile-avatar" />
-              </>
+              <div>
+                <img
+                  src={profile.image}
+                  alt="Profile"
+                  className="profile-avatar"
+                />
+              </div>
             )}
             {isDisplay ? (
               <>
@@ -231,7 +241,7 @@ const Profile = () => {
                 >
                   <FaLock /> Đổi Password
                 </button>
-                <PostButton />
+                <PostButton onSubmit={handleChildParent} />
               </div>
             </>
           ) : (
@@ -244,33 +254,54 @@ const Profile = () => {
         <h2>Bài đăng của bạn</h2>
         <div className="posts-list">
           {posts.map((post) => (
-            <div key={post.id} className="post-card">
-              <img src={post.image} alt={post.title} className="post-image" />
-              <h3 className="post-title">{post.title}</h3>
-              <div className="post-details">
-                <p className="post-area">Diện tích: {post.area} m²</p>
-                <p className="post-price">Giá: {post.price} triệu</p>
+            <div
+              key={post.id}
+              className="post-card"
+              onClick={() => {
+                navigate(`/post/${post.id}`);
+              }}
+            >
+              <img src={post.image} alt={post.Title} className="post-image" />
+              <h3 className="post-title">{post.Title}</h3>
+              <div className="post-details" style={{ textAlign: "left" }}>
+                <p className="post-area">
+                  <i class="fa-solid fa-chart-area"></i>Diện tích: {post.Area}{" "}
+                  m²
+                </p>
+                <p className="post-price">
+                  <i class="fa-solid fa-money-bill"></i>Giá: {post.Price} VND
+                </p>
+                <p className="post-area">
+                  <i class="fa-solid fa-location-dot"></i>Địa chỉ:{" "}
+                  {post.Address} m²
+                </p>
               </div>
             </div>
           ))}
         </div>
-        <div className="pagination">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </button>
-          <span>
-            Trang {currentPage} / {totalPages}
-          </span>
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
+        {posts.length > 0 ? (
+          <>
+            <div className="pagination">
+              <button
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                Previous
+              </button>
+              <span>
+                Trang {currentPage} / {totalPages}
+              </span>
+              <button
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        ) : (
+          <>Bạn hiện chưa có bài đăng nào</>
+        )}
       </div>
 
       {showModal && (
@@ -281,7 +312,6 @@ const Profile = () => {
           onSave={handleUpdateProfile}
         />
       )}
-      {/* <ToastContainer style={{ zIndex: "99999999999" }} /> */}
     </div>
   );
 };

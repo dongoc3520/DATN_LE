@@ -213,7 +213,7 @@ export const getUserandMessages = async (req, res) => {
 
 export const searchUser = async (req, res) => {
   const { search } = req.body;
-  console.log("this is search user", search);
+  // console.log("this is search user", search);
   const body = {
     search,
     idUser: req.idUser,

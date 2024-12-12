@@ -13,7 +13,7 @@ export const createPostController = async (req, res) => {
     selectedTags : selectedTags,
     type:type,
   };
-  console.log("body",body);
+  // console.log("body",body);
   try {
     const response = await postService.createPostService(body);
     return res.status(200).json(response);

@@ -52,7 +52,7 @@
 
 /* Danh sách bài đăng bên phải */
 .posts-container {
-    margin-left: 100px;
+    /* margin-left: 100px; */
     margin-top: 25px;
     flex: 3;
 }
@@ -108,6 +108,7 @@
     text-overflow: ellipsis;
     /* Thêm dấu "..." nếu văn bản quá dài */
     white-space: nowrap;
+
     /* Hiển thị trên một dòng */
 }
 
@@ -122,6 +123,11 @@
     font-size: 14px;
     color: #666;
     margin: 5px 0;
+    text-overflow: ellipsis;
+        /* Thêm dấu "..." nếu văn bản quá dài */
+    white-space: nowrap;
+    overflow: hidden;
+    /* width: 100px; */
 }
 
 .avatar-container {
@@ -189,6 +195,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 16px;
+    padding-top: 50px;
 }
 
 .pagination button {

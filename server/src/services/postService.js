@@ -22,7 +22,7 @@ export const createPostService = (body) =>
       const idPost = newpost.id;
 
       for (let index = 0; index < body.images.length; index++) {
-        console.log(body.images[index]);
+        // console.log(body.images[index]);
         const a = await Images.create({
           PostId: idPost,
           url: body.images[index],
@@ -64,15 +64,39 @@ export const getPostsByidpostService = (id) =>
           {
             model: Users,
             as: "user",
-            attributes: ["id", "username", "avatar", "name"],
+            attributes: ["id", "avatar", "name"],
           },
         ],
         order: [["createdAt", "DESC"]],
       });
+      if (!posts) {
+        reslove({
+          errCode: 1,
+          errMessage: "Bài viết không tồn tại!",
+        });
+        return;
+      }
+      const images = await Images.findAll({
+        where: {
+          PostId: id, // Điều kiện lấy ảnh theo bài viết
+        },
+        attributes: ["url", "type"], // Chỉ lấy các trường cần thiết
+      });
+
+      // Tách ảnh theo type
+      const type2Image =
+        images.find((image) => image.type === "2")?.url || null; // Chỉ lấy URL của ảnh type = 2
+      const type1Images = images
+        .filter((image) => image.type === "1")
+        .map((image) => image.url); // Chỉ lấy URL của các ảnh type = 1
 
       reslove({
         errCode: 0,
-        data: posts,
+        data: {
+          post: posts,
+          type2Image: type2Image || null, // Trả về null nếu không có ảnh type = 2
+          type1Images: type1Images, // Trả về mảng rỗng nếu không có ảnh type = 1
+        },
       });
     } catch (error) {
       reject(error);

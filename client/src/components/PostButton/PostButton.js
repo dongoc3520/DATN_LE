@@ -127,9 +127,9 @@ const PostButton = ({ onSubmit }) => {
     setPage("1");
   };
 
-  const callAPI = () => {
+  const callAPI = async() => {
     console.log(formData);
-    axios
+    await axios
       .post(`${url}/post`, formData, { withCredentials: true })
       .then((response) => {
         // console.log(response);
@@ -150,7 +150,9 @@ const PostButton = ({ onSubmit }) => {
       type: "Phòng trọ",
       address: "",
     });
+    onSubmit();
     setShowModal(false);
+
   };
   const handleVRChange = (event) => {
     const file = event.target.files[0];

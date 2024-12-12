@@ -1,35 +1,91 @@
 import "./Post.css";
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import "react-image-gallery/styles/css/image-gallery.css";
+import axios from "axios";
+import { url } from "../../url";
+import { useNavigate } from "react-router-dom";
 
 const PostPage = () => {
-  const im = [
-    "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
-    "https://i.pinimg.com/736x/57/44/d5/5744d5dac67114a44ab42a07adf67dd6.jpg",
-    "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
-    "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
-    "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
-    "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
-    "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
-    "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
-    "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain",
-    "https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg",
-  ]; // Thay bằng đường dẫn thực tế
-
+  const navigate = useNavigate();
+  const { id } = useParams();
+  // const im
+  const [im, setIm] = useState([]);
+  const [f5, setF5] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const maxVisibleImages = 6;
-
+  const [featuredPosts, setFeaturedPosts] = useState([]);
+  const [idU, setIdU] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [post, setPost] = useState({
+    title: "",
+    price: 0,
+    address: "",
+    area: 25,
+    images: [""],
+    user: {
+      avatar: "",
+      name: "",
+      id: 0,
+    },
+    contact: { phone: "", email: "" },
+  });
+  const fetchPosts = async (page) => {
+    try {
+      const response = await axios.get(`${url}/post/posts/getbyuserid`, {
+        params: {
+          id: 1, // ID người dùng (ví dụ)
+          page: page, // Trang hiện tại
+          limit: 4, // Số bài đăng mỗi trang
+        },
+      });
+      const { posts, totalPages } = response.data;
+      // console.log("ngo ne", response.data);
+      setFeaturedPosts(response.data.posts); // Cập nhật danh sách bài đăng
+      console.log(featuredPosts);
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách bài đăng:", error);
+    }
+  };
+  const fetchmPost = async () => {
+    if (id) {
+      await axios
+        .get(`${url}/post/getbyidpost/${id}`)
+        .then((res) => {
+          console.log(res);
+          setPost({
+            ...post,
+            title: res.data.data.post.Title,
+            price: res.data.data.post.Price,
+            area: res.data.data.post.Area,
+            address: res.data.data.post.Address,
+            images: [res.data.data.type2Image],
+            user: { ...res.data.data.post.user },
+          });
+          setIm(res.data.data.type1Images);
+          setIdU(1);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+  useEffect(() => {
+    fetchmPost();
+    fetchPosts(1);
+  }, [f5]);
   // const visibleImages = im.slice(visibleStartIndex, Math.min(9999, im.length));
   const handleNext = () => {
     setVisibleStartIndex((prevIndex) => {
       if (im.length <= maxVisibleImages) {
-        return (prevIndex + 1) % im.length;
+        // return (prevIndex + 1) % im.length;
+        return;
       } else {
         return (prevIndex + 1) % (im.length - maxVisibleImages + 1);
       }
@@ -40,7 +96,8 @@ const PostPage = () => {
   const handlePrev = () => {
     setVisibleStartIndex((prevIndex) => {
       if (im.length <= maxVisibleImages) {
-        return (prevIndex - 1 + im.length) % im.length;
+        // return (prevIndex - 1 + im.length) % im.length;
+        return;
       } else {
         return (
           (prevIndex - 1 + im.length - maxVisibleImages + 1) %
@@ -50,7 +107,6 @@ const PostPage = () => {
     });
   };
   useEffect(() => {
-    console.log('1');
     setSelectedImage(im[currentImageIndex]);
   }, [currentImageIndex]);
   const openModal = (imageIndex) => {
@@ -68,50 +124,49 @@ const PostPage = () => {
   };
 
   const goToNext = () => {
-    console.log("hi");
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % im.length);
   };
 
-  const post = {
-    title: "Phòng trọ tiện nghi trung tâm quận 1",
-    price: 3000000,
-    address: "123 Nguyễn Trãi, Quận 1, TP.HCM",
-    area: 25,
-    images: ["https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg"],
-    user: { name: "Nguyễn Văn A" },
-    contact: { phone: "0901234567", email: "nva@gmail.com" },
-  };
+  // const post = {
+  //   title: "Phòng trọ tiện nghi trung tâm quận 1",
+  //   price: 3000000,
+  //   address: "123 Nguyễn Trãi, Quận 1, TP.HCM",
+  //   area: 25,
+  //   images: ["https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg"],
+  //   user: { name: "Nguyễn Văn A" },
+  //   contact: { phone: "0901234567", email: "nva@gmail.com" },
+  // };
 
-  const featuredPosts = [
-    {
-      title: "Phòng trọ cao cấp quận 7",
-      price: 3500000,
-      address: "456 Huỳnh Tấn Phát, Quận 7",
-      image:
-        "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
-    },
-    {
-      title: "Phòng trọ giá rẻ quận Gò Vấp",
-      price: 2500000,
-      address: "789 Lê Văn Thọ, Gò Vấp",
-      image:
-        "https://i.pinimg.com/736x/57/44/d5/5744d5dac67114a44ab42a07adf67dd6.jpg",
-    },
-    {
-      title: "Phòng trọ cao cấp quận 7",
-      price: 3500000,
-      address: "456 Huỳnh Tấn Phát, Quận 7",
-      image:
-        "https://th.bing.com/th/id/OIP.WdtD6iS63Iji7EO6iMBKUgHaHa?rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
-    },
-    {
-      title: "Phòng trọ cao cấp quận 7",
-      price: 3500000,
-      address: "456 Huỳnh Tấn Phát, Quận 7",
-      image:
-        "https://th.bing.com/th/id/OIP._ptc2dSyNtdmlSr5PfpQgQHaHQ?w=750&h=735&rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
-    },
-  ];
+  // const featuredPosts = [
+  //   {
+  //     title: "Phòng trọ cao cấp quận 7",
+  //     price: 3500000,
+  //     address: "456 Huỳnh Tấn Phát, Quận 7",
+  //     image:
+  //       "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
+  //   },
+  //   {
+  //     title: "Phòng trọ giá rẻ quận Gò Vấp",
+  //     price: 2500000,
+  //     address: "789 Lê Văn Thọ, Gò Vấp",
+  //     image:
+  //       "https://i.pinimg.com/736x/57/44/d5/5744d5dac67114a44ab42a07adf67dd6.jpg",
+  //   },
+  //   {
+  //     title: "Phòng trọ cao cấp quận 7",
+  //     price: 3500000,
+  //     address: "456 Huỳnh Tấn Phát, Quận 7",
+  //     image:
+  //       "https://th.bing.com/th/id/OIP.WdtD6iS63Iji7EO6iMBKUgHaHa?rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
+  //   },
+  //   {
+  //     title: "Phòng trọ cao cấp quận 7",
+  //     price: 3500000,
+  //     address: "456 Huỳnh Tấn Phát, Quận 7",
+  //     image:
+  //       "https://th.bing.com/th/id/OIP._ptc2dSyNtdmlSr5PfpQgQHaHQ?w=750&h=735&rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
+  //   },
+  // ];
   const { title, price, address, area, images, user, contact } = post;
 
   return (
@@ -201,7 +256,7 @@ const PostPage = () => {
           {/* Post Details */}
           <div className="post-details">
             <h1 className="post-title_">{title}</h1>
-            <p className="post-price_">Giá: {price.toLocaleString()} VND</p>
+            <p className="post-price_">Giá: {price} VND</p>
             <p className="post-address">
               <i class="fa-solid fa-location-dot"></i> Địa chỉ: {address}
             </p>
@@ -220,10 +275,10 @@ const PostPage = () => {
               <i class="fa-solid fa-user"></i>Người đăng: {user.name}
             </p>
             <p>
-              <i class="fa-solid fa-phone"></i>Số điện thoại: {contact.phone}
+              <i class="fa-solid fa-phone"></i>Số điện thoại:
             </p>
             <p>
-              <i class="fa-solid fa-envelope"></i>Email: {contact.email}
+              <i class="fa-solid fa-envelope"></i>Email:
             </p>
           </div>
         </div>
@@ -233,14 +288,11 @@ const PostPage = () => {
           <div className="post_person">
             <div className="post_canhan">
               <div className="post_image">
-                <img
-                  src="https://th.bing.com/th/id/OIP.bwOwujLirWR_DHF3rYZrJwHaFj?rs=1&pid=ImgDetMain"
-                  alt=""
-                />
+                <img src={user.avatar} alt="" />
               </div>
               <h4>
                 {" "}
-                Đỗ Văn Ngọc{" "}
+                {user.name}{" "}
                 <div>
                   <i class="fa-solid fa-user"></i>
                   Cá nhân
@@ -266,18 +318,32 @@ const PostPage = () => {
             </div>
           </div>
           <h2>Bài đăng nổi bật</h2>
-          <ul className="featured-posts">
-            {featuredPosts.map((featured, index) => (
-              <li key={index} className="featured-post-item">
-                <img src={featured.image} alt={featured.title} />
-                <div>
-                  <h3>{featured.title}</h3>
-                  <p>Giá: {featured.price.toLocaleString()} VND</p>
-                  <p>Địa chỉ: {featured.address}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          {featuredPosts.length > 0 ? (
+            <>
+              {" "}
+              <ul className="featured-posts">
+                {featuredPosts.map((featured, index) => (
+                  <li
+                    key={index}
+                    className="featured-post-item"
+                    onClick={() => {
+                      navigate(`/post/${featured.id}`);
+                      setF5(!f5);
+                    }}
+                  >
+                    <img src={featured.image} alt={featured.Title} />
+                    <div>
+                      <h3>{featured.Title}</h3>
+                      <p>Giá: {featured.Price} VND</p>
+                      <p>Địa chỉ: {featured.Address}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <>Hiện chưa có bài đăng nào</>
+          )}
         </div>
       </div>
       {isModalOpen && (

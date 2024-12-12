@@ -139,10 +139,7 @@ export const userchangePassservice = (body) =>
           message: "Tài khoản không tồn tại",
         });
       } else {
-        const checkPassword = bcrypt.compareSync(
-          body.oldPass,
-          user.pass
-        );
+        const checkPassword = bcrypt.compareSync(body.oldPass, user.pass);
         if (!checkPassword) {
           reslove({
             errCode: 1,
@@ -217,6 +214,7 @@ export const userGetprofileService = (id) =>
         attributes: { exclude: ["pass"] },
         raw: true,
       });
+      // console.log(user);
       if (!user) {
         reslove({
           errCode: 1,

@@ -3,8 +3,6 @@ const sequelizePaginate = require("sequelize-paginate");
 module.exports = (sequelize, DataTypes) => {
   const Posts = sequelize.define("Posts", {
     UserId: DataTypes.INTEGER,
-    ImageId: DataTypes.INTEGER,
-    InterestId: DataTypes.INTEGER,
     Title: {
       type: DataTypes.STRING,
       allowNull: false,

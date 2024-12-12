@@ -80,7 +80,7 @@ postRouter.get("/posts/getbyuserid", async (req, res) => {
 //   });
 // });
 // //api lấy ra bài viết dựa vào id bài viết
-// postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
+postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
 
 // //api lấy tất cả bài viết của người dùng
 // postRouter.get("/posts", middlewareLogin, async (req, res) => {

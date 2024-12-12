@@ -28,7 +28,15 @@
 
 .post-details {
     margin-bottom: 20px;
+    /* overflow: hidden; */
+    text-overflow: ellipsis;
     
+}
+.post-details i {
+    color: #0957aa;
+    padding-right: 10px;
+    padding-left: 5px;
+    font-size: 16px;
 }
 
 .post-title_ {
@@ -92,6 +100,7 @@
     margin-bottom: 15px;
     padding-bottom: 15px;
     border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
 }
 
 .featured-post-item img {
@@ -105,16 +114,18 @@
     font-size: 1.1rem;
     color: #333333;
     margin-bottom: 5px;
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+    width: 350px;
+    white-space: nowrap;
 }
 
 .featured-post-item p {
     font-size: 0.9rem;
     color: #555555;
 }
-.post_person{
-    /* background: #ddd; */
-    
-}
+
 .post_call p{
     margin-top: 10px;
 }
