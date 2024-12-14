@@ -9,6 +9,10 @@ import { storage } from "../../config";
 import { ClipLoader } from "react-spinners";
 import axios from "axios";
 import { url } from "../../url";
+import Select from "react-select";
+import { wardsData, data } from "../../data";
+
+// const districts = data;
 
 const PostButton = ({ onSubmit }) => {
   const [page, setPage] = useState("1");
@@ -25,11 +29,28 @@ const PostButton = ({ onSubmit }) => {
     price: 500000,
     area: 20,
     type: "1",
-    address: "",
+    district: "",
+    ward: "",
   });
+  const updateField = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+      ...(field === "district" && { ward: "" }), // Reset ward khi chọn lại district
+    }));
+  };
   const isFormValid = () => {
-    const { images, vrImage, title, selectedTags, price, area, type, address } =
-      formData;
+    const {
+      images,
+      vrImage,
+      title,
+      selectedTags,
+      price,
+      area,
+      type,
+      district,
+      ward,
+    } = formData;
 
     // Kiểm tra xem các trường đã có giá trị chưa
     if (
@@ -42,7 +63,8 @@ const PostButton = ({ onSubmit }) => {
       !price ||
       !area ||
       !type.trim() ||
-      !address.trim()
+      !district.trim() ||
+      !ward.trim()
     ) {
       return false;
     }
@@ -54,9 +76,7 @@ const PostButton = ({ onSubmit }) => {
     ? formData.images
     : formData.images.slice(0, 4);
   // const [selectedTags, setSelectedTags] = useState([]);
-  const handleAddressChange = (e) => {
-    setFormData({ ...formData, address: e.target.value });
-  };
+
   const availableTags = [
     "Yên lặng",
     "Tấp nập",
@@ -127,7 +147,7 @@ const PostButton = ({ onSubmit }) => {
     setPage("1");
   };
 
-  const callAPI = async() => {
+  const callAPI = async () => {
     console.log(formData);
     await axios
       .post(`${url}/post`, formData, { withCredentials: true })
@@ -148,11 +168,11 @@ const PostButton = ({ onSubmit }) => {
       price: 500000,
       area: 20,
       type: "Phòng trọ",
-      address: "",
+      district: "",
+      ward: "",
     });
     onSubmit();
     setShowModal(false);
-
   };
   const handleVRChange = (event) => {
     const file = event.target.files[0];
@@ -364,7 +384,7 @@ const PostButton = ({ onSubmit }) => {
                 <>
                   <div className="tag-input-container">
                     {/* Input địa chỉ */}
-                    <div className="address-input">
+                    {/* <div className="address-input">
                       <label htmlFor="address">Địa chỉ:</label>
                       <input
                         type="text"
@@ -373,6 +393,45 @@ const PostButton = ({ onSubmit }) => {
                         value={formData.address}
                         onChange={handleAddressChange}
                       />
+                    </div> */}
+                    <div className="address-input">
+                      {/* Dropdown Quận/Huyện */}
+                      {/* <label htmlFor="district">Quận/Huyện:</label> */}
+                      <Select
+                        id="district"
+                        options={data.flatMap((item) => item.options)}
+                        value={
+                          data
+                            .flatMap((item) => item.options)
+                            .find(
+                              (option) => option.value === formData.district
+                            ) || null
+                        }
+                        onChange={(option) =>
+                          updateField("district", option.value)
+                        }
+                        placeholder="-- Chọn Quận/Huyện --"
+                      />
+
+                      {/* Dropdown Phường/Xã */}
+                      {formData.district && (
+                        <div style={{ marginTop: "10px" }}>
+                          {/* <label htmlFor="ward">Phường/Xã:</label> */}
+                          <Select
+                            id="ward"
+                            options={wardsData[formData.district]}
+                            value={
+                              wardsData[formData.district]?.find(
+                                (option) => option.value === formData.ward
+                              ) || null
+                            }
+                            onChange={(option) =>
+                              updateField("ward", option.value)
+                            }
+                            placeholder="-- Chọn Phường/Xã --"
+                          />
+                        </div>
+                      )}
                     </div>
 
                     {formData.type === "3" ? (

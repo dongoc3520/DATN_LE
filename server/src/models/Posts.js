@@ -8,7 +8,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
 
-    Address: {
+    District: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Ward: {
       type: DataTypes.STRING,
       allowNull: false,
     },

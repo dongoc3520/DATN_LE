@@ -342,7 +342,9 @@ const PostPage = () => {
                     <div>
                       <h3>{featured.Title}</h3>
                       <p>Giá: {featured.Price} VND</p>
-                      <p>Địa chỉ: {featured.Address}</p>
+                      <p>
+                        Địa chỉ: {featured.District} - {featured.Ward}{" "}
+                      </p>
                     </div>
                   </li>
                 ))}

@@ -1,17 +1,29 @@
 const postService = require("../services/postService");
 
 export const createPostController = async (req, res) => {
-  const { title, address, price, area, images, vrImage, selectedTags, type } = req.body;
+  const {
+    title,
+    district,
+    ward,
+    price,
+    area,
+    images,
+    vrImage,
+    selectedTags,
+    type,
+  } = req.body;
   const body = {
     id: req.idUser,
     title: title,
-    address: address,
-    price:price,
-    area : area,
-    images : images,
-    vrImage : vrImage,
-    selectedTags : selectedTags,
-    type:type,
+    // address: address,
+    district: district,
+    ward:ward,
+    price: price,
+    area: area,
+    images: images,
+    vrImage: vrImage,
+    selectedTags: selectedTags,
+    type: type,
   };
   // console.log("body",body);
   try {
@@ -86,10 +98,10 @@ export const getimages = async (req, res) => {
   let id = 0;
   let idParam = parseInt(req.params.id);
   let idsub = parseInt(req.query.idsub);
-  if(idsub === 0){
-     id = req.idUser;
-  }else{
-    id = idsub
+  if (idsub === 0) {
+    id = req.idUser;
+  } else {
+    id = idsub;
   }
 
   try {
@@ -123,4 +135,3 @@ export const deletePostController = async (req, res) => {
     });
   }
 };
-

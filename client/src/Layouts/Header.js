@@ -51,13 +51,13 @@ function Header({ onReload }) {
         </a>
         <input className="searchPT" placeholder="" />
         <ul class="navbarr">
-          <Link to="/" className="nav-link">
+          <Link to="/1" className="nav-link">
             Căn hộ
           </Link>
-          <Link to="/" className="nav-link">
+          <Link to="/2" className="nav-link">
             Chung cư mini
           </Link>
-          <Link to="/" className="nav-link">
+          <Link to="/3" className="nav-link">
             Ở ghép
           </Link>
         </ul>
