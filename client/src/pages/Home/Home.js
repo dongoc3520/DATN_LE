@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Select from "react-select";
 import { Range } from "react-range";
 import MPost from "../../components/mPost/mPost";
+import quancao from "../../img/websitept.png";
 
 const leaderboardData = [
   {
@@ -23,11 +24,24 @@ const leaderboardData = [
     image: "https://randomuser.me/api/portraits/men/2.jpg",
     likes: 1000,
   },
-
 ];
 
 function Home() {
-  
+  const options = [
+    { id: 1, label: "Dưới 2 triệu", value: "under-2m" },
+    { id: 2, label: "2 - 3 triệu", value: "2-3m" },
+    { id: 3, label: "3 - 4 triệu", value: "3-4m" },
+    { id: 4, label: "4 - 5 triệu", value: "4-5m" },
+    { id: 5, label: "Trên 5 triệu", value: "5m" },
+  ];
+
+  const options2 = [
+    { id: 1, label: "Dưới 20 m2", value: "20m2" },
+    { id: 2, label: "20 - 30 m3", value: "30m2" },
+    { id: 3, label: "30 - 40 m2", value: "40m2" },
+    { id: 4, label: "Trên 40 m2", value: "50m2" },
+  ];
+
   const data = [
     {
       label: "Hà Nội",
@@ -261,7 +275,46 @@ function Home() {
               </div>
             ))}
           </div>
+          <div className="moigioi">Xem theo khoảng giá</div>
+          <div className="btn_choose">
+            {options.map((option) => (
+              <>
+                {/* <label>
+                  <i class="fa-solid fa-angle-right"></i>
+                </label> */}
+                <div
+                  key={option.id}
+                  className="card"
+                  // onClick={}
+                >
+                  <i class="fa-solid fa-angle-right"></i>
+                  {option.label}
+                </div>
+              </>
+            ))}
+          </div>
+          <div className="moigioi">Xem theo diện tích</div>
+          <div className="btn_choose">
+            {options2.map((option) => (
+              <>
+                {/* <label>
+                  <i class="fa-solid fa-angle-right"></i>
+                </label> */}
+                <div
+                  key={option.id}
+                  className="card"
+                  // onClick={}
+                >
+                  <i class="fa-solid fa-angle-right"></i>
+                  {option.label}
+                </div>
+              </>
+            ))}
+          </div>
         </div>
+      </div>
+      <div className="quangcao">
+        <img src={quancao} alt="Shenlik Tech Logo" />
       </div>
     </div>
   );

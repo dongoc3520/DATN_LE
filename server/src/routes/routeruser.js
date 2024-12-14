@@ -6,44 +6,24 @@ const userCotroller = require("../controllers/userController");
 const { middlewareLogin } = require("../middware/middwareLogin");
 
 //api register ( đăng kí ) người dùng
-userRouter.post( "/register",
-  userCotroller.userRegisterController
-);
-
+userRouter.post("/register", userCotroller.userRegisterController);
 //api login ( đăng nhập )
 userRouter.post("/login", userCotroller.userLoginController);
-
 //api log out ()
 userRouter.get("/logout", middlewareLogin, userCotroller.userLogoutController);
-
 //api đổi mật khẩu
-userRouter.post(
-  "/changePassword",
-  middlewareLogin,
-  userCotroller.userchangePasswordController
+userRouter.post("/changePassword",middlewareLogin,userCotroller.userchangePasswordController
 );
-
-userRouter.post(
-  "/changeUsername",
-  middlewareLogin,
-  userCotroller.userchangeUserNameController
+//api đổi username
+userRouter.post("/changeUsername", middlewareLogin, userCotroller.userchangeUserNameController
 );
-
 //api lấy người dùng bởi jwt để hiện thị ra trang cá nhân
-userRouter.get(
-  "/profilebyjwt",
-  middlewareLogin,
-  userCotroller.userJwtController
+userRouter.get("/profilebyjwt",middlewareLogin,userCotroller.userJwtController
 );
-
 //api lấy người dùng theo id
 userRouter.get("/profile/:id", userCotroller.userIdController);
-
 // api sửa đổi người dùng
 userRouter.post("/infor", middlewareLogin, userCotroller.userUpdateController);
-
-
-
 // api đổi avatar
 userRouter.post("/avatar", middlewareLogin, userCotroller.userAvatarController);
 

@@ -3,12 +3,22 @@ import logoImage from "../img/nhatro.png";
 import { Link } from "react-router-dom";
 import { getCookie } from "../Cookie";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 const idUser = getCookie("idUser");
-function Header() {
+function Header({ onReload }) {
+  // const { id } = useParams();
+  const navigate = useNavigate();
   const [showLinkBox, setShowLinkBox] = useState(false);
   const personRef = useRef(null); // Sử dụng ref để tham chiếu tới thẻ .Person
   const linkBoxRef = useRef(null); // Sử dụng ref để tham chiếu tới thẻ .linkBox
-
+  const handleProfileClick = () => {
+   
+    navigate(`/profile/${idUser}`, { replace: true });
+    if (onReload) {
+      onReload(); // Gọi hàm reload từ parent component.
+    }
+  };
   // Hàm toggle để mở/đóng box
   const toggleLinkBox = () => {
     setShowLinkBox(!showLinkBox);
@@ -59,12 +69,12 @@ function Header() {
               alt="Person"
             />
             {showLinkBox && (
-              <div className="linkBox" ref={linkBoxRef}>
-                <div>
-                  <Link to={`/profile/${idUser}`} className="">
-                    <i class="fa-solid fa-user"></i>
-                    Trang cá nhân
-                  </Link>
+              <div className="linkBox" >
+                <div onClick={handleProfileClick}>
+                  {/* <Link to={`/profile/${idUser}`} className=""> */}
+                  <i class="fa-solid fa-user"></i>
+                  Trang cá nhân
+                  {/* </Link> */}
                 </div>
                 <div>
                   <Link to="" className="">

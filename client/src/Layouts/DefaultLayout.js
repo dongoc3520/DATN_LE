@@ -1,8 +1,15 @@
+import { useEffect } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import "./layout.css";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 function DefaultLayout({ children }) {
+  const [key, setKey] = useState(0);
+
+  const handleReload = () => {
+    setKey((prevKey) => prevKey + 1); // Tăng key để reload lại component.
+  };
   return (
     <div className="layout">
       <div className="layout_navbar">
@@ -17,7 +24,7 @@ function DefaultLayout({ children }) {
         }}
         className="layout_container"
       >
-        <Header />
+        <Header onReload={handleReload} />
         {children}
         <Footer />
       </div>

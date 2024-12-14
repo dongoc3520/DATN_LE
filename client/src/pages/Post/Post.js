@@ -37,17 +37,20 @@ const PostPage = () => {
     contact: { phone: "", email: "" },
   });
   const fetchPosts = async (page) => {
+    console.log("ngoc day", post);
     try {
+      console.log("ngoc day", post.user.id);
       const response = await axios.get(`${url}/post/posts/getbyuserid`, {
         params: {
-          id: 1, // ID người dùng (ví dụ)
-          page: page, // Trang hiện tại
-          limit: 4, // Số bài đăng mỗi trang
+          id: post.user.id,
+          page: page,
+          limit: 4,
         },
       });
       const { posts, totalPages } = response.data;
       // console.log("ngo ne", response.data);
       setFeaturedPosts(response.data.posts); // Cập nhật danh sách bài đăng
+      console.log("us is", idU);
       console.log(featuredPosts);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách bài đăng:", error);
@@ -69,7 +72,7 @@ const PostPage = () => {
             user: { ...res.data.data.post.user },
           });
           setIm(res.data.data.type1Images);
-          setIdU(1);
+          console.log("ngoicoi", res.data.data.post.user.id);
         })
         .catch((err) => {
           console.log(err);
@@ -78,8 +81,9 @@ const PostPage = () => {
   };
   useEffect(() => {
     fetchmPost();
+    // setIdU(post.user.id);
     fetchPosts(1);
-  }, [f5]);
+  }, [f5, post.user?.id]);
   // const visibleImages = im.slice(visibleStartIndex, Math.min(9999, im.length));
   const handleNext = () => {
     setVisibleStartIndex((prevIndex) => {
@@ -126,7 +130,10 @@ const PostPage = () => {
   const goToNext = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % im.length);
   };
-
+  const handleSwitch = () => {
+    // console.log("hehelllll");
+    navigate(`/profile/${post.user.id}`);
+  };
   // const post = {
   //   title: "Phòng trọ tiện nghi trung tâm quận 1",
   //   price: 3000000,
@@ -286,7 +293,7 @@ const PostPage = () => {
         {/* Right Column */}
         <div className="post-right">
           <div className="post_person">
-            <div className="post_canhan">
+            <div className="post_canhan" onClick={handleSwitch}>
               <div className="post_image">
                 <img src={user.avatar} alt="" />
               </div>

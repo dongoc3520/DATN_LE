@@ -60,7 +60,7 @@ const Profile = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${url}/user/profilebyjwt`, {
+      const res = await axios.get(`${url}/user/profile/${id}`, {
         withCredentials: true,
       });
       setProfile({
@@ -99,9 +99,9 @@ const Profile = () => {
     try {
       const response = await axios.get(`${url}/post/posts/getbyuserid`, {
         params: {
-          id: 1, // ID người dùng (ví dụ)
+          id: id, // ID người dùng (ví dụ)
           page: page, // Trang hiện tại
-          limit: 5, // Số bài đăng mỗi trang
+          limit: 6, // Số bài đăng mỗi trang
         },
       });
       const { posts, totalPages } = response.data;
@@ -286,7 +286,7 @@ const Profile = () => {
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
               >
-                Previous
+                Trước
               </button>
               <span>
                 Trang {currentPage} / {totalPages}
@@ -295,7 +295,7 @@ const Profile = () => {
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
-                Next
+                Tiếp
               </button>
             </div>
           </>

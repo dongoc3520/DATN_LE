@@ -54,6 +54,23 @@ postRouter.get("/posts/getbyuserid", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// //api lấy ra bài viết dựa vào id bài viết
+postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
+
+//api tạo bài viết mới
+postRouter.post("/", middlewareLogin, postController.createPostController);
+
+
+
+
+
+
+
+
+
+
+
+
 
 // //api lấy tất cả bài viết của tất cả mọi người load ra trang chủ
 // postRouter.get("/posts/home", async (req, res) => {
@@ -79,8 +96,7 @@ postRouter.get("/posts/getbyuserid", async (req, res) => {
 //     totalPosts: total,
 //   });
 // });
-// //api lấy ra bài viết dựa vào id bài viết
-postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
+
 
 // //api lấy tất cả bài viết của người dùng
 // postRouter.get("/posts", middlewareLogin, async (req, res) => {
@@ -130,7 +146,7 @@ postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
 // );
 
 //api tạo bài viết mới
-postRouter.post("/", middlewareLogin, postController.createPostController);
+// postRouter.post("/", middlewareLogin, postController.createPostController);
 
 //api lấy profile 
 // postRouter.post("/", middlewareLogin, postController.createPostController);
