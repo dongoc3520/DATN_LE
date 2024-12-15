@@ -12,7 +12,8 @@ export const createPostService = (body) =>
         Price: body.price,
         Area: body.area,
         District: body.district,
-        Ward : body.ward,
+        Ward: body.ward,
+        Type: body.type,
       });
       // const post = await Posts.findOne({
       //   where: { id: newpost.id, UserId: newpost.UserId },

@@ -11,7 +11,7 @@ import { storage } from "../../config";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 } from "uuid";
 import { ClipLoader } from "react-spinners";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +32,7 @@ const Profile = () => {
     age: 0,
     likes: 0,
     image: "",
+    role: "",
   });
 
   const changeAvatar = (event) => {
@@ -68,8 +69,9 @@ const Profile = () => {
         age: res.data.user.age,
         likes: 0,
         image: res.data.user.avatar,
+        role: res.data.user.role,
       });
-      console.log("ngocdo");
+      console.log(profile);
       setImg(res.data.user.avatar);
     } catch (err) {
       console.error(err);
@@ -116,7 +118,7 @@ const Profile = () => {
   useEffect(() => {
     fetchPosts(currentPage);
     fetchUsers();
-  }, [f, currentPage]);
+  }, [f, currentPage, id]);
   const handleChildParent = () => {
     setF(!f);
   };
@@ -142,7 +144,7 @@ const Profile = () => {
     // setProfile({ ...profile, ...newData });
     if (modalType === "info") {
       setF((prev) => !prev);
-      console.log(f);
+      // console.log(f);
     }
 
     setShowModal(false);
@@ -160,11 +162,7 @@ const Profile = () => {
               </div>
             ) : (
               <div>
-                <img
-                  src={profile.image}
-                  alt="Profile"
-                  className="profile-avatar"
-                />
+                <img src={img} alt="Profile" className="profile-avatar" />
               </div>
             )}
             {isDisplay ? (
@@ -241,7 +239,14 @@ const Profile = () => {
                 >
                   <FaLock /> Đổi Password
                 </button>
-                <PostButton onSubmit={handleChildParent} />
+                {profile.role === "2" ? (
+                  <>
+                    {" "}
+                    <PostButton onSubmit={handleChildParent} />
+                  </>
+                ) : (
+                  <></>
+                )}
               </div>
             </>
           ) : (
@@ -312,6 +317,7 @@ const Profile = () => {
           onSave={handleUpdateProfile}
         />
       )}
+      <ToastContainer style={{zIndex:'99999999999999999'}}/>
     </div>
   );
 };

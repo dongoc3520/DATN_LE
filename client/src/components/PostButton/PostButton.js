@@ -26,9 +26,10 @@ const PostButton = ({ onSubmit }) => {
     vrImage: null, // Thêm trường VR
     title: "",
     selectedTags: [],
+    address: "",
     price: 500000,
     area: 20,
-    type: "1",
+    type: "chungcu",
     district: "",
     ward: "",
   });
@@ -49,6 +50,7 @@ const PostButton = ({ onSubmit }) => {
       area,
       type,
       district,
+      address,
       ward,
     } = formData;
 
@@ -56,6 +58,7 @@ const PostButton = ({ onSubmit }) => {
     if (
       !images.length ||
       !vrImage ||
+      !address||
       !title.trim() ||
       (selectedTags.length === 0 && type === "3") ||
       ((selectedTags.length === 1 || selectedTags.length === 2) &&
@@ -167,9 +170,10 @@ const PostButton = ({ onSubmit }) => {
       selectedTags: [],
       price: 500000,
       area: 20,
-      type: "Phòng trọ",
+      type: "chungcu",
       district: "",
       ward: "",
+      address: "",
     });
     onSubmit();
     setShowModal(false);
@@ -374,9 +378,9 @@ const PostButton = ({ onSubmit }) => {
                       value={formData.type}
                       onChange={handleInputChange}
                     >
-                      <option value="1">Căn hộ</option>
-                      <option value="2">Chung cư mini</option>
-                      <option value="3">Ở ghép</option>
+                      <option value="canho">Căn hộ</option>
+                      <option value="chungcu">Chung cư mini</option>
+                      <option value="oghep">Ở ghép</option>
                     </select>
                   </div>
                 </>
@@ -432,6 +436,17 @@ const PostButton = ({ onSubmit }) => {
                           />
                         </div>
                       )}
+
+                      <div className="form-group" style={{fontSize:'20px',padding:'10px 0px'}}>
+
+                        <textarea
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          placeholder="Nhập địa chỉ cụ thể ex: số nhà/đường"
+                          rows="1" /* Đặt chiều cao mặc định */
+                        />
+                      </div>
                     </div>
 
                     {formData.type === "3" ? (

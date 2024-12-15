@@ -2,14 +2,14 @@ const userService = require("../services/userSevices");
 const { validationResult } = require("express-validator");
 //---------------------------------------------------------------
 export const userRegisterController = async (req, res) => {
-  const { name, userName, pass, age, rePass, role, work } = req.body;
+  const { name, userName, pass, age, rePass, role, work , gender,phone,email } = req.body;
   try {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    if (!name || !userName || !pass || !age || !rePass || !role || !work) {
+    if (!name || !userName || !pass || !age || !rePass || !role || !work || !gender || !phone || !email) {
       return res.status(400).json({
         errCode: 1,
         message: "Cần điền đủ thông tin",
@@ -67,7 +67,7 @@ export const userLogoutController = async (req, res) => {
 export const userchangePasswordController = async (req, res) => {
   const idUser = req.idUser;
 
-  const { oldPass, newPass , renewPass } = req.body;
+  const { oldPass, newPass, renewPass } = req.body;
   const body = {
     newPass,
     oldPass,

@@ -4,7 +4,9 @@ import Select from "react-select";
 
 import MPost from "../../components/mPost/mPost";
 import quancao from "../../img/websitept.png";
-import { useParams } from "react-router-dom";
+import quancao2 from "../../img/byLe.png";
+
+import { Link, useParams } from "react-router-dom";
 import { wardsData, data } from "../../data";
 
 const leaderboardData = [
@@ -124,10 +126,15 @@ function Home() {
   //   ],
   // };
   const [isView, setIsView] = useState(true);
+  const [isView2, setIsView2] = useState(true);
+
 
   const handleCancel = () => {
     setIsView(false);
   };
+   const handleCancel2 = () => {
+     setIsView2(false);
+   };
 
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
@@ -250,28 +257,6 @@ function Home() {
           <MPost />
         </div>
         <div className="homePage_body_goiy">
-          <div className="moigioi">Top 3 môi giới chuyên nghiệp</div>
-          <div className="leaderboard">
-            {leaderboardData.map((user, index) => (
-              <div className="leaderboard-item" key={index}>
-                <div className="leaderboard-rank">
-                  <i class="fa-solid fa-crown" style={{ color: "#a8c12b" }}></i>
-                </div>
-                <div className="leaderboard-user-info">
-                  <div className="leaderboard-user-img">
-                    <img src={user.image} alt={user.name} />
-                  </div>
-                  <div className="leaderboard-user-details">
-                    <div className="leaderboard-user-name">{user.name}</div>
-                    <div className="leaderboard-likes">
-                      {user.likes}{" "}
-                      <i class="fa-solid fa-heart" style={{ color: "red" }}></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
           <div className="moigioi">Xem theo khoảng giá</div>
           <div className="btn_choose">
             {options.map((option) => (
@@ -310,6 +295,7 @@ function Home() {
           </div>
         </div>
       </div>
+
       {isView ? (
         <>
           <div className="quangcao">
@@ -322,6 +308,99 @@ function Home() {
       ) : (
         <></>
       )}
+      {isView2 ? (
+        <>
+          <div className="quangcao2">
+            <div className="quangcao2_x" onClick={handleCancel2}>
+              <i class="fa-solid fa-xmark"></i>
+            </div>
+            <img src={quancao2} alt="Shenlik Tech Logo" />
+          </div>
+        </>
+      ) : (
+        <></>
+      )}
+      <div style={{ marginTop: "250px" }}>
+        {" "}
+        <section className="why-choose-us">
+          <h2>Tại sao lại chọn PhongTroByLeHUST.com?</h2>
+          <p>
+            Chúng tôi biết bạn có rất nhiều lựa chọn, nhưng PhongTroByLeHUST.com
+            tự hào là trang web đứng top google về các từ khóa:
+            <Link href="#"> cho thuê phòng trọ</Link>,{" "}
+            <Link href="#">nhà trọ</Link>,
+            <Link href="#"> thuê nhà nguyên căn</Link>,
+            <Link href="#"> cho thuê căn hộ</Link>,{" "}
+            <Link href="#">tìm người ở ghép</Link>,
+            <Link href="#"> cho thuê mặt bằng</Link>...
+          </p>
+
+          <div className="stats-container">
+            <div className="stat-item">
+              <h3>130.000+</h3>
+              <p>Chủ nhà & Môi giới</p>
+            </div>
+            <div className="stat-item">
+              <h3>200.000+</h3>
+              <p>Tin đăng</p>
+            </div>
+            <div className="stat-item">
+              <h3>1.000+</h3>
+              <p>Tin đăng/ngày</p>
+            </div>
+            <div className="stat-item">
+              <h3>3.000.000+</h3>
+              <p>Lượt xem/tháng</p>
+            </div>
+          </div>
+
+          <div className="certificates">
+            <h3>Chứng chỉ và thành tựu</h3>
+            <div className="certificate-container">
+              <img
+                src="https://th.bing.com/th/id/OIP.TN3vFwB9cyXqbCyFCyTyPQAAAA?rs=1&pid=ImgDetMain"
+                alt="Chứng chỉ 1"
+                className="certificate-image"
+              />
+              <img
+                src="https://th.bing.com/th/id/OIP.uYYsK7cjDLMJix47THczfAHaHk?rs=1&pid=ImgDetMain"
+                alt="Chứng chỉ 1"
+                className="certificate-image"
+              />
+              <img
+                src="https://is1-ssl.mzstatic.com/image/thumb/Purple113/v4/18/0f/a4/180fa4ec-cf57-ad63-d085-f04d2999ee12/source/512x512bb.jpg"
+                alt="Chứng chỉ 2"
+                className="certificate-image"
+              />
+              <img
+                src="https://mydhanush.com/wp-content/uploads/2023/12/Dhanush-By-Ashika-Group-Blogs-17.png"
+                alt="Chứng chỉ 3"
+                className="certificate-image"
+              />
+            </div>
+          </div>
+
+          <div className="testimonial">
+            <h3>Chi phí thấp, hiệu quả tối đa</h3>
+            <p>
+              Trước khi biết website phongtro123, mình phải tốn nhiều công sức
+              và chi phí cho việc đăng tin cho thuê: từ việc phát tờ rơi, dán
+              giấy, và đăng lên các website khác nhưng hiệu quả không cao. Từ
+              khi biết website PhongTroByLeHUST.com, mình đã thử đăng tin lên và
+              đánh giá hiệu quả khá cao trong khi chi phí khá thấp, không còn
+              tình trạng phòng trống kéo dài.
+            </p>
+            <p className="testimonial-author">
+              — Le (chủ hệ thống phòng trọ toàn quốc)
+            </p>
+          </div>
+
+          <div className="cta">
+            <h3>Bạn đang có phòng trọ / căn hộ cho thuê?</h3>
+            <p>Không phải lo tìm người cho thuê, phòng trống kéo dài</p>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

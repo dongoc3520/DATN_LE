@@ -1,11 +1,13 @@
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-const { Users, sequelize } = require("../models");
+const { Users, Criterias, sequelize } = require("../models");
 var jwt = require("jsonwebtoken");
 
 export const userRegisterService = (body) =>
   new Promise(async (reslove, reject) => {
     try {
+      console.log(body);
+      console.log(body.selectedTags.length);
       const checkUser = await Users.findOne({
         where: {
           userName: body.userName,
@@ -24,9 +26,20 @@ export const userRegisterService = (body) =>
           name: body.name,
           role: body.role,
           work: body.work,
+          phone: body.phone,
+          email: body.email,
+          gender: body.gender,
           age: body.age,
           avatar: "https://cdn-icons-png.flaticon.com/512/6681/6681221.png",
         });
+        if (body.selectedTags.length > 0) {
+          for (let index = 0; index < body.selectedTags.length; index++) {
+            await Criterias.create({
+              UserId: user.id,
+              name: body.selectedTags[index],
+            });
+          }
+        }
         reslove({
           errCode: 0,
           message: "Tạo tài khoản thành công",

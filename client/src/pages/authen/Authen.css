@@ -244,7 +244,22 @@ option {
 select#work {
     margin-bottom: 10px;
 }
+select#gender {
+    margin-bottom: 10px;
+}
 
 select#role {
     margin-bottom: 10px;
+}
+.tag-option_ {
+    /* background-color: #f0f0f0; */
+    border: 1px solid #000000;
+    padding: 8px 12px;
+    border-radius: 15px;
+    margin: 5px;
+    width: 140px;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+    color: #9f9e9e;
 }

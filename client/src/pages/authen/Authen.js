@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import "./Authen.css";
 import axios from "axios";
 import { setCookie } from "../../Cookie";
@@ -6,6 +7,17 @@ import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function Authen() {
+  const availableTags = [
+    "Yên lặng",
+    "Tấp nập",
+    "Kỷ luật",
+    "Buông thả",
+    "Nấu ăn",
+    "Ăn nhanh",
+    "Thức khuya",
+    "Ngủ sớm",
+    "Nuôi pet",
+  ];
   const [lg, setLg] = useState({
     userName: "",
     pass: "",
@@ -16,10 +28,35 @@ function Authen() {
     pass: "",
     age: "",
     rePass: "",
-    role: "1",
-    work: "1",
+    role: "2",
+    work: "kithuat",
+    selectedTags: [],
+    phone: "",
+    email: "",
+    gender: "nam",
   });
+  // eslint-disable-next-line no-unused-vars
+  const [isV, setIsV] = useState(true);
   const [chLogin, setchLogin] = useState(true);
+  const handleTagClick = (tag) => {
+    // Nếu đã đủ 3 thẻ thì không cho thêm
+    if (reg.selectedTags.length >= 3) return;
+
+    // Kiểm tra nếu thẻ chưa tồn tại thì thêm vào
+    if (!reg.selectedTags.includes(tag)) {
+      setReg({
+        ...reg,
+        selectedTags: [...reg.selectedTags, tag],
+      });
+    }
+  };
+
+  const handleRemoveTag = (tag) => {
+    setReg({
+      ...reg,
+      selectedTags: reg.selectedTags.filter((item) => item !== tag),
+    });
+  };
   const handleLogin = () => {
     if (!lg.userName || !lg.pass) {
       alert("Cần điền đủ thông tin");
@@ -38,7 +75,8 @@ function Authen() {
           toast.success(response.data.message);
           setCookie("token", response.data.token, 30);
           setCookie("idUser", response.data.idUser, 30);
-          window.location.reload();
+          // window.location.reload();
+          window.location.href = "/1";
         } else {
           toast.warning(response.data.message);
         }
@@ -50,6 +88,7 @@ function Authen() {
     console.log(lg);
   };
   const handleRegister = () => {
+    console.log(reg);
     if (reg.rePass !== reg.pass) {
       setReg({
         name: "",
@@ -57,8 +96,12 @@ function Authen() {
         pass: "",
         age: "",
         rePass: "",
-        role: "1",
-        work: "1",
+        role: "2",
+        work: "kithuat",
+        phone: "",
+        email: "",
+        gender: "nam",
+        selectedTags: [],
       });
       alert("Mật khẩu không khớp");
     } else if (
@@ -66,11 +109,17 @@ function Authen() {
       !reg.userName ||
       !reg.pass ||
       !reg.rePass ||
-      !reg.age
+      !reg.age ||
+      !reg.gender
     ) {
       alert("Cần nhập đủ thông tin");
+      return;
+    } else if (reg.selectedTags.length < 3 && reg.role === "1") {
+      alert("Cần nhập đủ thông tin");
+      return;
     } else if (reg.pass.length < 6) {
       alert("Password phải có ít nhất 6 phần tử");
+      return;
     } else if (reg.userName.length < 6) {
       alert("userName phải có ít nhất 6 phần tử");
     } else {
@@ -86,8 +135,12 @@ function Authen() {
               pass: "",
               age: "",
               rePass: "",
-              role: "1",
-              work: "1",
+              role: "2",
+              work: "kithuat",
+              phone: "",
+              email: "",
+              gender: "nam",
+              selectedTags: [],
             });
             toast.success("Đăng ký thành công!");
           }
@@ -108,6 +161,10 @@ function Authen() {
     }
     if (name === "age" && !/^\d*$/.test(value)) {
       alert("Tuổi chỉ có thể là số");
+      return; // Không cập nhật trạng thái nếu không phải số
+    }
+    if (name === "phone" && !/^\d*$/.test(value)) {
+      alert("Số điện thoại chỉ có thể là số");
       return; // Không cập nhật trạng thái nếu không phải số
     }
     setReg((prevState) => ({
@@ -159,7 +216,10 @@ function Authen() {
         </>
       ) : (
         <>
-          <div class="login">
+          <div
+            class="login"
+            style={{ top: "20%", width: "460px", left: "45%" }}
+          >
             <h1 style={{ paddingBottom: "20px" }}>Đăng Ký</h1>
 
             <div>
@@ -192,6 +252,24 @@ function Authen() {
               />
               <input
                 className="input_au"
+                type="text"
+                name="email"
+                placeholder="Email"
+                required="required"
+                value={reg.email}
+                onChange={handleChange}
+              />
+              <input
+                className="input_au"
+                type="text"
+                name="phone"
+                placeholder="Phone"
+                required="required"
+                value={reg.phone}
+                onChange={handleChange}
+              />
+              <input
+                className="input_au"
                 type="password"
                 name="pass"
                 placeholder="Mật khẩu"
@@ -208,17 +286,28 @@ function Authen() {
                 value={reg.rePass}
                 onChange={handleChange}
               />
-              <div>
+              <div style={{ display: "flex", gap: "16px" }}>
                 {/* <label style = {{color : '#ddd'}} for="cars">Bạn đang là</label> */}
                 <select
                   name="work"
                   id="work"
                   value={reg.work}
                   onChange={handleChange}
+                  style={{ maxWidth: "100%" }}
                 >
-                  <option value="1">Sinh Viên</option>
-                  <option value="2">Nhân viên kỹ thuật</option>
-                  <option value="3">Nhân viên văn phòng</option>
+                  <option value="sinhvien">Sinh Viên</option>
+                  <option value="kithuat">Nhân viên kỹ thuật</option>
+                  <option value="vanphong">Nhân viên văn phòng</option>
+                </select>
+                <select
+                  name="gender"
+                  id="gender"
+                  value={reg.gender}
+                  onChange={handleChange}
+                  style={{ maxWidth: "100%" }}
+                >
+                  <option value="nam">Nam</option>
+                  <option value="nu">Nữ</option>
                 </select>
               </div>
               <div>
@@ -228,13 +317,64 @@ function Authen() {
                   id="role"
                   value={reg.role}
                   onChange={handleChange}
+                  style={{ maxWidth: "100%" }}
                 >
                   <option value="1">Người thuê</option>
                   <option value="2">Chủ cho thuê</option>
                 </select>
               </div>
+              {reg.role === "1" ? (
+                <div className="sub_tag">
+                  {/* Hiển thị các tag đã chọn */}
+                  <div
+                    className="selected-tags"
+                    style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
+                  >
+                    {reg.selectedTags.map((tag, index) => (
+                      <div key={index} className="tag">
+                        {tag}
+                        <button
+                          className="remove-tag"
+                          onClick={() => handleRemoveTag(tag)}
+                        >
+                          ✖
+                        </button>
+                      </div>
+                    ))}
+                  </div>
 
-              <button className="btnLogin" onClick={handleRegister}>
+                  {/* Danh sách các tag có sẵn */}
+                  <div className="available-tags">
+                    {availableTags.map((tag, index) => (
+                      <div
+                        key={index}
+                        className={`tag-option ${
+                          reg.selectedTags.includes(tag) ? "tag-selected" : ""
+                        }`}
+                        style={{
+                          backgroundColor: "#374c6f",
+                          textAlign: "center",
+                        }}
+                        onClick={() => handleTagClick(tag)}
+                      >
+                        {tag}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Hiển thị cảnh báo nếu đạt giới hạn */}
+                  {reg.selectedTags.length < 3 && (
+                    <p className="warning">Bạn chọn 3 sở thích.</p>
+                  )}
+                </div>
+              ) : (
+                <></>
+              )}
+              <button
+                className="btnLogin"
+                onClick={handleRegister}
+                style={{ marginTop: "10px" }}
+              >
                 Đăng ký
               </button>
               <div onClick={handleState} className="registerNow">

@@ -20,6 +20,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    Address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     Area: {
       type: DataTypes.INTEGER,
       allowNull: false,

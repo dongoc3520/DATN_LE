@@ -1,7 +1,7 @@
 // src/components/Footer.js
 import React from "react";
 import "./Footer.css";
-
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="footer">
@@ -24,27 +24,27 @@ const Footer = () => {
         <div className="footer-section">
           <h4>Kết nối với chúng tôi</h4>
           <div className="social-links">
-            <a
+            <Link
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
             >
               <i className="fa fa-facebook"></i> Facebook
-            </a>
-            <a
+            </Link>
+            <Link
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
             >
               <i className="fa fa-twitter"></i> Twitter
-            </a>
-            <a
+            </Link>
+            <Link
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
             >
               <i className="fa fa-instagram"></i> Instagram
-            </a>
+            </Link>
           </div>
         </div>
       </div>

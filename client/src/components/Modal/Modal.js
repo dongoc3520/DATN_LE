@@ -60,6 +60,7 @@ const Modal = ({ type, onClose, profile, onSave }) => {
         onSave();
       }
     } else if (type === "username") {
+      console.log(username);
       if (username.newUsername.length < 6) {
         toast.warning("Username cần ít nhất 6 phần tử");
         return;
@@ -76,10 +77,12 @@ const Modal = ({ type, onClose, profile, onSave }) => {
             withCredentials: true,
           })
           .then((res) => {
+            console.log(res);
             if (res.data.errCode === 0) {
               toast.success("Đổi tên đăng nhập thành công!");
               onSave();
             } else if (res.data.errCode === 1) {
+              console.log("hehe");
               toast.error(res.data.message);
             }
           })

@@ -9,13 +9,14 @@ export const createPostController = async (req, res) => {
     area,
     images,
     vrImage,
+    address,
     selectedTags,
     type,
   } = req.body;
   const body = {
     id: req.idUser,
     title: title,
-    // address: address,
+     address: address,
     district: district,
     ward:ward,
     price: price,

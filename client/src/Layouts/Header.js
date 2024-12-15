@@ -5,6 +5,7 @@ import { getCookie } from "../Cookie";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { deleteAllCookies } from "../Cookie";
 const idUser = getCookie("idUser");
 function Header({ onReload }) {
   // const { id } = useParams();
@@ -13,7 +14,6 @@ function Header({ onReload }) {
   const personRef = useRef(null); // Sử dụng ref để tham chiếu tới thẻ .Person
   const linkBoxRef = useRef(null); // Sử dụng ref để tham chiếu tới thẻ .linkBox
   const handleProfileClick = () => {
-   
     navigate(`/profile/${idUser}`, { replace: true });
     if (onReload) {
       onReload(); // Gọi hàm reload từ parent component.
@@ -23,7 +23,10 @@ function Header({ onReload }) {
   const toggleLinkBox = () => {
     setShowLinkBox(!showLinkBox);
   };
-
+  const logout = () => {
+    deleteAllCookies();
+    window.location.reload();
+  };
   // Hàm đóng box khi nhấn ra ngoài
   const handleClickOutside = (event) => {
     if (
@@ -46,9 +49,9 @@ function Header({ onReload }) {
   return (
     <>
       <header>
-        <a href="" class="logo">
+        <Link href="" class="logo">
           <img src={logoImage} alt="Shenlik Tech Logo" />
-        </a>
+        </Link>
         <input className="searchPT" placeholder="" />
         <ul class="navbarr">
           <Link to="/1" className="nav-link">
@@ -69,18 +72,16 @@ function Header({ onReload }) {
               alt="Person"
             />
             {showLinkBox && (
-              <div className="linkBox" >
+              <div className="linkBox">
                 <div onClick={handleProfileClick}>
                   {/* <Link to={`/profile/${idUser}`} className=""> */}
                   <i class="fa-solid fa-user"></i>
                   Trang cá nhân
                   {/* </Link> */}
                 </div>
-                <div>
-                  <Link to="" className="">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                    Đăng xuất
-                  </Link>
+                <div onClick={logout}>
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                  Đăng xuất
                 </div>
               </div>
             )}
