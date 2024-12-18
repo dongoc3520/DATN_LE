@@ -14,6 +14,7 @@ export const createPostService = (body) =>
         District: body.district,
         Ward: body.ward,
         Type: body.type,
+        Gender: body.gender,
       });
       // const post = await Posts.findOne({
       //   where: { id: newpost.id, UserId: newpost.UserId },
@@ -32,7 +33,7 @@ export const createPostService = (body) =>
           type: "1",
         });
       }
-      if (body.type === "3") {
+      if (body.type === "oghep") {
         for (let index = 0; index < body.selectedTags.length; index++) {
           await Interests.create({
             PostId: idPost,

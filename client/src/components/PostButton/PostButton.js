@@ -32,6 +32,7 @@ const PostButton = ({ onSubmit }) => {
     type: "chungcu",
     district: "",
     ward: "",
+    gender: "nam",
   });
   const updateField = (field, value) => {
     setFormData((prev) => ({
@@ -52,17 +53,18 @@ const PostButton = ({ onSubmit }) => {
       district,
       address,
       ward,
+      gender,
     } = formData;
 
     // Kiểm tra xem các trường đã có giá trị chưa
     if (
       !images.length ||
       !vrImage ||
-      !address||
+      !address ||
       !title.trim() ||
-      (selectedTags.length === 0 && type === "3") ||
+      (selectedTags.length === 0 && type === "oghep") ||
       ((selectedTags.length === 1 || selectedTags.length === 2) &&
-        type === "3") ||
+        type === "oghep") ||
       !price ||
       !area ||
       !type.trim() ||
@@ -174,6 +176,7 @@ const PostButton = ({ onSubmit }) => {
       district: "",
       ward: "",
       address: "",
+      gender: "nam",
     });
     onSubmit();
     setShowModal(false);
@@ -437,10 +440,13 @@ const PostButton = ({ onSubmit }) => {
                         </div>
                       )}
 
-                      <div className="form-group" style={{fontSize:'20px',padding:'10px 0px'}}>
-
+                      <div
+                        className="form-group"
+                        style={{ fontSize: "20px", padding: "10px 0px" }}
+                      >
                         <textarea
                           name="address"
+                          style={{ fontSize: "16px", textAlign: "center" }}
                           value={formData.address}
                           onChange={handleInputChange}
                           placeholder="Nhập địa chỉ cụ thể ex: số nhà/đường"
@@ -449,8 +455,23 @@ const PostButton = ({ onSubmit }) => {
                       </div>
                     </div>
 
-                    {formData.type === "3" ? (
+                    {formData.type === "oghep" ? (
                       <>
+                        <div className="form-group">
+                          <select
+                            name="gender"
+                            value={formData.gender}
+                            onChange={handleInputChange}
+                            style={{
+                              width: "100%",
+                              maxWidth: "100%",
+                              fontSize: "18px",
+                            }}
+                          >
+                            <option value="nam">Nam</option>
+                            <option value="nu">Nữ</option>
+                          </select>
+                        </div>
                         {/* Hiển thị các tag đã chọn */}
                         <div className="selected-tags">
                           {formData.selectedTags.map((tag, index) => (
@@ -531,7 +552,7 @@ const PostButton = ({ onSubmit }) => {
           </div>
         </div>
       )}
-      <ToastContainer style={{ zIndex: "99999999999" }} />
+      {/* <ToastContainer style={{ zIndex: "99999999999" }} /> */}
     </>
   );
 };

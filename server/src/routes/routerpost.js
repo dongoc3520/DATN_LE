@@ -6,7 +6,7 @@ const { Posts, Users, Images } = require("../models");
 
 // api lấy tất cả bài viết của khách ( người mình xem )
 postRouter.get("/posts/getbyuserid", async (req, res) => {
-    // console.log(req.query);
+  // console.log(req.query);
   const { page, limit, id } = req.query;
   const iduser = parseInt(id);
   const options = {
@@ -23,8 +23,8 @@ postRouter.get("/posts/getbyuserid", async (req, res) => {
     },
   };
 
-//   const { docs, pages, total } = await Posts.paginate(options);
-  
+  //   const { docs, pages, total } = await Posts.paginate(options);
+
   try {
     const { docs, pages, total } = await Posts.paginate(options);
 
@@ -54,23 +54,55 @@ postRouter.get("/posts/getbyuserid", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-// //api lấy ra bài viết dựa vào id bài viết
+// api lấy ra bài viết dựa vào id bài viết
 postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
+
+//api lấy ra bài viết của mọi người theo cách bình thường, ứng với căn hộ và chung cư mini
+postRouter.get("/posts/home", async (req, res) => {
+  const { page, limit, id } = req.query;
+
+  // Map id to Type
+  const typeMap = {
+    1: "canho",
+    2: "chungcu",
+    3: "oghep",
+  };
+
+  const options = {
+    page: parseInt(page, 10) || 1, // Trang hiện tại
+    paginate: parseInt(limit, 10) || 5, // Số bài viết mỗi trang
+    order: [["createdAt", "DESC"]], // Sắp xếp giảm dần theo createdAt
+    where: {},
+    include: {
+      model: Users,
+      as: "user",
+      attributes: ["id", "avatar", "username", "name"], // Lấy thông tin người dùng
+    },
+  };
+
+  // Thêm điều kiện lọc Type dựa vào id
+  if (id && typeMap[id]) {
+    options.where.Type = typeMap[id];
+  }
+
+  try {
+    const { docs, pages, total } = await Posts.paginate(options);
+
+    res.json({
+      posts: docs,
+      currentPage: options.page,
+      totalPages: pages,
+      totalPosts: total,
+    });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 //api tạo bài viết mới
 postRouter.post("/", middlewareLogin, postController.createPostController);
-
-
-
-
-
-
-
-
-
-
-
-
 
 // //api lấy tất cả bài viết của tất cả mọi người load ra trang chủ
 // postRouter.get("/posts/home", async (req, res) => {
@@ -96,7 +128,6 @@ postRouter.post("/", middlewareLogin, postController.createPostController);
 //     totalPosts: total,
 //   });
 // });
-
 
 // //api lấy tất cả bài viết của người dùng
 // postRouter.get("/posts", middlewareLogin, async (req, res) => {
@@ -148,7 +179,7 @@ postRouter.post("/", middlewareLogin, postController.createPostController);
 //api tạo bài viết mới
 // postRouter.post("/", middlewareLogin, postController.createPostController);
 
-//api lấy profile 
+//api lấy profile
 // postRouter.post("/", middlewareLogin, postController.createPostController);
 
 module.exports = postRouter;

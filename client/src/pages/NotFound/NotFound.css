@@ -1,0 +1,27 @@
+.notfound{
+    position: relative;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: rgb(26, 66, 88);
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    color: bisque;
+}
+
+.btnHome{
+    padding: 10px;
+    margin-left: 50px;
+    background: rgb(255, 251, 251);
+    color: rgb(26, 66, 88);
+    cursor: pointer;
+    border-radius: 20px;
+}
+.btnHome:hover{
+    padding: 12px 10px;
+    background-color: rgb(167, 166, 165);
+}

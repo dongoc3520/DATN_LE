@@ -6,8 +6,8 @@ var jwt = require("jsonwebtoken");
 export const userRegisterService = (body) =>
   new Promise(async (reslove, reject) => {
     try {
-      console.log(body);
-      console.log(body.selectedTags.length);
+      // console.log(body);
+      // console.log(body.selectedTags.length);
       const checkUser = await Users.findOne({
         where: {
           userName: body.userName,

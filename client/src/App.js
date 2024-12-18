@@ -5,6 +5,7 @@ import { publicRoutes } from "./routes/routes";
 import DefaultLayout from "./Layouts/DefaultLayout";
 import { getCookie } from "./Cookie";
 import Authen from "./pages/authen/Authen";
+import NotFound from "./pages/NotFound/NotFound";
 
 const token = getCookie("token");
 
@@ -35,7 +36,9 @@ function App() {
                   />
                 );
               })}
+              <Route path="*" element={<NotFound />} />,
             </Routes>
+            {/* <Route path="*" element={<NotFound />} />, */}
           </>
         ) : (
           <>

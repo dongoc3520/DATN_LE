@@ -1,13 +1,14 @@
 import "./Home.css";
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-
+import axios from "axios";
 import MPost from "../../components/mPost/mPost";
 import quancao from "../../img/websitept.png";
 import quancao2 from "../../img/byLe.png";
 
 import { Link, useParams } from "react-router-dom";
 import { wardsData, data } from "../../data";
+import { url } from "../../url";
 
 const leaderboardData = [
   {
@@ -31,6 +32,10 @@ const leaderboardData = [
 ];
 
 function Home() {
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [mData, setMData] = useState({
     district: "",
     ward: "",
@@ -128,13 +133,12 @@ function Home() {
   const [isView, setIsView] = useState(true);
   const [isView2, setIsView2] = useState(true);
 
-
   const handleCancel = () => {
     setIsView(false);
   };
-   const handleCancel2 = () => {
-     setIsView2(false);
-   };
+  const handleCancel2 = () => {
+    setIsView2(false);
+  };
 
   const [selectedDistrict, setSelectedDistrict] = useState(null);
   const [selectedWard, setSelectedWard] = useState(null);
@@ -166,6 +170,29 @@ function Home() {
   const handleAreaChange = (selectedOption) => {
     setSelectedArea(selectedOption);
     handleSetData("area", selectedOption.value);
+  };
+
+  const fetchPosts = async (page, id) => {
+    // setLoading(true);
+    try {
+      const response = await axios.get(`${url}/post/posts/home`, {
+        params: {
+          page: page || 1, // Số trang
+          limit: 5, // Số bài viết mỗi trang
+          id: 3, // Giá trị id (1, 2 hoặc 3)
+        },
+      });
+
+      const { posts, currentPage, totalPages } = response.data;
+      console.log("post is", posts);
+      setPosts(posts);
+      setCurrentPage(currentPage);
+      setTotalPages(totalPages);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -379,6 +406,7 @@ function Home() {
               />
             </div>
           </div>
+          <button onClick={fetchPosts}>NGOCDO</button>
 
           <div className="testimonial">
             <h3>Chi phí thấp, hiệu quả tối đa</h3>

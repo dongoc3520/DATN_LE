@@ -12,19 +12,21 @@ export const createPostController = async (req, res) => {
     address,
     selectedTags,
     type,
+    gender,
   } = req.body;
   const body = {
     id: req.idUser,
     title: title,
-     address: address,
+    address: address,
     district: district,
-    ward:ward,
+    ward: ward,
     price: price,
     area: area,
     images: images,
     vrImage: vrImage,
     selectedTags: selectedTags,
     type: type,
+    gender: gender,
   };
   // console.log("body",body);
   try {
