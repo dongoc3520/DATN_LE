@@ -3,6 +3,8 @@ const postRouter = express.Router();
 const postController = require("../controllers/postController");
 const { middlewareLogin } = require("../middware/middwareLogin");
 const { Posts, Users, Images } = require("../models");
+const { Sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 
 // api lấy tất cả bài viết của khách ( người mình xem )
 postRouter.get("/posts/getbyuserid", async (req, res) => {
@@ -58,8 +60,76 @@ postRouter.get("/posts/getbyuserid", async (req, res) => {
 postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
 
 //api lấy ra bài viết của mọi người theo cách bình thường, ứng với căn hộ và chung cư mini
+// postRouter.get("/posts/home", async (req, res) => {
+//   const { page, limit, id } = req.query;
+
+//   // Map id to Type
+//   const typeMap = {
+//     1: "canho",
+//     2: "chungcu",
+//     3: "oghep",
+//   };
+
+//   const options = {
+//     page: parseInt(page, 10) || 1, // Trang hiện tại
+//     paginate: parseInt(limit, 10) || 5, // Số bài viết mỗi trang
+//     order: [["createdAt", "DESC"]], // Sắp xếp giảm dần theo createdAt
+//     where: {},
+//     include: {
+//       model: Users,
+//       as: "user",
+//       attributes: ["id", "avatar", "username", "name"], // Lấy thông tin người dùng
+//     },
+//   };
+
+//   // Thêm điều kiện lọc Type dựa vào id
+//   if (id && typeMap[id]) {
+//     options.where.Type = typeMap[id];
+//   }
+
+//   try {
+//     const { docs, pages, total } = await Posts.paginate(options);
+//     const postsWithImage = await Promise.all(
+//       docs.map(async (post) => {
+//         const image = await Images.findOne({
+//           where: { PostId: post.id }, // Điều kiện lấy ảnh
+//           attributes: ["url"], // Lấy cột "url" (hoặc các cột cần thiết)
+//         });
+
+//         return {
+//           ...post.toJSON(), // Chuyển bài viết sang JSON
+//           image: image ? image.url : null, // Gắn ảnh vào bài viết
+//         };
+//       })
+//     );
+//     res.json({
+//       posts: postsWithImage,
+//       currentPage: options.page,
+//       totalPages: pages,
+//       totalPosts: total,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching posts:", error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 postRouter.get("/posts/home", async (req, res) => {
-  const { page, limit, id } = req.query;
+  const {
+    page,
+    limit,
+    id,
+    district,
+    ward,
+    minPrice,
+    maxPrice,
+    minArea,
+    maxArea,
+  } = req.query;
+  // console.log(req.query);
+  // console.log(limit);
+  // console.log(id);
+  // console.log(district);
+  // console.log(ward);
 
   // Map id to Type
   const typeMap = {
@@ -72,7 +142,7 @@ postRouter.get("/posts/home", async (req, res) => {
     page: parseInt(page, 10) || 1, // Trang hiện tại
     paginate: parseInt(limit, 10) || 5, // Số bài viết mỗi trang
     order: [["createdAt", "DESC"]], // Sắp xếp giảm dần theo createdAt
-    where: {},
+    where: {}, // Điều kiện lọc bài viết
     include: {
       model: Users,
       as: "user",
@@ -80,16 +150,62 @@ postRouter.get("/posts/home", async (req, res) => {
     },
   };
 
-  // Thêm điều kiện lọc Type dựa vào id
+  // Lọc theo loại bài viết dựa vào id
   if (id && typeMap[id]) {
     options.where.Type = typeMap[id];
   }
 
-  try {
-    const { docs, pages, total } = await Posts.paginate(options);
+  // Lọc theo địa chỉ huyện (district) nếu tồn tại
+  if (district) {
+    options.where.District = district;
+  }
 
+  // Lọc theo địa chỉ xã (ward) nếu tồn tại
+  if (ward) {
+    options.where.Ward = ward;
+  }
+
+  // Lọc theo khoảng giá (minPrice và maxPrice) nếu ít nhất một tồn tại
+  if (minPrice || maxPrice) {
+    options.where.Price = {
+      [Op.and]: [
+        minPrice ? { [Op.gte]: parseInt(minPrice) } : {},
+        maxPrice ? { [Op.lte]: parseInt(maxPrice) } : {},
+      ],
+    };
+  }
+
+  if (minArea || maxArea) {
+    options.where.Area = {
+      [Op.and]: [
+        minArea ? { [Op.gte]: parseInt(minArea) } : {},
+        maxArea ? { [Op.lte]: parseInt(maxArea) } : {},
+      ],
+    };
+  }
+
+  try {
+    // Lấy bài viết từ cơ sở dữ liệu
+    const { docs, pages, total } = await Posts.paginate(options);
+    // console.log("doc is", docs);
+    // Gắn thêm ảnh vào bài viết
+    const postsWithImage = await Promise.all(
+      docs.map(async (post) => {
+        const image = await Images.findOne({
+          where: { PostId: post.id },
+          attributes: ["url"],
+        });
+
+        return {
+          ...post.toJSON(),
+          image: image ? image.url : null,
+        };
+      })
+    );
+
+    // Trả dữ liệu về client
     res.json({
-      posts: docs,
+      posts: postsWithImage,
       currentPage: options.page,
       totalPages: pages,
       totalPosts: total,
@@ -99,7 +215,6 @@ postRouter.get("/posts/home", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 //api tạo bài viết mới
 postRouter.post("/", middlewareLogin, postController.createPostController);

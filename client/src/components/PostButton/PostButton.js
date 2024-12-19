@@ -350,7 +350,7 @@ const PostButton = ({ onSubmit }) => {
                       type="range"
                       name="price"
                       min="1000000"
-                      max="5000000"
+                      max="10000000"
                       step="100000"
                       value={formData.price}
                       onChange={handleInputChange}

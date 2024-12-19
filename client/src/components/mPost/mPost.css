@@ -11,7 +11,12 @@
     /* overflow: hidden; */
     /* Đảm bảo không bị tràn */
     margin: 10px 0;
+    /* transition: all 0.1s ease; */
     /* Khoảng cách giữa các post */
+}
+.homePage_post:hover{
+    background-color: #e5e5e5;
+    /* padding: 2px 0px; */
 }
 
 /* Hình ảnh của bài đăng */
@@ -50,6 +55,9 @@
     /* text-overflow: ellipsis; */
     /* overflow: hidden; */
     white-space: nowrap;
+}
+.homePage_post_title:hover{
+    color: #1c5db7;
 }
 
 /* Giá bài đăng */

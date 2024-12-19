@@ -282,10 +282,10 @@ const PostPage = () => {
               <i class="fa-solid fa-user"></i>Người đăng: {user.name}
             </p>
             <p>
-              <i class="fa-solid fa-phone"></i>Số điện thoại:
+              <i class="fa-solid fa-phone"></i>Điện thoại: {user.phone}
             </p>
             <p>
-              <i class="fa-solid fa-envelope"></i>Email:
+              <i class="fa-solid fa-envelope"></i>Email: {user.email}
             </p>
           </div>
         </div>

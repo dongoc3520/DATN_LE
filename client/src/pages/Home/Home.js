@@ -6,9 +6,11 @@ import MPost from "../../components/mPost/mPost";
 import quancao from "../../img/websitept.png";
 import quancao2 from "../../img/byLe.png";
 
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { wardsData, data } from "../../data";
 import { url } from "../../url";
+
+const ValidIds = ["1", "2", "3"];
 
 const leaderboardData = [
   {
@@ -32,10 +34,23 @@ const leaderboardData = [
 ];
 
 function Home() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [reload, setReload] = useState(true);
   const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [myData, setMyData] = useState({
+    page: "1",
+
+    district: "",
+    ward: "",
+    minPrice: "",
+    maxPrice: "",
+    minArea: "",
+    maxArea: "",
+  });
   const [mData, setMData] = useState({
     district: "",
     ward: "",
@@ -47,7 +62,20 @@ function Home() {
       alert("Vui lòng nhập đủ dữ kiện trước khi tìm");
       return;
     }
-    console.log(mData);
+    const [mminPrice, mmaxPrice] = mData.price.split("-").map(Number);
+    const [mminArea, mmaxArea] = mData.area.split("-").map(Number);
+    setMyData({
+      ...myData,
+      page: "1",
+      minPrice: mminPrice,
+      maxPrice: mmaxPrice,
+      minArea: mminArea,
+      maxArea: mmaxArea,
+      district: mData.district,
+      ward: mData.ward,
+    });
+    setReload(!reload);
+    console.log(myData);
   };
   const handleSetData = (field, value) => {
     setMData((prevState) => ({
@@ -55,7 +83,7 @@ function Home() {
       [field]: value,
     }));
   };
-  const { id } = useParams();
+
   const options = [
     { id: 1, label: "Dưới 2 triệu", value: "under-2m" },
     { id: 2, label: "2 - 3 triệu", value: "2-3m" },
@@ -74,10 +102,12 @@ function Home() {
     {
       label: "Khoảng giá",
       options: [
-        { value: "1-5", label: "Dưới 5 triệu" },
-        { value: "5-10", label: "5 - 10 triệu" },
-        { value: "10-15", label: "10 - 15 triệu" },
-        { value: "15-20", label: "15 - 20 triệu" },
+        { value: "0-1000000", label: "Dưới 1 triệu" },
+        { value: "1000000-2000000", label: "1 - 2 triệu" },
+        { value: "2000000-3000000", label: "2 - 3 triệu" },
+        { value: "3000000-4000000", label: "3 - 4 triệu" },
+        { value: "4000000-5000000", label: "4 - 5 triệu" },
+        { value: "5000000-10000000", label: "Trên 5 triệu" },
       ],
     },
   ];
@@ -85,10 +115,10 @@ function Home() {
     {
       label: "Diện tích",
       options: [
-        { value: "10-50", label: "Dưới 50 m²" },
-        { value: "50-100", label: "50 - 100 m²" },
-        { value: "100-150", label: "100 - 150 m²" },
-        { value: "150-200", label: "150 - 200 m²" },
+        { value: "0-35", label: "Dưới 35 m²" },
+        { value: "35-50", label: "35 - 50 m²" },
+        { value: "50-70", label: "50 - 70 m²" },
+        { value: "70-100", label: "70 - 100 m²" },
       ],
     },
   ];
@@ -171,15 +201,45 @@ function Home() {
     setSelectedArea(selectedOption);
     handleSetData("area", selectedOption.value);
   };
+  const handleToPage = (mId) => {
+    navigate(`/post/${mId}`, { replace: true });
+  };
 
-  const fetchPosts = async (page, id) => {
-    // setLoading(true);
+  // const fetchPosts = async (page, id) => {
+  //   // setLoading(true);
+  //   try {
+  //     const response = await axios.get(`${url}/post/posts/home`, {
+  //       params: {
+  //         page: page || 1, // Số trang
+  //         limit: 5, // Số bài viết mỗi trang
+  //         id: id, // Giá trị id (1, 2 hoặc 3)
+  //       },
+  //     });
+
+  //     const { posts, currentPage, totalPages } = response.data;
+  //     console.log("post is", posts);
+  //     setPosts(posts);
+  //     setCurrentPage(currentPage);
+  //     setTotalPages(totalPages);
+  //   } catch (error) {
+  //     console.error("Error fetching posts:", error);
+  //   } finally {
+  //     // setLoading(false);
+  //   }
+  // };
+  const fetchPosts = async (mpost) => {
     try {
       const response = await axios.get(`${url}/post/posts/home`, {
         params: {
-          page: page || 1, // Số trang
+          page: mpost.page || 1, // Số trang
           limit: 5, // Số bài viết mỗi trang
-          id: 3, // Giá trị id (1, 2 hoặc 3)
+          id: id, // Giá trị id (1, 2 hoặc 3)
+          district: mpost.district, // Địa chỉ huyện
+          ward: mpost.ward, // Địa chỉ xã
+          minPrice: mpost.minPrice, // Giá trị minPrice (nếu có)
+          maxPrice: mpost.maxPrice, // Giá trị maxPrice (nếu có)
+          minArea: mpost.minArea, // Diện tích minArea (nếu có)
+          maxArea: mpost.maxArea, // Diện tích maxArea (nếu có)
         },
       });
 
@@ -190,11 +250,26 @@ function Home() {
       setTotalPages(totalPages);
     } catch (error) {
       console.error("Error fetching posts:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (!ValidIds.includes(id)) {
+      navigate("/1", { replace: true });
+      return;
+    }
+    console.log(myData);
+    fetchPosts(myData);
+    setMyData({
+      page: "1",
+      district: "",
+      ward: "",
+      minPrice: "",
+      maxPrice: "",
+      minArea: "",
+      maxArea: "",
+    });
+  }, [id, navigate, reload]);
   return (
     <div className="homePage">
       <div className="homePage_search">
@@ -274,14 +349,17 @@ function Home() {
 
       <div className="homePage_body">
         <div className="homePage_body_content">
-          <MPost />
-          <MPost />
-          <MPost />
-          <MPost />
-          <MPost />
-          <MPost />
-          <MPost />
-          <MPost />
+          {posts.map((post) => (
+            <div
+              onClick={() => {
+                handleToPage(post.id);
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              <MPost key={post.id} post={post} />
+            </div>
+            // <MPost />
+          ))}
         </div>
         <div className="homePage_body_goiy">
           <div className="moigioi">Xem theo khoảng giá</div>
@@ -406,7 +484,7 @@ function Home() {
               />
             </div>
           </div>
-          <button onClick={fetchPosts}>NGOCDO</button>
+          {/* <button onClick={fetchPosts}>NGOCDO</button> */}
 
           <div className="testimonial">
             <h3>Chi phí thấp, hiệu quả tối đa</h3>

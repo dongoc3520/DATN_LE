@@ -16,13 +16,7 @@ export const createPostService = (body) =>
         Type: body.type,
         Gender: body.gender,
       });
-      // const post = await Posts.findOne({
-      //   where: { id: newpost.id, UserId: newpost.UserId },
-      //   include: {
-      //     model: Users,
-      //     as: "user",
-      //   },
-      // });
+     
       const idPost = newpost.id;
 
       for (let index = 0; index < body.images.length; index++) {
@@ -68,7 +62,7 @@ export const getPostsByidpostService = (id) =>
           {
             model: Users,
             as: "user",
-            attributes: ["id", "avatar", "name"],
+            attributes: ["id", "avatar", "name","phone","email"],
           },
         ],
         order: [["createdAt", "DESC"]],
