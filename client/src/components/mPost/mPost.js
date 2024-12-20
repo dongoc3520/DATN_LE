@@ -1,7 +1,7 @@
 import "./mPost.css";
 
 function MPost({ post }) {
-  console.log(post);
+  // console.log(post);
   return (
     <>
       <div className="homePage_post">

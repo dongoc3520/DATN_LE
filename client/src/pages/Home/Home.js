@@ -42,8 +42,7 @@ function Home() {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [myData, setMyData] = useState({
-    page: "1",
-
+    page: 1,
     district: "",
     ward: "",
     minPrice: "",
@@ -244,7 +243,7 @@ function Home() {
       });
 
       const { posts, currentPage, totalPages } = response.data;
-      console.log("post is", posts);
+      console.log("post is", response.data);
       setPosts(posts);
       setCurrentPage(currentPage);
       setTotalPages(totalPages);
@@ -252,7 +251,20 @@ function Home() {
       console.error("Error fetching posts:", error);
     }
   };
-
+  const handlePageChange = (page) => {
+    if (page > 0 && page <= totalPages) {
+      setCurrentPage(page);
+      setMyData({
+        ...myData,
+        page: page,
+      });
+       window.scrollTo({
+         top: 0,
+         behavior: "smooth", // Hiệu ứng cuộn mượt
+       });
+      setReload(!reload);
+    }
+  };
   useEffect(() => {
     if (!ValidIds.includes(id)) {
       navigate("/1", { replace: true });
@@ -360,6 +372,32 @@ function Home() {
             </div>
             // <MPost />
           ))}
+          <div className="pagination_">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Trước
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => {
+              const pageIndex = i + 1; // Trang bắt đầu từ 1
+              return (
+                <button
+                  key={pageIndex}
+                  className={currentPage === pageIndex ? "active" : ""}
+                  onClick={() => handlePageChange(pageIndex)}
+                >
+                  {pageIndex}
+                </button>
+              );
+            })}
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Sau
+            </button>
+          </div>
         </div>
         <div className="homePage_body_goiy">
           <div className="moigioi">Xem theo khoảng giá</div>

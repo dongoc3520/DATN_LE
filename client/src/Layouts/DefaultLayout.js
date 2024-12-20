@@ -4,9 +4,15 @@ import Header from "./Header";
 import "./layout.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 function DefaultLayout({ children }) {
   const [key, setKey] = useState(0);
-
+  const handleCuonLen = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Hiệu ứng cuộn mượt
+    });
+  };
   const handleReload = () => {
     setKey((prevKey) => prevKey + 1); // Tăng key để reload lại component.
   };
@@ -26,6 +32,9 @@ function DefaultLayout({ children }) {
       >
         <Header onReload={handleReload} />
         {children}
+        <div className="cuonlen" onClick={handleCuonLen}>
+          <i class="fa-solid fa-up-long"></i>
+        </div>
         <Footer />
       </div>
     </div>

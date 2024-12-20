@@ -124,6 +124,10 @@ const Profile = () => {
   };
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Hiệu ứng cuộn mượt
+      });
       setCurrentPage(newPage);
     }
   };
@@ -317,7 +321,7 @@ const Profile = () => {
           onSave={handleUpdateProfile}
         />
       )}
-      <ToastContainer style={{zIndex:'99999999999999999'}}/>
+      <ToastContainer style={{ zIndex: "99999999999999999" }} />
     </div>
   );
 };

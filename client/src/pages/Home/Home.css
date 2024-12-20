@@ -1,4 +1,36 @@
+.pagination_ button {
+    margin: 5px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    text-align: center;
+    /* display: flex; */
+    /* justify-content: center; */
+}
 
+.pagination_ {
+    margin-bottom: 30px;
+    margin-top: 30px;
+    display: flex;
+        justify-content: center;
+}
+.pagination_ button.active {
+    background-color: #007bff;
+    /* Màu xanh để nổi bật */
+    color: white;
+    /* Chữ trắng */
+    font-weight: bold;
+    border-color: #0056b3;
+    /* Viền xanh đậm hơn */
+}
+
+.pagination_ button:disabled {
+    background-color: #f5f5f5;
+    color: #aaa;
+    cursor: not-allowed;
+}
 .homePage {
     /* height: 100vh; */
     /* overflow-y: auto; */
