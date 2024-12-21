@@ -219,6 +219,13 @@ postRouter.get("/posts/home", async (req, res) => {
 //api tạo bài viết mới
 postRouter.post("/", middlewareLogin, postController.createPostController);
 
+//api xóa bài viết
+postRouter.post(
+  "/delete/:id",
+  middlewareLogin,
+  postController.deletePostController
+);
+
 // //api lấy tất cả bài viết của tất cả mọi người load ra trang chủ
 // postRouter.get("/posts/home", async (req, res) => {
 //   const { page, limit } = req.query;
@@ -283,12 +290,6 @@ postRouter.post("/", middlewareLogin, postController.createPostController);
 //   "/:id",
 //   middlewareLogin,
 //   postController.updatePostbyidController
-// );
-// //api xóa bài viết
-// postRouter.post(
-//   "/delete/:id",
-//   middlewareLogin,
-//   postController.deletePostController
 // );
 
 //api tạo bài viết mới

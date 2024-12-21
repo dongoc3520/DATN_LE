@@ -38,7 +38,7 @@ const Profile = () => {
   const changeAvatar = (event) => {
     const file = event.target.files[0];
     setIsLoading(true);
-    console.log(file);
+    // console.log(file);
     if (file) {
       const imgRef = ref(storage, `files/${v4()}`);
       const metadata = { contentType: file.type };
@@ -48,7 +48,7 @@ const Profile = () => {
           return getDownloadURL(snapshot.ref);
         })
         .then((url) => {
-          console.log("URL returned:", url);
+          // console.log("URL returned:", url);
           setImg(url);
           setIsLoading(false);
           setIsDisplay(true);
@@ -71,14 +71,14 @@ const Profile = () => {
         image: res.data.user.avatar,
         role: res.data.user.role,
       });
-      console.log(profile);
+      // console.log(profile);
       setImg(res.data.user.avatar);
     } catch (err) {
       console.error(err);
     }
   };
   const handleSave = () => {
-    console.log(img);
+    // console.log(img);
     axios
       .post(`${url}/user/avatar`, { img }, { withCredentials: true })
       .then((res) => {
@@ -93,7 +93,7 @@ const Profile = () => {
       });
   };
   const handleCancel = () => {
-    console.log("cancel");
+    // console.log("cancel");
     setImg(profile.image);
     setIsDisplay(false);
   };
@@ -107,10 +107,10 @@ const Profile = () => {
         },
       });
       const { posts, totalPages } = response.data;
-      console.log(response.data);
+      // console.log(response.data);
       setPosts(posts); // Cập nhật danh sách bài đăng
       setTotalPages(totalPages); // Cập nhật tổng số trang
-      console.log(posts);
+      // console.log(posts);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách bài đăng:", error);
     }
@@ -124,10 +124,6 @@ const Profile = () => {
   };
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth", // Hiệu ứng cuộn mượt
-      });
       setCurrentPage(newPage);
     }
   };
@@ -195,7 +191,7 @@ const Profile = () => {
                   className="avatar-container"
                   onMouseEnter={() => {
                     setIsHovered(true);
-                    console.log("hehehe");
+                    // console.log("hehehe");
                   }}
                   onMouseLeave={() => setIsHovered(false)}
                 >

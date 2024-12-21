@@ -66,7 +66,7 @@ function Authen() {
       .post(`${url}/user/login`, lg) // Thay thế URL bằng URL của API bạn
       .then((response) => {
         // Xử lý phản hồi từ API
-        console.log("Đăng nhập thành công:", response.data);
+        // console.log("Đăng nhập thành công:", response.data);
         if (response.data.errCode === 0) {
           setLg({
             userName: "",
@@ -85,10 +85,10 @@ function Authen() {
         console.error("Lỗi khi đăng nhập:", err);
         toast.error("Đăng nhập thất bại");
       });
-    console.log(lg);
+    // console.log(lg);
   };
   const handleRegister = () => {
-    console.log(reg);
+    // console.log(reg);
     if (reg.rePass !== reg.pass) {
       setReg({
         name: "",
@@ -127,7 +127,7 @@ function Authen() {
         .post(`${url}/user/register`, reg) // Thay thế URL bằng URL của API bạn
         .then((response) => {
           // Xử lý phản hồi từ API
-          console.log("Đăng nhập thành công:", response.data);
+          // console.log("Đăng nhập thành công:", response.data);
           if (response.data.errCode === 0) {
             setReg({
               name: "",

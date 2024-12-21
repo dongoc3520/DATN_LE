@@ -8,22 +8,55 @@ import "react-image-gallery/styles/css/image-gallery.css";
 import axios from "axios";
 import { url } from "../../url";
 import { useNavigate } from "react-router-dom";
+import { getCookie } from "../../Cookie";
+// import {getCookies} from "../"
 
 const PostPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const idUser = getCookie("idUser");
   // const im
   const [im, setIm] = useState([]);
   const [f5, setF5] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [isDelete, setIsDelete] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const maxVisibleImages = 6;
   const [featuredPosts, setFeaturedPosts] = useState([]);
-  const [idU, setIdU] = useState(0);
-  const [posts, setPosts] = useState([]);
+  const [isEditImageModalOpen, setIsEditImageModalOpen] = useState(false);
+  const [isEditInfoModalOpen, setIsEditInfoModalOpen] = useState(false);
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    // console.log("Selected file:", file);
+    // Xử lý file ảnh
+  };
+
+  const saveImageChanges = async () => {
+    try {
+      // Gửi API cập nhật ảnh
+      // console.log("Saving image changes...");
+      setIsEditImageModalOpen(false);
+    } catch (error) {
+      console.error("Error saving image changes:", error);
+    }
+  };
+
+  const saveInfoChanges = async () => {
+    try {
+      // Gửi API cập nhật thông tin
+      // console.log("Saving info changes...", post);
+      setIsEditInfoModalOpen(false);
+    } catch (error) {
+      console.error("Error saving info changes:", error);
+    }
+  };
+  // const [idU, setIdU] = useState(0);
+  // const [posts, setPosts] = useState([]);
   const [post, setPost] = useState({
+    idPost: "",
     title: "",
     price: 0,
     address: "",
@@ -35,11 +68,13 @@ const PostPage = () => {
       id: 0,
     },
     contact: { phone: "", email: "" },
+    district: "",
+    ward: "",
   });
   const fetchPosts = async (page) => {
-    console.log("ngoc day", post);
+    // console.log("ngoc day", post);
     try {
-      console.log("ngoc day", post.user.id);
+      // console.log("ngoc day", post.user.id);
       const response = await axios.get(`${url}/post/posts/getbyuserid`, {
         params: {
           id: post.user.id,
@@ -47,11 +82,11 @@ const PostPage = () => {
           limit: 4,
         },
       });
-      const { posts, totalPages } = response.data;
+      // const { posts, totalPages } = response.data;
       // console.log("ngo ne", response.data);
       setFeaturedPosts(response.data.posts); // Cập nhật danh sách bài đăng
-      console.log("us is", idU);
-      console.log(featuredPosts);
+      // console.log("us is", idU);
+      // console.log(featuredPosts);
     } catch (error) {
       console.error("Lỗi khi lấy danh sách bài đăng:", error);
     }
@@ -61,18 +96,21 @@ const PostPage = () => {
       await axios
         .get(`${url}/post/getbyidpost/${id}`)
         .then((res) => {
-          console.log(res);
+          // console.log("hi", res);
           setPost({
             ...post,
+            idPost: res.data.data.post.id,
             title: res.data.data.post.Title,
             price: res.data.data.post.Price,
             area: res.data.data.post.Area,
             address: res.data.data.post.Address,
             images: [res.data.data.type2Image],
             user: { ...res.data.data.post.user },
+            district: res.data.data.post.District,
+            ward: res.data.data.post.Ward,
           });
           setIm(res.data.data.type1Images);
-          console.log("ngoicoi", res.data.data.post.user.id);
+          // console.log("ngoicoi", res.data.data.post.user.id);
         })
         .catch((err) => {
           console.log(err);
@@ -134,47 +172,34 @@ const PostPage = () => {
     // console.log("hehelllll");
     navigate(`/profile/${post.user.id}`);
   };
-  // const post = {
-  //   title: "Phòng trọ tiện nghi trung tâm quận 1",
-  //   price: 3000000,
-  //   address: "123 Nguyễn Trãi, Quận 1, TP.HCM",
-  //   area: 25,
-  //   images: ["https://vr360.com.vn/uploads/images/chupanh360dodanang.jpg"],
-  //   user: { name: "Nguyễn Văn A" },
-  //   contact: { phone: "0901234567", email: "nva@gmail.com" },
-  // };
+  const APIDelete = async () => {
+    // console.log("delete");
+    // console.log(post);
+    //  await axios
+    //    .post(`${url}/post/delete/${post.idPost}`, { withCredentials: true })
+    //    .then((res) => {
+    //      console.log("res is", res);
+    //      navigate(`/profile/${post.user.id}`);
+    //    })
+    //    .catch((err) => {
+    //      console.log(err);
+    //    });
+    await axios
+      .post(`${url}/post/delete/${post.idPost}`,{}, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.errCode === 0) {
+          navigate(`/profile/${post.user.id}`);
+          //  toast.success("Update thành công!");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  // const featuredPosts = [
-  //   {
-  //     title: "Phòng trọ cao cấp quận 7",
-  //     price: 3500000,
-  //     address: "456 Huỳnh Tấn Phát, Quận 7",
-  //     image:
-  //       "https://th.bing.com/th/id/OIP.1a31QUbCZjQD8w2KP2DKnwHaGu?rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
-  //   },
-  //   {
-  //     title: "Phòng trọ giá rẻ quận Gò Vấp",
-  //     price: 2500000,
-  //     address: "789 Lê Văn Thọ, Gò Vấp",
-  //     image:
-  //       "https://i.pinimg.com/736x/57/44/d5/5744d5dac67114a44ab42a07adf67dd6.jpg",
-  //   },
-  //   {
-  //     title: "Phòng trọ cao cấp quận 7",
-  //     price: 3500000,
-  //     address: "456 Huỳnh Tấn Phát, Quận 7",
-  //     image:
-  //       "https://th.bing.com/th/id/OIP.WdtD6iS63Iji7EO6iMBKUgHaHa?rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
-  //   },
-  //   {
-  //     title: "Phòng trọ cao cấp quận 7",
-  //     price: 3500000,
-  //     address: "456 Huỳnh Tấn Phát, Quận 7",
-  //     image:
-  //       "https://th.bing.com/th/id/OIP._ptc2dSyNtdmlSr5PfpQgQHaHQ?w=750&h=735&rs=1&pid=ImgDetMain", // Thay bằng đường dẫn thực tế
-  //   },
-  // ];
-  const { title, price, address, area, images, user, contact } = post;
+  const { title, price, address, area, images, user, district, ward } = post;
 
   return (
     <div className="post-page-container">
@@ -183,6 +208,20 @@ const PostPage = () => {
         <div className="post-left">
           {/* 360 Viewer */}
           <div className="post-360-view">
+            {post.user.id === parseInt(idUser) ? (
+              <>
+                {" "}
+                <button
+                  className=" ngocbtn"
+                  onClick={() => setIsEditImageModalOpen(true)}
+                >
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
+
             <Canvas>
               <ambientLight intensity={1} />
               <OrbitControls enableZoom={false} />
@@ -265,11 +304,24 @@ const PostPage = () => {
             <h1 className="post-title_">{title}</h1>
             <p className="post-price_">Giá: {price} VND</p>
             <p className="post-address">
-              <i class="fa-solid fa-location-dot"></i> Địa chỉ: {address}
+              <i class="fa-solid fa-location-dot"></i> Địa chỉ: {address} -{" "}
+              {district} - {ward}
             </p>
             <p className="post-area">
               <i class="fa-solid fa-chart-area"></i> Diện tích: {area} m²
             </p>
+            {post.user.id === parseInt(idUser) ? (
+              <>
+                <button
+                  className="edit-button"
+                  onClick={() => setIsEditInfoModalOpen(true)}
+                >
+                  Sửa thông tin
+                </button>
+              </>
+            ) : (
+              <></>
+            )}
           </div>
 
           {/* Contact Info */}
@@ -319,9 +371,25 @@ const PostPage = () => {
                   style={{ paddingLeft: "5px", color: "red" }}
                 ></i>
               </p>
-              <div className="post_chat">
-                <i class="fa-brands fa-rocketchat"></i>Chat
-              </div>
+              {post.user.id === parseInt(idUser) ? (
+                <>
+                  <div
+                    className="post_chat"
+                    style={{ background: "#c93434" }}
+                    onClick={() => {
+                      setIsDelete(true);
+                    }}
+                  >
+                    <i class="fa-solid fa-trash"></i>Xóa bài viết
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="post_chat">
+                    <i class="fa-brands fa-rocketchat"></i>Nhắn tin
+                  </div>
+                </>
+              )}
             </div>
           </div>
           <h2>Bài đăng nổi bật</h2>
@@ -355,6 +423,60 @@ const PostPage = () => {
           )}
         </div>
       </div>
+      <div className="support-container">
+        <div className="support-content">
+          <div className="">
+            <h3 style={{ marginBottom: "30px", marginTop: "20px" }}>
+              {" "}
+              Đánh giá của khách hàng (5.0{" "}
+              <i
+                style={{ color: "rgb(162, 183, 8)" }}
+                class="fa-solid fa-star"
+              ></i>
+              )
+            </h3>
+            <div className="support-image">
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+              <i class="fa-solid fa-star"></i>
+            </div>
+          </div>
+          <div
+            style={{
+              alignItems: "center",
+              marginTop: "40px",
+              marginLeft: "100px",
+            }}
+          >
+            <div className="support-text">
+              <h2>Hỗ trợ chủ nhà đăng tin</h2>
+              <p>
+                Nếu bạn cần hỗ trợ đăng tin, vui lòng liên hệ số điện thoại bên
+                dưới:
+              </p>
+            </div>
+            <div className="support-contact">
+              <div
+                className="contact-button phone"
+                onClick={() => {
+                  window.open("https://chat.zalo.me/", "_blank");
+                }}
+              >
+                📞 ĐT: 0123456789
+              </div>
+              <div
+                className="contact-button zalo"
+                onClick={() => {
+                  window.open("https://chat.zalo.me/", "_blank");
+                }}
+              >
+                💬 Zalo: 0123456789
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {isModalOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content_" onClick={(e) => e.stopPropagation()}>
@@ -372,7 +494,110 @@ const PostPage = () => {
           </div>
         </div>
       )}
+      {/* Modal sửa ảnh */}
+      {/* Modal sửa ảnh */}
+      {isEditImageModalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+            <h2>Update ảnh 360 VR</h2>
+            <div
+              className="image-upload-box"
+              onClick={() => document.getElementById("imageInput").click()}
+            >
+              <span className="plus-icon">+</span>
+            </div>
+            <input
+              id="imageInput"
+              type="file"
+              style={{ display: "none" }}
+              onChange={handleImageChange}
+            />
+            <div className="btnNgocHe">
+              <button className="save_btn_n" onClick={saveImageChanges}>
+                Lưu
+              </button>
+              <button
+                className="cancel_btn_n"
+                onClick={() => setIsEditImageModalOpen(false)}
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal sửa thông tin */}
+      {isEditInfoModalOpen && (
+        <div className="_modal">
+          <div className="_modal-content">
+            <h2>Sửa thông tin</h2>
+            <input
+              type="text"
+              placeholder="Tiêu đề"
+              value={post.title}
+              onChange={(e) => setPost({ ...post, title: e.target.value })}
+            />
+            <input
+              type="number"
+              placeholder="Giá"
+              value={post.price}
+              onChange={(e) =>
+                setPost({ ...post, price: parseInt(e.target.value) })
+              }
+            />
+            <input
+              type="text"
+              placeholder="Địa chỉ"
+              value={post.address}
+              onChange={(e) => setPost({ ...post, address: e.target.value })}
+            />
+            <button
+              className="save_btn_n"
+              style={{ marginRight: "50px" }}
+              onClick={saveInfoChanges}
+            >
+              Lưu
+            </button>
+            <button
+              className="cancel_btn_n"
+              onClick={() => setIsEditInfoModalOpen(false)}
+            >
+              Đóng
+            </button>
+          </div>
+        </div>
+      )}
+      {isDelete && (
+        <div className="_modal">
+          <div className="_modal-content">
+            <h2>
+              <i
+                class="fa-solid fa-triangle-exclamation"
+                style={{
+                  fontSize: "29px",
+                  marginRight: "10px",
+                  color: "rgb(250 41 41)",
+                }}
+              ></i>
+              Bài viết sẽ được xóa vĩnh viễn.
+            </h2>
+
+            <button
+              className="save_btn_n"
+              style={{ marginRight: "50px" }}
+              onClick={APIDelete}
+            >
+              Đồng ý
+            </button>
+            <button className="cancel_btn_n" onClick={() => setIsDelete(false)}>
+              Hủy
+            </button>
+          </div>
+        </div>
+      )}
     </div>
+    // </div>
   );
 };
 

@@ -3,6 +3,7 @@ export const middlewareLogin = (req, res, next) => {
 
   const token = req.cookies.token;
   // console.log(req);
+  // console.log(req);
   if (!token) {
     return res.json({
       message: "You are not logged in",

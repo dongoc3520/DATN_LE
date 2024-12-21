@@ -153,7 +153,7 @@ const PostButton = ({ onSubmit }) => {
   };
 
   const callAPI = async () => {
-    console.log(formData);
+    // console.log(formData);
     await axios
       .post(`${url}/post`, formData, { withCredentials: true })
       .then((response) => {
@@ -194,7 +194,7 @@ const PostButton = ({ onSubmit }) => {
           return getDownloadURL(snapshot.ref);
         })
         .then((url) => {
-          console.log("URL returned:", url);
+          // console.log("URL returned:", url);
           setIsLoading(false);
           toast.success("Upload ảnh VR thành công!");
 
@@ -215,7 +215,7 @@ const PostButton = ({ onSubmit }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    console.log(formData);
+    // console.log(formData);
   };
 
   // const handleImageChange = (e) => {

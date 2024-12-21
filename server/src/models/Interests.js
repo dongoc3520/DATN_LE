@@ -10,7 +10,11 @@ module.exports = (sequelize, DataTypes) => {
     },
   });
   Interests.associate = (models) => {
-    Interests.belongsTo(models.Posts, { foreignKey: "PostId", as: "post" });
+    Interests.belongsTo(models.Posts, {
+      foreignKey: "PostId",
+      as: "post",
+      onDelete: "CASCADE",
+    });
   };
 
   return Interests;

@@ -17,7 +17,11 @@ module.exports = (sequelize, DataTypes) => {
     // Users.hasMany(models.Likes, {
     //   onDelete: "cascade",
     // });
-    Images.belongsTo(models.Posts, { foreignKey: "PostId", as: "post" });
+    Images.belongsTo(models.Posts, {
+      foreignKey: "PostId",
+      as: "post",
+      onDelete: "CASCADE",
+    });
   };
 
   return Images;

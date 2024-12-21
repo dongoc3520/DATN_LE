@@ -74,7 +74,7 @@ function Home() {
       ward: mData.ward,
     });
     setReload(!reload);
-    console.log(myData);
+    // console.log(myData);
   };
   const handleSetData = (field, value) => {
     setMData((prevState) => ({
@@ -243,7 +243,7 @@ function Home() {
       });
 
       const { posts, currentPage, totalPages } = response.data;
-      console.log("post is", response.data);
+      // console.log("post is", response.data);
       setPosts(posts);
       setCurrentPage(currentPage);
       setTotalPages(totalPages);
@@ -270,7 +270,7 @@ function Home() {
       navigate("/1", { replace: true });
       return;
     }
-    console.log(myData);
+    // console.log(myData);
     fetchPosts(myData);
     setMyData({
       page: "1",
@@ -527,11 +527,11 @@ function Home() {
           <div className="testimonial">
             <h3>Chi phí thấp, hiệu quả tối đa</h3>
             <p>
-              Trước khi biết website phongtro123, mình phải tốn nhiều công sức
-              và chi phí cho việc đăng tin cho thuê: từ việc phát tờ rơi, dán
-              giấy, và đăng lên các website khác nhưng hiệu quả không cao. Từ
-              khi biết website PhongTroByLeHUST.com, mình đã thử đăng tin lên và
-              đánh giá hiệu quả khá cao trong khi chi phí khá thấp, không còn
+              Trước khi biết website PhongTroByLeHUST, mình phải tốn nhiều công
+              sức và chi phí cho việc đăng tin cho thuê: từ việc phát tờ rơi,
+              dán giấy, và đăng lên các website khác nhưng hiệu quả không cao.
+              Từ khi biết website PhongTroByLeHUST.com, mình đã thử đăng tin lên
+              và đánh giá hiệu quả khá cao trong khi chi phí khá thấp, không còn
               tình trạng phòng trống kéo dài.
             </p>
             <p className="testimonial-author">

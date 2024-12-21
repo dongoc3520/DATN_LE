@@ -40,11 +40,13 @@ module.exports = (sequelize, DataTypes) => {
 
   Posts.associate = (models) => {
     Posts.hasMany(models.Images, {
-      onDelete: "cascade",
+      foreignKey: "PostId",
+      onDelete: "CASCADE",
     });
     Posts.belongsTo(models.Users, { foreignKey: "UserId", as: "user" });
     Posts.hasMany(models.Interests, {
-      onDelete: "cascade",
+      foreignKey: "PostId",
+      onDelete: "CASCADE",
     });
   };
   sequelizePaginate.paginate(Posts);
