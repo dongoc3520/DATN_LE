@@ -439,7 +439,7 @@ button.slider-right {
 .btnNgocHe{
     display: flex;
     justify-content: center;
-    margin-top: 50px;
+    margin-top: 23px;
     gap: 90px;
     font-size: 25px;
 }
@@ -513,4 +513,24 @@ button.slider-right {
 
 ._modal-content button:hover {
     opacity: 0.8;
+}
+.myIm canvas{
+    width: 100%;
+    height: 100%;
+}
+.option_sele:hover{
+    background: red !important;
+}
+.iconngoccoi {
+    font-size: 25px;
+    position: relative;
+ width: 100%;
+    text-align: right;
+      cursor: pointer;
+    z-index: 9;
+    color: blue;
+    /* top: 0; */
+}
+.iconngoccoi:hover{
+    font-size: 26px;
 }

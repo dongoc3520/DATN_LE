@@ -390,20 +390,9 @@ const PostButton = ({ onSubmit }) => {
               ) : (
                 <>
                   <div className="tag-input-container">
-                    {/* Input địa chỉ */}
-                    {/* <div className="address-input">
-                      <label htmlFor="address">Địa chỉ:</label>
-                      <input
-                        type="text"
-                        id="address"
-                        placeholder="Nhập địa chỉ của bạn..."
-                        value={formData.address}
-                        onChange={handleAddressChange}
-                      />
-                    </div> */}
+            
                     <div className="address-input">
-                      {/* Dropdown Quận/Huyện */}
-                      {/* <label htmlFor="district">Quận/Huyện:</label> */}
+                
                       <Select
                         id="district"
                         options={data.flatMap((item) => item.options)}

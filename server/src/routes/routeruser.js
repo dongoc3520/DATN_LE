@@ -12,13 +12,22 @@ userRouter.post("/login", userCotroller.userLoginController);
 //api log out ()
 userRouter.get("/logout", middlewareLogin, userCotroller.userLogoutController);
 //api đổi mật khẩu
-userRouter.post("/changePassword",middlewareLogin,userCotroller.userchangePasswordController
+userRouter.post(
+  "/changePassword",
+  middlewareLogin,
+  userCotroller.userchangePasswordController
 );
 //api đổi username
-userRouter.post("/changeUsername", middlewareLogin, userCotroller.userchangeUserNameController
+userRouter.post(
+  "/changeUsername",
+  middlewareLogin,
+  userCotroller.userchangeUserNameController
 );
 //api lấy người dùng bởi jwt để hiện thị ra trang cá nhân
-userRouter.get("/profilebyjwt",middlewareLogin,userCotroller.userJwtController
+userRouter.get(
+  "/profilebyjwt",
+  middlewareLogin,
+  userCotroller.userJwtController
 );
 //api lấy người dùng theo id
 userRouter.get("/profile/:id", userCotroller.userIdController);

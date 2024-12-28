@@ -226,6 +226,12 @@ postRouter.post(
   postController.deletePostController
 );
 
+//api update bài viết
+postRouter.post("/update/:id", postController.updatePostbyId);
+
+//api update ảnh VR bài viết
+postRouter.post("/update/img/:id", postController.updatePostimgbyId);
+//updatePostbyId
 // //api lấy tất cả bài viết của tất cả mọi người load ra trang chủ
 // postRouter.get("/posts/home", async (req, res) => {
 //   const { page, limit } = req.query;

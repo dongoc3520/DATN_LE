@@ -16,7 +16,7 @@ export const createPostService = (body) =>
         Type: body.type,
         Gender: body.gender,
       });
-     
+
       const idPost = newpost.id;
 
       for (let index = 0; index < body.images.length; index++) {
@@ -62,7 +62,7 @@ export const getPostsByidpostService = (id) =>
           {
             model: Users,
             as: "user",
-            attributes: ["id", "avatar", "name","phone","email"],
+            attributes: ["id", "avatar", "name", "phone", "email"],
           },
         ],
         order: [["createdAt", "DESC"]],
@@ -98,6 +98,82 @@ export const getPostsByidpostService = (id) =>
       });
     } catch (error) {
       reject(error);
+    }
+  });
+
+//updatePostService
+export const updatePostService = (body, id) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Tìm bài viết cần cập nhật
+      const post = await Posts.findOne({
+        where: { id: id },
+      });
+
+      if (!post) {
+        resolve({
+          errCode: 1,
+          errMessage: "Bài viết không tồn tại!",
+        });
+        return;
+      }
+
+      // Cập nhật thông tin bài viết
+      await post.update({
+        Title: body.title || post.title,
+        Price: body.price || post.price,
+        Address: body.address || post.address,
+        Area: body.area || post.area,
+        District: body.district || post.district,
+        Ward: body.ward || post.ward,
+      });
+
+      resolve({
+        errCode: 0,
+        message: "Cập nhật bài viết thành công!",
+      });
+    } catch (error) {
+      reject({
+        errCode: -1,
+        errMessage: "Lỗi hệ thống!",
+        error: error.message,
+      });
+    }
+  });
+
+//updatePostimgService
+export const updatePostimgService = (body, id) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Tìm bài viết cần cập nhật
+      const image = await Images.findOne({
+        where: { PostId: id, type: "2" },
+      });
+
+      if (!image) {
+        resolve({
+          errCode: 1,
+          errMessage: "Hình ảnh không tồn tại!",
+        });
+        return;
+      }
+
+      // Cập nhật thông tin bài viết
+      await image.update({
+        url: body.url || image.url,
+      });
+
+      resolve({
+        errCode: 0,
+        message: "Update ảnh VR thành công!",
+        url : image.url
+      });
+    } catch (error) {
+      reject({
+        errCode: -1,
+        errMessage: "Lỗi hệ thống!",
+        error: error.message,
+      });
     }
   });
 

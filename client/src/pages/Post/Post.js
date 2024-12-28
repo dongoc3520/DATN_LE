@@ -6,16 +6,22 @@ import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Environment } from "@react-three/drei";
 import "react-image-gallery/styles/css/image-gallery.css";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 import { url } from "../../url";
 import { useNavigate } from "react-router-dom";
 import { getCookie } from "../../Cookie";
+import { ClipLoader } from "react-spinners";
+import { storage } from "../../config";
+import VrImage360 from "../../components/RoomVR/RoomVR";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { wardsData, data } from "../../data";
+import { v4 } from "uuid";
 // import {getCookies} from "../"
 
 const PostPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const idUser = getCookie("idUser");
-  // const im
   const [im, setIm] = useState([]);
   const [f5, setF5] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -27,34 +33,16 @@ const PostPage = () => {
   const [featuredPosts, setFeaturedPosts] = useState([]);
   const [isEditImageModalOpen, setIsEditImageModalOpen] = useState(false);
   const [isEditInfoModalOpen, setIsEditInfoModalOpen] = useState(false);
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    // console.log("Selected file:", file);
-    // Xử lý file ảnh
-  };
-
-  const saveImageChanges = async () => {
-    try {
-      // Gửi API cập nhật ảnh
-      // console.log("Saving image changes...");
-      setIsEditImageModalOpen(false);
-    } catch (error) {
-      console.error("Error saving image changes:", error);
-    }
-  };
-
-  const saveInfoChanges = async () => {
-    try {
-      // Gửi API cập nhật thông tin
-      // console.log("Saving info changes...", post);
-      setIsEditInfoModalOpen(false);
-    } catch (error) {
-      console.error("Error saving info changes:", error);
-    }
-  };
-  // const [idU, setIdU] = useState(0);
-  // const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [myim, setMyim] = useState("");
+  const [checkp, setCheckp] = useState({
+    title: "",
+    price: 0,
+    address: "",
+    area: 0,
+    district: "",
+    ward: "",
+  });
   const [post, setPost] = useState({
     idPost: "",
     title: "",
@@ -71,6 +59,104 @@ const PostPage = () => {
     district: "",
     ward: "",
   });
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setIsLoading(true);
+
+    if (file) {
+      const imgRef = ref(storage, `files/${v4()}`);
+      const metadata = { contentType: file.type };
+
+      uploadBytes(imgRef, file, metadata)
+        .then((snapshot) => {
+          return getDownloadURL(snapshot.ref);
+        })
+        .then((url) => {
+          // console.log("URL returned:", url);
+          setMyim(url);
+          setIsLoading(false);
+          // toast.success("Upload ảnh VR thành công!");
+          // Cập nhật vrImage mà không làm mất ảnh tĩnh
+        })
+        .catch((error) => {
+          // setIsLoading(false);
+          // toast.error("Upload ảnh VR thất bại!");
+          console.error("Error uploading file:", error);
+        });
+    }
+  };
+
+  const saveImageChanges = async () => {
+    try {
+      if (!myim) {
+        toast.warning("Cần up ảnh lên");
+        return;
+      }
+      const body = {
+        url: myim,
+      };
+      if (myim) {
+        await axios
+          .post(`${url}/post/update/img/${id}`, body)
+          .then((res) => {
+            console.log("kk", res);
+            setPost({ ...post, images: [res.data.url] });
+            toast.success("Đổi ảnh thành công!");
+            setIsEditInfoModalOpen(false);
+            setMyim("");
+            console.log(post);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      setIsEditImageModalOpen(false);
+    } catch (error) {
+      console.error("Error saving image changes:", error);
+    }
+  };
+
+  const saveInfoChanges = async () => {
+    try {
+      const body = {
+        title: post.title,
+        price: post.price,
+        address: post.address,
+        area: post.area,
+        district: post.district,
+        ward: post.ward,
+      };
+      if (
+        body.title === checkp.title &&
+        body.price === checkp.price &&
+        body.address === checkp.address &&
+        body.area === checkp.area &&
+        body.district === checkp.district &&
+        body.ward === checkp.ward
+      ) {
+        toast.warning("Cần sửa đổi thông tin");
+        return;
+      }
+
+      if (id) {
+        await axios
+          .post(`${url}/post/update/${id}`, body)
+          .then((res) => {
+            setIsEditInfoModalOpen(false);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      // setIsEditInfoModalOpen(false);
+    } catch (error) {
+      console.error("Error saving info changes:", error);
+    }
+  };
+  // const [idU, setIdU] = useState(0);
+  // const [posts, setPosts] = useState([]);
+
   const fetchPosts = async (page) => {
     // console.log("ngoc day", post);
     try {
@@ -106,6 +192,15 @@ const PostPage = () => {
             address: res.data.data.post.Address,
             images: [res.data.data.type2Image],
             user: { ...res.data.data.post.user },
+            district: res.data.data.post.District,
+            ward: res.data.data.post.Ward,
+          });
+          setCheckp({
+            ...checkp,
+            title: res.data.data.post.Title,
+            price: res.data.data.post.Price,
+            area: res.data.data.post.Area,
+            address: res.data.data.post.Address,
             district: res.data.data.post.District,
             ward: res.data.data.post.Ward,
           });
@@ -169,7 +264,6 @@ const PostPage = () => {
     setCurrentImageIndex((prevIndex) => (prevIndex + 1) % im.length);
   };
   const handleSwitch = () => {
-    // console.log("hehelllll");
     navigate(`/profile/${post.user.id}`);
   };
   const APIDelete = async () => {
@@ -185,9 +279,13 @@ const PostPage = () => {
     //      console.log(err);
     //    });
     await axios
-      .post(`${url}/post/delete/${post.idPost}`,{}, {
-        withCredentials: true,
-      })
+      .post(
+        `${url}/post/delete/${post.idPost}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => {
         if (res.data.errCode === 0) {
           navigate(`/profile/${post.user.id}`);
@@ -500,12 +598,43 @@ const PostPage = () => {
         <div className="modal">
           <div className="modal-content">
             <h2>Update ảnh 360 VR</h2>
-            <div
-              className="image-upload-box"
-              onClick={() => document.getElementById("imageInput").click()}
-            >
-              <span className="plus-icon">+</span>
-            </div>
+            {isLoading ? (
+              <>
+                {" "}
+                <div className="" style={{ textAlign: "center" }}>
+                  {" "}
+                  <ClipLoader color="#3498db" size={50} />{" "}
+                </div>{" "}
+              </>
+            ) : (
+              <>
+                {myim ? (
+                  <>
+                    <i
+                      class="fa-solid fa-xmark iconngoccoi"
+                      onClick={() => {
+                        setMyim("");
+                      }}
+                    ></i>
+                    <div className="vr-viewer">
+                      <VrImage360 imageUrl={myim} /> {/* Hiển thị ảnh 360 */}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="image-upload-box"
+                      onClick={() =>
+                        document.getElementById("imageInput").click()
+                      }
+                    >
+                      <span className="plus-icon">+</span>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
+
             <input
               id="imageInput"
               type="file"
@@ -552,6 +681,56 @@ const PostPage = () => {
               value={post.address}
               onChange={(e) => setPost({ ...post, address: e.target.value })}
             />
+            <div>
+              {/* <label>Quận:</label> */}
+              <select
+                style={{
+                  background: "none",
+                  color: "#333",
+                  border: "1px solid #999",
+                }}
+                value={post.district}
+                onChange={(e) => {
+                  const selectedDistrict = e.target.value;
+                  setPost({ ...post, district: selectedDistrict, ward: "" });
+                }}
+              >
+                {data.map((city) =>
+                  city.options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
+            <div>
+              {/* <label>Phường:</label> */}
+              <select
+                style={{
+                  background: "none",
+                  color: "#333",
+                  marginTop: "10px",
+                  border: "1px solid #999",
+                }}
+                value={post.ward}
+                onChange={(e) => setPost({ ...post, ward: e.target.value })}
+                disabled={!post.district}
+              >
+                {/* <option value="">Chọn phường</option> */}
+                {post.district &&
+                  wardsData[post.district]?.map((ward) => (
+                    <option
+                      className="option_sele"
+                      key={ward.value}
+                      value={ward.value}
+                      // style={{ background: "rgb(103 145 237)", color: "#ddd" }}
+                    >
+                      {ward.label}
+                    </option>
+                  ))}
+              </select>
+            </div>
             <button
               className="save_btn_n"
               style={{ marginRight: "50px" }}
@@ -568,6 +747,7 @@ const PostPage = () => {
           </div>
         </div>
       )}
+
       {isDelete && (
         <div className="_modal">
           <div className="_modal-content">
@@ -596,6 +776,7 @@ const PostPage = () => {
           </div>
         </div>
       )}
+      <ToastContainer style={{zIndex:'999999999999999999'}}/>
     </div>
     // </div>
   );

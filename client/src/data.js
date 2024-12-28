@@ -10,24 +10,11 @@ export const data = [
       { value: "ThanhXuan", label: "Thanh Xuân" },
       { value: "HoangMai", label: "Hoàng Mai" },
       { value: "LongBien", label: "Long Biên" },
-      { value: "NamTuLiem", label: "Nam Từ Liêm" },
-      { value: "BacTuLiem", label: "Bắc Từ Liêm" },
-      { value: "TayHo", label: "Tây Hồ" },
-      { value: "HaDong", label: "Hà Đông" },
     ],
   },
   {
     label: "TP Hồ Chí Minh",
-    options: [
-      { value: "District1", label: "Quận 1" },
-      { value: "District3", label: "Quận 3" },
-      { value: "TanBinh", label: "Tân Bình" },
-      { value: "PhuNhuan", label: "Phú Nhuận" },
-      { value: "BinhThanh", label: "Bình Thạnh" },
-      { value: "District7", label: "Quận 7" },
-      { value: "GoVap", label: "Gò Vấp" },
-      { value: "ThuDuc", label: "Thủ Đức" },
-    ],
+    options: [],
   },
 ];
 

@@ -54,7 +54,37 @@ export const getPostbyidpostController = async (req, res) => {
     });
   }
 };
+//updatePostbyId
+export const updatePostbyId = async (req, res) => {
+  const id = req.params.id;
+  const body = req.body;
+  try {
+    const response = await postService.updatePostService(body, id);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(400).json({
+      errCode: -1,
+      message: "Lỗi server",
+      error: error,
+    });
+  }
+};
 
+//updatePostimgbyId
+export const updatePostimgbyId = async (req, res) => {
+  const id = req.params.id;
+  const body = req.body;
+  try {
+    const response = await postService.updatePostimgService(body, id);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(400).json({
+      errCode: -1,
+      message: "Lỗi server",
+      error: error,
+    });
+  }
+};
 export const getPostbyidController = async (req, res) => {
   const id = req.idUser;
   const idPost = req.params.id;
