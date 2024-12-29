@@ -20,6 +20,7 @@ import { v4 } from "uuid";
 
 const PostPage = () => {
   const navigate = useNavigate();
+  const [inter, setInter] = useState([]);
   const { id } = useParams();
   const idUser = getCookie("idUser");
   const [im, setIm] = useState([]);
@@ -158,7 +159,7 @@ const PostPage = () => {
   // const [posts, setPosts] = useState([]);
 
   const fetchPosts = async (page) => {
-    // console.log("ngoc day", post);
+    console.log("ngoc day", post);
     try {
       // console.log("ngoc day", post.user.id);
       const response = await axios.get(`${url}/post/posts/getbyuserid`, {
@@ -195,6 +196,9 @@ const PostPage = () => {
             district: res.data.data.post.District,
             ward: res.data.data.post.Ward,
           });
+          if (res.data.data.interests.length > 0) {
+            setInter(res.data.data.interests);
+          }
           setCheckp({
             ...checkp,
             title: res.data.data.post.Title,
@@ -423,7 +427,7 @@ const PostPage = () => {
           </div>
 
           {/* Contact Info */}
-          <div className="contact-info">
+          <div className="contact-info" style={{ marginLeft: "14px" }}>
             <h2>
               <i class="fa-solid fa-address-book"></i>Thông tin liên hệ
             </h2>
@@ -437,6 +441,32 @@ const PostPage = () => {
             <p>
               <i class="fa-solid fa-envelope"></i>Email: {user.email}
             </p>
+          </div>
+          {/* <button
+            onClick={() => {
+              console.log("hehe", inter);
+            }}
+          >
+            HEHEHEHEH
+          </button> */}
+          {/* {post.Gender === "nu" ? (
+            <>
+              <i class="fa-solid fa-venus"></i>
+            </>
+          ) : (
+            <>
+              <i class="fa-solid fa-mars"></i>
+            </>
+          )} */}
+          <div className="sothich">
+            {inter &&
+              inter.length > 0 &&
+              inter.map((item, index) => (
+                <div key={index}>
+                  {/* <i class="fa-brands fa-pinterest-p"></i> */}
+                  <p>{item.name}</p>
+                </div>
+              ))}
           </div>
         </div>
 
@@ -776,7 +806,7 @@ const PostPage = () => {
           </div>
         </div>
       )}
-      <ToastContainer style={{zIndex:'999999999999999999'}}/>
+      <ToastContainer style={{ zIndex: "999999999999999999" }} />
     </div>
     // </div>
   );

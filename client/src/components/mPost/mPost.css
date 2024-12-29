@@ -82,6 +82,8 @@
     display: flex;
     align-items: center;
     margin-top: 10px;
+    width: 100%;
+    position: relative;
 }
 
 .home_post_user_img {
@@ -119,8 +121,7 @@ cursor: pointer;
 padding: 5px;
 border: 1px solid #737171;
 border-radius: 5px;
-}
-.home_post_heart i:hover{
-    color: rgb(210, 5, 5);
-    border: 1px solid red;
+position: absolute;
+right: 10px;
+bottom: 10px;
 }

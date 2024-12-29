@@ -12,27 +12,6 @@ import { url } from "../../url";
 
 const ValidIds = ["1", "2", "3"];
 
-const leaderboardData = [
-  {
-    rank: "Thứ nhất",
-    name: "Nguyễn Văn A",
-    image: "https://randomuser.me/api/portraits/men/1.jpg",
-    likes: 1500,
-  },
-  {
-    rank: "Thứ nhì",
-    name: "Trần Thị B",
-    image: "https://randomuser.me/api/portraits/women/1.jpg",
-    likes: 1200,
-  },
-  {
-    rank: "Thứ ba",
-    name: "Lê Quang C",
-    image: "https://randomuser.me/api/portraits/men/2.jpg",
-    likes: 1000,
-  },
-];
-
 function Home() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -228,22 +207,27 @@ function Home() {
   // };
   const fetchPosts = async (mpost) => {
     try {
-      const response = await axios.get(`${url}/post/posts/home`, {
-        params: {
-          page: mpost.page || 1, // Số trang
-          limit: 5, // Số bài viết mỗi trang
-          id: id, // Giá trị id (1, 2 hoặc 3)
-          district: mpost.district, // Địa chỉ huyện
-          ward: mpost.ward, // Địa chỉ xã
-          minPrice: mpost.minPrice, // Giá trị minPrice (nếu có)
-          maxPrice: mpost.maxPrice, // Giá trị maxPrice (nếu có)
-          minArea: mpost.minArea, // Diện tích minArea (nếu có)
-          maxArea: mpost.maxArea, // Diện tích maxArea (nếu có)
-        },
-      });
+      const response = await axios.get(
+        `${url}/post/posts/home`,
+
+        {
+          withCredentials: true,
+          params: {
+            page: mpost.page || 1, // Số trang
+            limit: 6, // Số bài viết mỗi trang
+            id: id, // Giá trị id (1, 2 hoặc 3)
+            district: mpost.district, // Địa chỉ huyện
+            ward: mpost.ward, // Địa chỉ xã
+            minPrice: mpost.minPrice, // Giá trị minPrice (nếu có)
+            maxPrice: mpost.maxPrice, // Giá trị maxPrice (nếu có)
+            minArea: mpost.minArea, // Diện tích minArea (nếu có)
+            maxArea: mpost.maxArea, // Diện tích maxArea (nếu có)
+          },
+        }
+      );
 
       const { posts, currentPage, totalPages } = response.data;
-      // console.log("post is", response.data);
+      console.log("post is", response.data);
       setPosts(posts);
       setCurrentPage(currentPage);
       setTotalPages(totalPages);
@@ -258,10 +242,10 @@ function Home() {
         ...myData,
         page: page,
       });
-       window.scrollTo({
-         top: 0,
-         behavior: "smooth", // Hiệu ứng cuộn mượt
-       });
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // Hiệu ứng cuộn mượt
+      });
       setReload(!reload);
     }
   };
@@ -282,6 +266,53 @@ function Home() {
       maxArea: "",
     });
   }, [id, navigate, reload]);
+
+  const renderPagination = () => {
+    const maxVisiblePages = 3;
+    const startPage = Math.max(
+      1,
+      currentPage - Math.floor(maxVisiblePages / 2)
+    );
+    const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    const buttons = [];
+
+    if (startPage > 1) {
+      buttons.push(
+        <button key="start" onClick={() => handlePageChange(1)}>
+          1
+        </button>
+      );
+      if (startPage > 2) {
+        buttons.push(<span key="start-dots">...</span>);
+      }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      buttons.push(
+        <button
+          key={i}
+          className={currentPage === i ? "active" : ""}
+          onClick={() => handlePageChange(i)}
+        >
+          {i}
+        </button>
+      );
+    }
+
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        buttons.push(<span key="end-dots">...</span>);
+      }
+      buttons.push(
+        <button key="end" onClick={() => handlePageChange(totalPages)}>
+          {totalPages}
+        </button>
+      );
+    }
+
+    return buttons;
+  };
+
   return (
     <div className="homePage">
       <div className="homePage_search">
@@ -361,17 +392,18 @@ function Home() {
 
       <div className="homePage_body">
         <div className="homePage_body_content">
-          {posts.map((post) => (
-            <div
-              onClick={() => {
-                handleToPage(post.id);
-              }}
-              style={{ cursor: "pointer" }}
-            >
-              <MPost key={post.id} post={post} />
-            </div>
-            // <MPost />
-          ))}
+          {posts &&
+            posts.map((post) => (
+              <div
+                onClick={() => {
+                  handleToPage(post.id);
+                }}
+                style={{ cursor: "pointer" }}
+              >
+                <MPost key={post.id} post={post} />
+              </div>
+              // <MPost />
+            ))}
           <div className="pagination_">
             <button
               disabled={currentPage === 1}
@@ -379,18 +411,7 @@ function Home() {
             >
               Trước
             </button>
-            {Array.from({ length: totalPages }, (_, i) => {
-              const pageIndex = i + 1; // Trang bắt đầu từ 1
-              return (
-                <button
-                  key={pageIndex}
-                  className={currentPage === pageIndex ? "active" : ""}
-                  onClick={() => handlePageChange(pageIndex)}
-                >
-                  {pageIndex}
-                </button>
-              );
-            })}
+            {renderPagination()}
             <button
               disabled={currentPage === totalPages}
               onClick={() => handlePageChange(currentPage + 1)}

@@ -74,6 +74,18 @@ export const getPostsByidpostService = (id) =>
         });
         return;
       }
+      let interests = [];
+      // const interests;
+      if (posts.Type === "oghep") {
+        interests = await Interests.findAll({
+          where: {
+            PostId: id,
+          },
+          attributes: ["name"],
+          raw: true,
+        });
+        // console.log(interests);
+      }
       const images = await Images.findAll({
         where: {
           PostId: id, // Điều kiện lấy ảnh theo bài viết
@@ -91,6 +103,7 @@ export const getPostsByidpostService = (id) =>
       reslove({
         errCode: 0,
         data: {
+          interests: interests || [],
           post: posts,
           type2Image: type2Image || null, // Trả về null nếu không có ảnh type = 2
           type1Images: type1Images, // Trả về mảng rỗng nếu không có ảnh type = 1
@@ -166,7 +179,7 @@ export const updatePostimgService = (body, id) =>
       resolve({
         errCode: 0,
         message: "Update ảnh VR thành công!",
-        url : image.url
+        url: image.url,
       });
     } catch (error) {
       reject({

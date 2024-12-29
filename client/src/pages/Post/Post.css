@@ -534,3 +534,15 @@ button.slider-right {
 .iconngoccoi:hover{
     font-size: 26px;
 }
+
+.sothich{
+    display: flex;
+}
+.sothich div{
+    background: #1273dc;
+    color: #ddd;
+    padding: 10px 10px;
+    margin: 0px 9px;
+    border-radius: 10px;
+    margin-top: 20px;
+}

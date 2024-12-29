@@ -2,9 +2,10 @@ const express = require("express");
 const postRouter = express.Router();
 const postController = require("../controllers/postController");
 const { middlewareLogin } = require("../middware/middwareLogin");
-const { Posts, Users, Images } = require("../models");
+const { Posts, Users, Images, Criterias, Interests } = require("../models");
 const { Sequelize } = require("sequelize");
 const { Op } = require("sequelize");
+const { raw } = require("body-parser");
 
 // api lấy tất cả bài viết của khách ( người mình xem )
 postRouter.get("/posts/getbyuserid", async (req, res) => {
@@ -113,7 +114,9 @@ postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
 //     res.status(500).json({ error: "Internal server error" });
 //   }
 // });
-postRouter.get("/posts/home", async (req, res) => {
+postRouter.get("/posts/home", middlewareLogin, async (req, res) => {
+  const idUser = req.idUser;
+  console.log(idUser);
   const {
     page,
     limit,
@@ -125,28 +128,37 @@ postRouter.get("/posts/home", async (req, res) => {
     minArea,
     maxArea,
   } = req.query;
-  // console.log(req.query);
-  // console.log(limit);
-  // console.log(id);
-  // console.log(district);
-  // console.log(ward);
 
-  // Map id to Type
   const typeMap = {
     1: "canho",
     2: "chungcu",
-    3: "oghep",
+    3: "oghep", // Kiểu "oghep"
   };
+
+  const user = await Users.findOne({
+    where: { id: idUser },
+    raw: true,
+  });
+
+  // Lấy sở thích của người thuê
+  let interests = [];
+  if (user.role === "1") {
+    interests = await Criterias.findAll({
+      where: { UserId: user.id },
+      attributes: ["name"],
+      raw: true,
+    });
+  }
 
   const options = {
     page: parseInt(page, 10) || 1, // Trang hiện tại
-    paginate: parseInt(limit, 10) || 5, // Số bài viết mỗi trang
+    paginate: parseInt(limit, 10) || 6, // Số bài viết mỗi trang
     order: [["createdAt", "DESC"]], // Sắp xếp giảm dần theo createdAt
     where: {}, // Điều kiện lọc bài viết
     include: {
       model: Users,
       as: "user",
-      attributes: ["id", "avatar", "username", "name"], // Lấy thông tin người dùng
+      attributes: ["id", "avatar", "username", "name", "gender"], // Lấy thông tin người dùng và giới tính
     },
   };
 
@@ -175,6 +187,7 @@ postRouter.get("/posts/home", async (req, res) => {
     };
   }
 
+  // Lọc theo diện tích
   if (minArea || maxArea) {
     options.where.Area = {
       [Op.and]: [
@@ -187,25 +200,81 @@ postRouter.get("/posts/home", async (req, res) => {
   try {
     // Lấy bài viết từ cơ sở dữ liệu
     const { docs, pages, total } = await Posts.paginate(options);
-    // console.log("doc is", docs);
-    // Gắn thêm ảnh vào bài viết
+
+    // Lọc và sắp xếp bài viết
     const postsWithImage = await Promise.all(
       docs.map(async (post) => {
+        // Lấy ảnh cho bài viết
         const image = await Images.findOne({
           where: { PostId: post.id },
           attributes: ["url"],
         });
 
+        // Kiểm tra sự phù hợp với giới tính và sở thích
+        let genderMatch = 0; // 0 = không trùng, 1 = trùng giới tính
+        let interestMatchCount = 0; // Đếm số sở thích trùng
+
+        // Kiểm tra nếu bài viết có loại "oghep" và người thuê có sở thích phù hợp
+        if (post.Type === "oghep" && user.role === "1") {
+          const postGender = post.Gender; // Giới tính bài viết
+          const userGender = user.gender; // Giới tính người thuê
+          // console.log("lll");
+          // console.log(postGender);
+          // console.log(userGender);
+          // Kiểm tra nếu giới tính bài viết và người thuê trùng nhau
+          if (postGender === userGender) {
+            genderMatch = 1; // Trùng giới tính
+          }
+
+          // Lấy sở thích của bài viết từ bảng Interests
+          const postInterests = await Interests.findAll({
+            where: { PostId: post.id },
+            attributes: ["name"],
+            raw: true,
+          });
+
+          // Kiểm tra sở thích của bài viết với sở thích của người thuê (so sánh với 3 sở thích)
+          const userInterestNames = interests.map((i) => i.name);
+          const matchedInterests = postInterests.filter((postInterest) =>
+            userInterestNames.includes(postInterest.name)
+          );
+
+          // Đếm số sở thích trùng
+          interestMatchCount = matchedInterests.length;
+        }
+
+        // Trả lại bài viết đã có các chỉ số phù hợp
         return {
-          ...post.toJSON(),
-          image: image ? image.url : null,
+          post: {
+            ...post.toJSON(),
+            image: image ? image.url : null,
+            genderMatch,
+            interestMatchCount,
+          },
         };
       })
     );
+    // console.log(postsWithImage);
+    // Sắp xếp bài viết theo độ ưu tiên (giới tính trùng > số sở thích trùng)
+    const sortedPosts = postsWithImage
+      .filter((post) => post) // Lọc các bài viết không phải null
+      .sort((a, b) => {
+        // Kiểm tra và so sánh theo giới tính trước
+        if (b.post.genderMatch !== a.post.genderMatch) {
+          return b.post.genderMatch - a.post.genderMatch; // Giới tính trùng sẽ ưu tiên hơn
+        }
+
+        // Nếu giới tính giống nhau, sắp xếp theo số sở thích trùng
+        return b.post.interestMatchCount - a.post.interestMatchCount;
+      })
+      .map((post) => post.post); // Trả về phần tử bài viết đã sắp xếp
+
+    console.log(sortedPosts);
 
     // Trả dữ liệu về client
+    console.log(sortedPosts);
     res.json({
-      posts: postsWithImage,
+      posts: sortedPosts,
       currentPage: options.page,
       totalPages: pages,
       totalPosts: total,
