@@ -218,6 +218,7 @@ header {
 
 .Person{
     height: 100%;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -300,4 +301,115 @@ header {
 .linkBox div:hover a{
     color: #fff;
     cursor: pointer;
+}
+
+.message_soc{
+    font-size: 27px;
+    color: #ddd;
+    border: 2px solid #4c8beb;
+    background: #4c8beb;
+    padding: 7px 13px;
+    margin-right: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.messageBox {
+    position: absolute;
+    top: 71px;
+    right: 138px;
+    width: 330px;
+    text-align: left;
+    padding: 10px 5px;
+    background: #efecec;   
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 8px;
+    padding: 10px;
+    z-index: 10;
+    overflow-y: auto;
+    /* overflow-x: hidden; */
+    max-height: 400px;
+    
+}
+
+
+
+.messageBox h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.messageList {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.messageItem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    padding-bottom: 3px;
+}
+.messageItem:hover{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+.messageItem img {
+    width: 50px !important;
+    height: 50px !important;
+    border-radius: 50%;
+    object-fit: cover;
+    flex: 1;
+}
+
+.messageDetails {
+    flex: 5;
+   
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.messageName {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.messageText {
+    font-size: 13px;
+    color: #555;
+    /* overflow: hidden; */
+    white-space: nowrap;
+        /* Không xuống dòng */
+        overflow: hidden;
+        /* Cắt nội dung vượt quá */
+        text-overflow: ellipsis;
+        /* Hiện dấu "..." khi nội dung bị cắt */
+}
+
+/* Áp dụng cho thanh cuộn trong hộp tin nhắn */
+
+
+.recent-messages::-webkit-scrollbar {
+    width: 5px;
+    /* Độ rộng của thanh cuộn */
+}
+
+.recent-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    /* Màu nền của track */
+    border-radius: 3px;
+    /* Góc bo tròn */
+}
+
+.recent-messages::-webkit-scrollbar-thumb {
+    background-color: #4285dc;
+    /* Màu của thanh cuộn */
+    border-radius: 3px;
+    /* Góc bo tròn */
+}
+
+.recent-messages::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3;
+    /* Màu khi di chuột qua thanh cuộn */
 }

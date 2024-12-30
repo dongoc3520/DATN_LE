@@ -181,210 +181,229 @@ function Authen() {
   };
   return (
     <div>
-      {chLogin ? (
-        <>
-          <div class="login">
-            <h1 style={{ paddingBottom: "20px" }}>Đăng Nhập</h1>
+      <div>
+        {chLogin ? (
+          <>
+            <div class="login">
+              <h1 style={{ paddingBottom: "20px" }}>Đăng Nhập</h1>
 
-            <div>
-              <input
-                className="input_au"
-                type="text"
-                name="userName"
-                value={lg.userName}
-                placeholder="Tên đăng nhập"
-                required="required"
-                onChange={handleLoginChange}
-              />
-              <input
-                className="input_au"
-                type="password"
-                name="pass"
-                value={lg.pass}
-                onChange={handleLoginChange}
-                placeholder="Mật khẩu"
-                required="required"
-              />
-              <button className="btnLogin" onClick={handleLogin}>
-                Đăng Nhập
-              </button>
-              <div onClick={handleState} className="registerNow">
-                Đăng ký ngay
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div
-            class="login"
-            style={{ top: "20%", width: "460px", left: "45%" }}
-          >
-            <h1 style={{ paddingBottom: "20px" }}>Đăng Ký</h1>
-
-            <div>
-              <input
-                className="input_au"
-                type="text"
-                name="name"
-                placeholder="Họ và tên"
-                required="required"
-                value={reg.name}
-                onChange={handleChange}
-              />
-              <input
-                className="input_au"
-                type="text"
-                name="userName"
-                placeholder="Tên đăng nhập"
-                required="required"
-                value={reg.userName}
-                onChange={handleChange}
-              />
-              <input
-                className="input_au"
-                type="text"
-                name="age"
-                placeholder="Tuổi"
-                required="required"
-                value={reg.age}
-                onChange={handleChange}
-              />
-              <input
-                className="input_au"
-                type="text"
-                name="email"
-                placeholder="Email"
-                required="required"
-                value={reg.email}
-                onChange={handleChange}
-              />
-              <input
-                className="input_au"
-                type="text"
-                name="phone"
-                placeholder="Phone"
-                required="required"
-                value={reg.phone}
-                onChange={handleChange}
-              />
-              <input
-                className="input_au"
-                type="password"
-                name="pass"
-                placeholder="Mật khẩu"
-                required="required"
-                value={reg.pass}
-                onChange={handleChange}
-              />
-              <input
-                className="input_au"
-                type="password"
-                name="rePass"
-                placeholder="Nhập lại mật khẩu"
-                required="required"
-                value={reg.rePass}
-                onChange={handleChange}
-              />
-              <div style={{ display: "flex", gap: "16px" }}>
-                {/* <label style = {{color : '#ddd'}} for="cars">Bạn đang là</label> */}
-                <select
-                  name="work"
-                  id="work"
-                  value={reg.work}
-                  onChange={handleChange}
-                  style={{ maxWidth: "100%" }}
-                >
-                  <option value="sinhvien">Sinh Viên</option>
-                  <option value="kithuat">Nhân viên kỹ thuật</option>
-                  <option value="vanphong">Nhân viên văn phòng</option>
-                </select>
-                <select
-                  name="gender"
-                  id="gender"
-                  value={reg.gender}
-                  onChange={handleChange}
-                  style={{ maxWidth: "100%" }}
-                >
-                  <option value="nam">Nam</option>
-                  <option value="nu">Nữ</option>
-                </select>
-              </div>
               <div>
-                {/* <label style = {{color : '#ddd'}} for="cars">Bạn đang là</label> */}
-                <select
-                  name="role"
-                  id="role"
-                  value={reg.role}
-                  onChange={handleChange}
-                  style={{ maxWidth: "100%" }}
-                >
-                  <option value="1">Người thuê</option>
-                  <option value="2">Chủ cho thuê</option>
-                </select>
-              </div>
-              {reg.role === "1" ? (
-                <div className="sub_tag">
-                  {/* Hiển thị các tag đã chọn */}
-                  <div
-                    className="selected-tags"
-                    style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
-                  >
-                    {reg.selectedTags.map((tag, index) => (
-                      <div key={index} className="tag">
-                        {tag}
-                        <button
-                          className="remove-tag"
-                          onClick={() => handleRemoveTag(tag)}
-                        >
-                          ✖
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Danh sách các tag có sẵn */}
-                  <div className="available-tags">
-                    {availableTags.map((tag, index) => (
-                      <div
-                        key={index}
-                        className={`tag-option ${
-                          reg.selectedTags.includes(tag) ? "tag-selected" : ""
-                        }`}
-                        style={{
-                          backgroundColor: "#374c6f",
-                          textAlign: "center",
-                        }}
-                        onClick={() => handleTagClick(tag)}
-                      >
-                        {tag}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Hiển thị cảnh báo nếu đạt giới hạn */}
-                  {reg.selectedTags.length < 3 && (
-                    <p className="warning">Bạn chọn 3 sở thích.</p>
-                  )}
+                <input
+                  className="input_au"
+                  type="text"
+                  name="userName"
+                  value={lg.userName}
+                  placeholder="Tên đăng nhập"
+                  required="required"
+                  onChange={handleLoginChange}
+                />
+                <input
+                  className="input_au"
+                  type="password"
+                  name="pass"
+                  value={lg.pass}
+                  onChange={handleLoginChange}
+                  placeholder="Mật khẩu"
+                  required="required"
+                />
+                <button className="btnLogin" onClick={handleLogin}>
+                  Đăng Nhập
+                </button>
+                <div onClick={handleState} className="registerNow">
+                  Đăng ký ngay
                 </div>
-              ) : (
-                <></>
-              )}
-              <button
-                className="btnLogin"
-                onClick={handleRegister}
-                style={{ marginTop: "10px" }}
-              >
-                Đăng ký
-              </button>
-              <div onClick={handleState} className="registerNow">
-                Đăng nhập ngay
               </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        ) : (
+          <>
+            <div
+              class="login"
+              style={{
+                top: reg.role === "1" ? "18%" : "30%",
+                width: "460px",
+                left: "20%",
+              }}
+            >
+              <h1 style={{ paddingBottom: "20px" }}>Đăng Ký</h1>
+
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault(); // Ngăn chặn reload trang
+                  handleLogin(); // Gọi hàm login
+                }}
+              >
+                <input
+                  className="input_au"
+                  type="text"
+                  name="name"
+                  placeholder="Họ và tên"
+                  required="required"
+                  value={reg.name}
+                  onChange={handleChange}
+                />
+                <input
+                  className="input_au"
+                  type="text"
+                  name="userName"
+                  placeholder="Tên đăng nhập"
+                  required="required"
+                  value={reg.userName}
+                  onChange={handleChange}
+                />
+                <input
+                  className="input_au"
+                  type="text"
+                  name="age"
+                  placeholder="Tuổi"
+                  required="required"
+                  value={reg.age}
+                  onChange={handleChange}
+                />
+                <input
+                  className="input_au"
+                  type="text"
+                  name="email"
+                  placeholder="Email"
+                  required="required"
+                  value={reg.email}
+                  onChange={handleChange}
+                />
+                <input
+                  className="input_au"
+                  type="text"
+                  name="phone"
+                  placeholder="Phone"
+                  required="required"
+                  value={reg.phone}
+                  onChange={handleChange}
+                />
+                <input
+                  className="input_au"
+                  type="password"
+                  name="pass"
+                  placeholder="Mật khẩu"
+                  required="required"
+                  value={reg.pass}
+                  onChange={handleChange}
+                />
+                <input
+                  className="input_au"
+                  type="password"
+                  name="rePass"
+                  placeholder="Nhập lại mật khẩu"
+                  required="required"
+                  value={reg.rePass}
+                  onChange={handleChange}
+                />
+                <div style={{ display: "flex", gap: "16px" }}>
+                  {/* <label style = {{color : '#ddd'}} for="cars">Bạn đang là</label> */}
+                  <select
+                    name="work"
+                    id="work"
+                    value={reg.work}
+                    onChange={handleChange}
+                    style={{ maxWidth: "100%", color: "#ddd" }}
+                  >
+                    <option value="sinhvien">Sinh Viên</option>
+                    <option value="kithuat">Nhân viên kỹ thuật</option>
+                    <option value="vanphong">Nhân viên văn phòng</option>
+                  </select>
+                  <select
+                    name="gender"
+                    id="gender"
+                    value={reg.gender}
+                    onChange={handleChange}
+                    style={{ maxWidth: "100%", color: "#ddd" }}
+                  >
+                    <option value="nam">Nam</option>
+                    <option value="nu">Nữ</option>
+                  </select>
+                </div>
+                <div>
+                  {/* <label style = {{color : '#ddd'}} for="cars">Bạn đang là</label> */}
+                  <select
+                    name="role"
+                    id="role"
+                    value={reg.role}
+                    onChange={handleChange}
+                    style={{ maxWidth: "100%", color: "#ddd" }}
+                  >
+                    <option value="1">Người thuê</option>
+                    <option value="2">Chủ cho thuê</option>
+                  </select>
+                </div>
+                {reg.role === "1" ? (
+                  <div className="sub_tag">
+                    {/* Hiển thị các tag đã chọn */}
+                    <div
+                      className="selected-tags"
+                      style={{ backgroundColor: "rgba(0, 0, 0, 0.3)" }}
+                    >
+                      {reg.selectedTags.map((tag, index) => (
+                        <div key={index} className="tag">
+                          {tag}
+                          <button
+                            className="remove-tag"
+                            onClick={() => handleRemoveTag(tag)}
+                          >
+                            ✖
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Danh sách các tag có sẵn */}
+                    <div className="available-tags">
+                      {availableTags.map((tag, index) => (
+                        <div
+                          key={index}
+                          className={`tag-option ${
+                            reg.selectedTags.includes(tag) ? "tag-selected" : ""
+                          }`}
+                          style={{
+                            backgroundColor: "#374c6f",
+                            textAlign: "center",
+                          }}
+                          onClick={() => handleTagClick(tag)}
+                        >
+                          {tag}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Hiển thị cảnh báo nếu đạt giới hạn */}
+                    {reg.selectedTags.length < 3 && (
+                      <p className="warning">Bạn chọn 3 sở thích.</p>
+                    )}
+                  </div>
+                ) : (
+                  <></>
+                )}
+                <button
+                  className="btnLogin"
+                  onClick={handleRegister}
+                  style={{ marginTop: "10px" }}
+                >
+                  Đăng ký
+                </button>
+                <div onClick={handleState} className="registerNow">
+                  Đăng nhập ngay
+                </div>
+              </form>
+            </div>
+          </>
+        )}
+        <div className="imgright">
+          <img src="https://img.pikbest.com/png-images/qiantu/vector-illustration-of-a-cartoon-interior-of-a-cozy-interior-living-room_2682766.png!bw700" />
+        </div>
+      </div>
       <ToastContainer />
+      <p className="textlinhtinh">
+        Website tìm kiếm phòng trọ đỉnh nhất Vịnh Bắc Bộ. Với 1000+ bài đăng mỗi
+        ngày. <br />
+        Liên hệ ngay 0123456789
+      </p>
     </div>
   );
 }
