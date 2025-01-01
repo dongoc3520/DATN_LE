@@ -40,7 +40,13 @@ io.on("connection", (socket) => {
         receiverId: IdReceiver,
         content: data.content,
       });
-      io.to(roomName).emit("newMess", newMess);
+      const ngocNewMess = {
+        senderId: UserId,
+        receiverId: IdReceiver,
+        content: data.content,
+        senderAvatar: data.senderAvatar,
+      };
+      io.to(roomName).emit("newMess", ngocNewMess);
     } catch (error) {
       console.log(error);
     }

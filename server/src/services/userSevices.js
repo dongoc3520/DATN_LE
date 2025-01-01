@@ -96,6 +96,7 @@ export const userLoginService = (body) =>
             message: "Đăng nhập thành công",
             token: token,
             idUser: user.id,
+            avatar : user.avatar,
           });
         }
       }

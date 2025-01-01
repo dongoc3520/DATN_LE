@@ -33,7 +33,6 @@ export const createFriendShip = (body) =>
     }
   });
 
-
 // const { Op } = require("sequelize"); // Sử dụng Op để hỗ trợ truy vấn
 // const { Friendships, Users, Messages } = require("./models"); // Đảm bảo import các models
 
@@ -82,7 +81,7 @@ export const getFriends = async (id) => {
             id: friend.id,
             avatar: friend.avatar,
             name: friend.name,
-            text: lastMessage ? lastMessage.content : "Gửi lời chào",
+            content: lastMessage ? lastMessage.content : "Gửi lời chào",
           };
         })
       );
@@ -97,4 +96,3 @@ export const getFriends = async (id) => {
     }
   });
 };
-

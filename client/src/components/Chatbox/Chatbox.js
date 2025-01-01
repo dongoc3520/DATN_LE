@@ -5,23 +5,27 @@ import io from "socket.io-client"; // Import socket.io-client
 import "./Chatbox.css";
 import { getCookie } from "../../Cookie";
 import { url } from "../../url";
+import { useRef } from "react";
 
 const socket = io("http://localhost:5555"); // URL server backend của bạn
 
-function ChatBox({ chatWith, onClose }) {
+function ChatBox({ chatWith, onClose, mavatar }) {
+  const chatBodyRef = useRef(null);
+  const lastMessageRef = useRef(null);
   const idUser = getCookie("idUser");
-  console.log("day la id", idUser);
+  const avatarU = getCookie("avatarU");
+  // console.log("day la id", idUser);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const fetchChatHistory = async () => {
     try {
       const res = await axios.get(`${url}/mess/get`, {
         params: {
-          receiverId: parseInt(chatWith.id), // Truyền receiverId vào query
+          receiverId: parseInt(chatWith.id),
         },
-        withCredentials: true, // Nếu server yêu cầu xác thực qua cookie
+        withCredentials: true,
       });
-      console.log("Tin nhắn:", res.data.data); // Dựa trên response của API
+      console.log("Tin nhắn:", res.data.data);
       const formattedMessages = res.data.data.map((msg) => ({
         id: msg.id,
         senderId: msg.senderId,
@@ -55,6 +59,7 @@ function ChatBox({ chatWith, onClose }) {
 
     // Lắng nghe sự kiện "newMess" từ server
     socket.on("newMess", (newMessage) => {
+      // const fData = { ...newMessage, send };
       console.log("this is new", newMessage);
       setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
@@ -65,6 +70,13 @@ function ChatBox({ chatWith, onClose }) {
     };
   }, [chatWith]);
 
+  useEffect(() => {
+    // Cuộn xuống cuối cùng của danh sách tin nhắn
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
@@ -72,20 +84,24 @@ function ChatBox({ chatWith, onClose }) {
       idUser: parseInt(idUser), // Thay bằng ID người dùng hiện tại
       receiverId: parseInt(chatWith.id),
       content: newMessage,
+      senderAvatar: mavatar,
     };
-
+    console.log("vao dat nhe");
     // Gửi tin nhắn qua socket
     socket.emit("newMess", messageData);
-
+    console.log("new message", messageData);
     // Tạm thời thêm tin nhắn vào danh sách (optimistic UI)
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        senderId: parseInt(idUser),
-        text: newMessage,
-        avatar: "your-avatar-url",
-      },
-    ]);
+    // setMessages((prevMessages) => [
+    //   ...prevMessages,
+    //   {
+    //     senderId: parseInt(idUser),
+    //     receiverId: parseInt(chatWith.id),
+    //     content: newMessage,
+    //     senderAvatar:
+    //       "https://www.freepngimg.com/thumb/doraemon/80623-area-nobi-doraemon-cartoon-line-nobita.png", // Thay bằng avatar đúng nếu có
+    //     time: new Date().toISOString(), // Tạm thời đặt thời gian hiện tại
+    //   },
+    // ]);
     setNewMessage(""); // Reset input
   };
 
@@ -98,13 +114,14 @@ function ChatBox({ chatWith, onClose }) {
           <i className="fa-solid fa-xmark"></i>
         </button>
       </div>
-      <div className="chat-body">
+      <div className="chat-body" ref={chatBodyRef}>
         {messages.map((msg, index) => (
           <div
             key={index}
             className={`chat-message ${
               msg.senderId === parseInt(idUser) ? "sent" : "received"
             }`}
+            ref={index === messages.length - 1 ? lastMessageRef : null}
           >
             {msg.senderId !== parseInt(idUser) && (
               <div className="message-avatar">
@@ -115,6 +132,7 @@ function ChatBox({ chatWith, onClose }) {
           </div>
         ))}
       </div>
+
       <div className="chat-input">
         <input
           type="text"
@@ -135,13 +153,13 @@ function ChatBox({ chatWith, onClose }) {
           <MdSend />
         </button>
       </div>
-      <button
+      {/* <button
         onClick={() => {
           ngoc();
         }}
       >
         ÁKHDFKDASF
-      </button>
+      </button> */}
     </div>
   );
 }

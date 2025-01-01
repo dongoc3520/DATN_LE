@@ -130,7 +130,6 @@ function Header({ onReload }) {
       console.error("Error fetching posts:", error);
     }
     // Giả lập delay giống API thật
-   
   };
 
   useEffect(() => {
@@ -231,7 +230,7 @@ function Header({ onReload }) {
                     <img src={message.avatar} alt={message.name} />
                     <div className="messageDetails">
                       <span className="messageName">{message.name}</span>
-                      <span className="messageText">{message.text}</span>
+                      <span className="messageText">{message.content}</span>
                     </div>
                   </div>
                 ))}
@@ -264,7 +263,7 @@ function Header({ onReload }) {
           </div>
         </div>
       </header>
-      {currentChat && <ChatBox chatWith={currentChat} onClose={closeChatBox} />}
+      {currentChat && <ChatBox chatWith={currentChat} onClose={closeChatBox} mavatar = {profile.image}/>}
     </>
   );
 }
