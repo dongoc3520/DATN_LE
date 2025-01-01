@@ -335,10 +335,21 @@ header {
 
 .messageBox h4 {
     margin-bottom: 10px;
-    font-size: 18px;
+    font-size: 20px;
+    position: fixed;
+    height: 50px;
+    width: 310px;
+    z-index: 99;
+    background: #efecec;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #0056b3;
+    color: #0056b3;
+
 }
 
 .messageList {
+    margin-top: 50px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -349,10 +360,11 @@ header {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    padding-bottom: 3px;
+    padding-top: 5px;
 }
 .messageItem:hover{
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px; */
+    /* border-bottom: 1px solid #0056b3; */
 }
 .messageItem img {
     width: 50px !important;

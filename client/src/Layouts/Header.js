@@ -8,6 +8,8 @@ import { Tooltip } from "react-tooltip";
 import { deleteAllCookies } from "../Cookie";
 import { url } from "../url";
 import axios from "axios";
+import ChatBox from "../components/Chatbox/Chatbox";
+import { useMessageContext } from "../MessageContext";
 
 const idUser = getCookie("idUser");
 
@@ -15,6 +17,7 @@ function Header({ onReload }) {
   const navigate = useNavigate();
   const [showLinkBox, setShowLinkBox] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(false);
+  const { showMessageBox1, toggleMessageBox1 } = useMessageContext();
   const [profile, setProfile] = useState({
     name: "",
     age: 0,
@@ -26,6 +29,17 @@ function Header({ onReload }) {
   const personRef = useRef(null);
   const linkBoxRef = useRef(null);
   const messageRef = useRef(null);
+
+  const [currentChat, setCurrentChat] = useState(null); // Lưu người đang chat
+
+  const handleMessageItemClick = (user) => {
+    setCurrentChat(user); // Hiển thị hộp chat với người đã click
+    setShowMessageBox(false); // Ẩn danh sách tin nhắn
+  };
+
+  const closeChatBox = () => {
+    setCurrentChat(null); // Đóng hộp chat
+  };
 
   const handleProfileClick = () => {
     navigate(`/profile/${idUser}`, { replace: true });
@@ -50,58 +64,73 @@ function Header({ onReload }) {
       console.error(err);
     }
   };
-
+  const [fakeMessages, setFakeMessages] = useState([]);
   const fetchRecentMessages = async () => {
     // Fake API dữ liệu tin nhắn
-    const fakeMessages = [
-      {
-        id: 1,
-        avatar:
-          "https://th.bing.com/th/id/OIP.9uRXtvNbvPHbtOPA6FTaQwHaLG?rs=1&pid=ImgDetMain", // URL giả ảnh đại diện
-        name: "Nguyễn Văn A",
-        text: "Xin chào! Hôm nay bạn thế nào?",
-      },
-      {
-        id: 2,
-        avatar:
-          "https://th.bing.com/th/id/OIP.HsGHymmj1VAtNMgWzcmQ6gHaNs?pid=ImgDet&w=474&h=876&rs=1",
-        name: "Trần Thị B",
-        text: "Bạn đã nhận được tài liệu chưa?",
-      },
-      {
-        id: 3,
-        avatar:
-          "https://th.bing.com/th/id/OIP.JOFMlfTiIMFMuUd-TMcwCgHaJQ?pid=ImgDet&w=474&h=592&rs=1",
-        name: "Lê Văn C",
-        text: "Hẹn gặp bạn vào lúc 3 giờ nhé!",
-      },
-      {
-        id: 4,
-        avatar:
-          "https://pbs.twimg.com/profile_images/1463326625970352132/vUrHQSPd_400x400.jpg",
-        name: "Phạm Văn D",
-        text: "Cảm ơn bạn rất nhiều!",
-      },
-      {
-        id: 5,
-        avatar:
-          "https://i.pinimg.com/736x/b2/97/2a/b2972a47827633c16a5a9bbfc9ec563c.jpg",
-        name: "Hoàng Thị E",
-        text: "Tin nhắn quan trọng, hãsh tra!",
-      },
-      {
-        id: 6,
-        avatar:
-          "https://i.pinimg.com/736x/0c/8b/84/0c8b841585ac25f461dba0f356859808.jpg",
-        name: "Vũ Văn F",
-        text: "Đừng quên cuộc họp nhé dsafasdfsadfasdfasdfsadfasdfasdffsad!",
-      },
-    ];
+    // const fakeMessages = [
+    //   {
+    //     id: 1,
+    //     avatar:
+    //       "https://th.bing.com/th/id/OIP.9uRXtvNbvPHbtOPA6FTaQwHaLG?rs=1&pid=ImgDetMain", // URL giả ảnh đại diện
+    //     name: "Nguyễn Văn A",
+    //     text: "Xin chào! Hôm nay bạn thế nào?",
+    //   },
+    //   {
+    //     id: 1,
+    //     avatar:
+    //       "https://th.bing.com/th/id/OIP.HsGHymmj1VAtNMgWzcmQ6gHaNs?pid=ImgDet&w=474&h=876&rs=1",
+    //     name: "Lê Thu Hương",
+    //     text: "Hi",
+    //   },
+    //   {
+    //     id: 3,
+    //     avatar:
+    //       "https://th.bing.com/th/id/OIP.JOFMlfTiIMFMuUd-TMcwCgHaJQ?pid=ImgDet&w=474&h=592&rs=1",
+    //     name: "Lê Văn C",
+    //     text: "Hẹn gặp bạn vào lúc 3 giờ nhé!",
+    //   },
+    //   {
+    //     id: 4,
+    //     avatar:
+    //       "https://pbs.twimg.com/profile_images/1463326625970352132/vUrHQSPd_400x400.jpg",
+    //     name: "Phạm Văn D",
+    //     text: "Cảm ơn bạn rất nhiều!",
+    //   },
+    //   {
+    //     id: 5,
+    //     avatar:
+    //       "https://i.pinimg.com/736x/b2/97/2a/b2972a47827633c16a5a9bbfc9ec563c.jpg",
+    //     name: "Hoàng Thị E",
+    //     text: "Tin nhắn quan trọng, hãsh tra!",
+    //   },
+    //   {
+    //     id: 6,
+    //     avatar:
+    //       "https://i.pinimg.com/736x/0c/8b/84/0c8b841585ac25f461dba0f356859808.jpg",
+    //     name: "Vũ Văn F",
+    //     text: "Đừng quên cuộc họp nhé dsafasdfsadfasdfasdfsadfasdfasdffsad!",
+    //   },
+    // ];
+    try {
+      const response = await axios.get(`${url}/friend/friends`, {
+        withCredentials: true,
+      });
+      if (response && response.data) {
+        console.log(response.data.friendsWithMessages);
+        // Lọc và chuyển dữ liệu về định dạng mong muốn
+        setFakeMessages(response.data.friendsWithMessages);
+        // console.log("lklk");
+        setRecentMessages(response.data.friendsWithMessages);
 
+        // console.log("Danh sách bạn bè đã được định dạng:", formattedData);
+      } else {
+        console.error("Dữ liệu không hợp lệ hoặc không có bạn bè");
+      }
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
     // Giả lập delay giống API thật
-    setTimeout(() => {
-      setRecentMessages(fakeMessages);
-    }, 500); // 500ms delay
+   
   };
 
   useEffect(() => {
@@ -179,12 +208,26 @@ function Header({ onReload }) {
             <i className="fa-regular fa-comment"></i>
           </div>
           <Tooltip id="mess-tooltip" place="left" />
-          {showMessageBox && (
+          {showMessageBox && !currentChat && (
             <div className="messageBox recent-messages" ref={messageRef}>
-              <h4>Hộp tin nhắn</h4>
-              <div className="messageList ">
+              <h4>
+                Đoạn chat{" "}
+                <i
+                  class="fa-regular fa-message"
+                  style={{ position: "absolute", right: "40px" }}
+                ></i>{" "}
+                <i
+                  class="fa-solid fa-ellipsis"
+                  style={{ position: "absolute", right: "10px" }}
+                ></i>
+              </h4>
+              <div className="messageList  ">
                 {recentMessages.map((message, index) => (
-                  <div key={index} className="messageItem">
+                  <div
+                    key={index}
+                    className="messageItem"
+                    onClick={() => handleMessageItemClick(message)}
+                  >
                     <img src={message.avatar} alt={message.name} />
                     <div className="messageDetails">
                       <span className="messageName">{message.name}</span>
@@ -209,14 +252,21 @@ function Header({ onReload }) {
                   <i className="fa-solid fa-right-from-bracket"></i>
                   Đăng xuất
                 </div>
+                <button
+                  onClick={() => {
+                    console.log(fakeMessages);
+                  }}
+                >
+                  kjasjhdfkads
+                </button>
               </div>
             )}
           </div>
         </div>
       </header>
+      {currentChat && <ChatBox chatWith={currentChat} onClose={closeChatBox} />}
     </>
   );
 }
-
 
 export default Header;

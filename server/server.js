@@ -39,8 +39,6 @@ export const io = socketIo(server, {
   },
 });
 
-
-
 app.get("/hehe", (req, res) => {
   res.send("hello world");
 });
@@ -50,14 +48,14 @@ app.use("/user", userRouter);
 const postRouter = require("./src/routes/routerpost");
 app.use("/post", postRouter);
 
-// const friendRouter = require("./src/routes/routerfriend");
-// app.use("/friend", friendRouter);
+const friendRouter = require("./src/routes/routerfriend");
+app.use("/friend", friendRouter);
 
 // const commentRouter = require("./src/routes/routercomment");
 // app.use("/comment", commentRouter);
 
-// const messRouter = require("./src/routes/routermess");
-// app.use("/mess", messRouter);
+const messRouter = require("./src/routes/routermess");
+app.use("/mess", messRouter);
 
 // const videoRouter = require("./src/routes/routerVideo");
 // app.use("/video", videoRouter);

@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-const { Users, Criterias, sequelize } = require("../models");
+const { Users, Criterias, sequelize, Messages } = require("../models");
 var jwt = require("jsonwebtoken");
 
 export const userRegisterService = (body) =>

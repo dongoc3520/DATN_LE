@@ -15,10 +15,12 @@ import { storage } from "../../config";
 import VrImage360 from "../../components/RoomVR/RoomVR";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { wardsData, data } from "../../data";
+import { useMessageContext } from "../../MessageContext";
 import { v4 } from "uuid";
 // import {getCookies} from "../"
 
 const PostPage = () => {
+  const { toggleMessageBox1 } = useMessageContext(); // Sử dụng context
   const navigate = useNavigate();
   const [inter, setInter] = useState([]);
   const { id } = useParams();
@@ -36,6 +38,7 @@ const PostPage = () => {
   const [isEditInfoModalOpen, setIsEditInfoModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [myim, setMyim] = useState("");
+
   const [checkp, setCheckp] = useState({
     title: "",
     price: 0,
@@ -60,6 +63,25 @@ const PostPage = () => {
     district: "",
     ward: "",
   });
+
+  const handleSendMess = async () => {
+    try {
+      const receiverId = post.user.id;
+      const response = await axios.post(
+        `${url}/friend/send`,
+        { receiverId: receiverId },
+        {
+          withCredentials: true,
+        }
+      );
+      if (response) {
+        console.log("response", response);
+        // toggleMessageBox1();
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách bài đăng:", error);
+    }
+  };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -159,7 +181,7 @@ const PostPage = () => {
   // const [posts, setPosts] = useState([]);
 
   const fetchPosts = async (page) => {
-    console.log("ngoc day", post);
+    //console.log("ngoc day", post);
     try {
       // console.log("ngoc day", post.user.id);
       const response = await axios.get(`${url}/post/posts/getbyuserid`, {
@@ -513,7 +535,7 @@ const PostPage = () => {
                 </>
               ) : (
                 <>
-                  <div className="post_chat">
+                  <div className="post_chat" onClick={handleSendMess}>
                     <i class="fa-brands fa-rocketchat"></i>Nhắn tin
                   </div>
                 </>

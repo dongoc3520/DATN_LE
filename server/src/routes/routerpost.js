@@ -116,7 +116,7 @@ postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
 // });
 postRouter.get("/posts/home", middlewareLogin, async (req, res) => {
   const idUser = req.idUser;
-  console.log(idUser);
+  //console.log(idUser);
   const {
     page,
     limit,
@@ -269,10 +269,10 @@ postRouter.get("/posts/home", middlewareLogin, async (req, res) => {
       })
       .map((post) => post.post); // Trả về phần tử bài viết đã sắp xếp
 
-    console.log(sortedPosts);
+    //console.log(sortedPosts);
 
     // Trả dữ liệu về client
-    console.log(sortedPosts);
+    //console.log(sortedPosts);
     res.json({
       posts: sortedPosts,
       currentPage: options.page,

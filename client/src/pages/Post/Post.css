@@ -30,7 +30,7 @@
     margin-bottom: 20px;
     /* overflow: hidden; */
     text-overflow: ellipsis;
-    
+    max-width: 100%;
 }
 .post-details i {
     color: #0957aa;
