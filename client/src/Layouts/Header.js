@@ -1,5 +1,6 @@
 import "./Header.css";
 import logoImage from "../img/nhatro.png";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { getCookie } from "../Cookie";
 import { useState, useEffect, useRef } from "react";
@@ -9,15 +10,20 @@ import { deleteAllCookies } from "../Cookie";
 import { url } from "../url";
 import axios from "axios";
 import ChatBox from "../components/Chatbox/Chatbox";
-import { useMessageContext } from "../MessageContext";
+import io from "socket.io-client"; // Import socket.io-client
+
+// import { useMessageContext } from "../DataContext";
+
+import { DataContext } from "../DataContext";
 
 const idUser = getCookie("idUser");
 
 function Header({ onReload }) {
   const navigate = useNavigate();
+  const socket = io("http://localhost:5555"); // URL server backend của bạn
   const [showLinkBox, setShowLinkBox] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(false);
-  const { showMessageBox1, toggleMessageBox1 } = useMessageContext();
+  const { mydata, setMydata } = useContext(DataContext);
   const [profile, setProfile] = useState({
     name: "",
     age: 0,
@@ -31,14 +37,40 @@ function Header({ onReload }) {
   const messageRef = useRef(null);
 
   const [currentChat, setCurrentChat] = useState(null); // Lưu người đang chat
-
+  const handleSendMessage2 = () => {
+    const messageData = {
+      idUser: parseInt(idUser),
+      receiverId: parseInt(mydata.id),
+      content: mydata.content1,
+      senderAvatar: mydata.avatar,
+    };
+    const messageData2 = {
+      idUser: parseInt(idUser),
+      receiverId: parseInt(mydata.id),
+      content: mydata.content2,
+      senderAvatar: mydata.avatar,
+    };
+    socket.emit("newMess", messageData2);
+    socket.emit("newMess", messageData);
+    // fetchChatHistory();
+    console.log("new mess nay nay");
+  };
   const handleMessageItemClick = (user) => {
+    console.log(user);
     setCurrentChat(user); // Hiển thị hộp chat với người đã click
     setShowMessageBox(false); // Ẩn danh sách tin nhắn
   };
 
   const closeChatBox = () => {
-    setCurrentChat(null); // Đóng hộp chat
+    setCurrentChat(null);
+    setMydata(null);
+    setShowMessageBox(false);
+  };
+  const childRef = React.createRef();
+  const handleClick = () => {
+    console.log("Button clicked in Parent!");
+    // Gọi hàm trong component con
+    childRef.current.childFunction();
   };
 
   const handleProfileClick = () => {
@@ -66,76 +98,47 @@ function Header({ onReload }) {
   };
   const [fakeMessages, setFakeMessages] = useState([]);
   const fetchRecentMessages = async () => {
-    // Fake API dữ liệu tin nhắn
-    // const fakeMessages = [
-    //   {
-    //     id: 1,
-    //     avatar:
-    //       "https://th.bing.com/th/id/OIP.9uRXtvNbvPHbtOPA6FTaQwHaLG?rs=1&pid=ImgDetMain", // URL giả ảnh đại diện
-    //     name: "Nguyễn Văn A",
-    //     text: "Xin chào! Hôm nay bạn thế nào?",
-    //   },
-    //   {
-    //     id: 1,
-    //     avatar:
-    //       "https://th.bing.com/th/id/OIP.HsGHymmj1VAtNMgWzcmQ6gHaNs?pid=ImgDet&w=474&h=876&rs=1",
-    //     name: "Lê Thu Hương",
-    //     text: "Hi",
-    //   },
-    //   {
-    //     id: 3,
-    //     avatar:
-    //       "https://th.bing.com/th/id/OIP.JOFMlfTiIMFMuUd-TMcwCgHaJQ?pid=ImgDet&w=474&h=592&rs=1",
-    //     name: "Lê Văn C",
-    //     text: "Hẹn gặp bạn vào lúc 3 giờ nhé!",
-    //   },
-    //   {
-    //     id: 4,
-    //     avatar:
-    //       "https://pbs.twimg.com/profile_images/1463326625970352132/vUrHQSPd_400x400.jpg",
-    //     name: "Phạm Văn D",
-    //     text: "Cảm ơn bạn rất nhiều!",
-    //   },
-    //   {
-    //     id: 5,
-    //     avatar:
-    //       "https://i.pinimg.com/736x/b2/97/2a/b2972a47827633c16a5a9bbfc9ec563c.jpg",
-    //     name: "Hoàng Thị E",
-    //     text: "Tin nhắn quan trọng, hãsh tra!",
-    //   },
-    //   {
-    //     id: 6,
-    //     avatar:
-    //       "https://i.pinimg.com/736x/0c/8b/84/0c8b841585ac25f461dba0f356859808.jpg",
-    //     name: "Vũ Văn F",
-    //     text: "Đừng quên cuộc họp nhé dsafasdfsadfasdfasdfsadfasdfasdffsad!",
-    //   },
-    // ];
     try {
       const response = await axios.get(`${url}/friend/friends`, {
         withCredentials: true,
       });
       if (response && response.data) {
         console.log(response.data.friendsWithMessages);
-        // Lọc và chuyển dữ liệu về định dạng mong muốn
-        setFakeMessages(response.data.friendsWithMessages);
-        // console.log("lklk");
-        setRecentMessages(response.data.friendsWithMessages);
 
-        // console.log("Danh sách bạn bè đã được định dạng:", formattedData);
+        setFakeMessages(response.data.friendsWithMessages);
+
+        setRecentMessages(response.data.friendsWithMessages);
       } else {
         console.error("Dữ liệu không hợp lệ hoặc không có bạn bè");
       }
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
-    // Giả lập delay giống API thật
   };
 
   useEffect(() => {
     fetchUsers();
     fetchRecentMessages();
-  }, []);
+  }, [showMessageBox]);
+
+  useEffect(() => {
+    // console.log("heheheh");
+    if (mydata) {
+      console.log("data cua toi", mydata);
+      setCurrentChat(mydata);
+      // console.log(mydata);
+      handleSendMessage2();
+      setShowMessageBox(false);
+      // setMydata(null);
+    }
+  }, [mydata]);
+
+  // useEffect(() => {
+  //   console.log("hix");
+  //   if (!currentChat && mydata) {
+  //     setMydata(null);
+  //   }
+  // }, [currentChat, mydata, setMydata]);
 
   const toggleLinkBox = () => {
     setShowLinkBox(!showLinkBox);
@@ -234,6 +237,11 @@ function Header({ onReload }) {
                     </div>
                   </div>
                 ))}
+                {recentMessages.length === 0 && (
+                  <span className="chuacotin" style={{ padding: "10px 5px" }}>
+                    Chưa có tin nhắn nào
+                  </span>
+                )}
               </div>
             </div>
           )}
@@ -253,7 +261,7 @@ function Header({ onReload }) {
                 </div>
                 <button
                   onClick={() => {
-                    console.log(fakeMessages);
+                    console.log(currentChat);
                   }}
                 >
                   kjasjhdfkads
@@ -263,7 +271,13 @@ function Header({ onReload }) {
           </div>
         </div>
       </header>
-      {currentChat && <ChatBox chatWith={currentChat} onClose={closeChatBox} mavatar = {profile.image}/>}
+      {currentChat && (
+        <ChatBox
+          chatWith={currentChat}
+          onClose={closeChatBox}
+          mavatar={profile.image}
+        />
+      )}
     </>
   );
 }

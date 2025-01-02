@@ -1,5 +1,5 @@
 import "./Post.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
@@ -15,12 +15,14 @@ import { storage } from "../../config";
 import VrImage360 from "../../components/RoomVR/RoomVR";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { wardsData, data } from "../../data";
-import { useMessageContext } from "../../MessageContext";
+// import { useMessageContext } from "../../DataContext";
+import { DataContext } from "../../DataContext";
 import { v4 } from "uuid";
 // import {getCookies} from "../"
 
 const PostPage = () => {
-  const { toggleMessageBox1 } = useMessageContext(); // Sử dụng context
+  // const { toggleMessageBox1 } = useMessageContext(); // Sử dụng context
+  const { setMydata } = useContext(DataContext);
   const navigate = useNavigate();
   const [inter, setInter] = useState([]);
   const { id } = useParams();
@@ -81,6 +83,14 @@ const PostPage = () => {
     } catch (error) {
       console.error("Lỗi khi lấy danh sách bài đăng:", error);
     }
+    const fakeNe = {
+      id: post.user.id,
+      avatar: post.user.avatar,
+      name: post.user.name,
+      content1: "Cho tôi thông tin trọ này",
+      content2: post.images[0],
+    };
+    setMydata(fakeNe);
   };
 
   const handleImageChange = (event) => {

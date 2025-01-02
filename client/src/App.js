@@ -6,13 +6,13 @@ import DefaultLayout from "./Layouts/DefaultLayout";
 import { getCookie } from "./Cookie";
 import Authen from "./pages/authen/Authen";
 import NotFound from "./pages/NotFound/NotFound";
-import { MessageProvider } from "./MessageContext";
+import { DataProvider } from "./DataContext";
 
 const token = getCookie("token");
 
 function App() {
   return (
-    <MessageProvider>
+    <DataProvider>
       <Router>
         <div className="App">
           {token ? (
@@ -49,7 +49,7 @@ function App() {
           )}
         </div>
       </Router>
-    </MessageProvider>
+    </DataProvider>
   );
 }
 export default App;

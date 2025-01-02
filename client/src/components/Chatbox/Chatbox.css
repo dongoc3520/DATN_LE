@@ -140,3 +140,14 @@
     background-color: #f1f1f1;
     width: 80%;
 }
+span.new-message-notification {
+    position: fixed;
+    top: 15px;
+    right: 176px;
+    width: 18px;
+    height: 18px;
+    background: red;
+    border-radius: 50%;
+    /* font-size: 25px; */
+    color: #ff1212;
+}

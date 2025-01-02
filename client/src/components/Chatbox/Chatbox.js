@@ -17,6 +17,7 @@ function ChatBox({ chatWith, onClose, mavatar }) {
   // console.log("day la id", idUser);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [newMessageNotification, setNewMessageNotification] = useState(false);
   const fetchChatHistory = async () => {
     try {
       const res = await axios.get(`${url}/mess/get`, {
@@ -41,70 +42,79 @@ function ChatBox({ chatWith, onClose, mavatar }) {
     }
   };
 
-  const ngoc = () => {
-    console.log(messages);
-  };
-
   useEffect(() => {
-    // Fetch chat history từ API
-
-    fetchChatHistory();
-
-    // Join room khi mở chat
-    const roomData = {
-      idUser: parseInt(idUser), // Thay bằng ID người dùng hiện tại
-      receiverId: parseInt(chatWith.id),
-    };
-    socket.emit("joinRoom", roomData);
-
-    // Lắng nghe sự kiện "newMess" từ server
-    socket.on("newMess", (newMessage) => {
-      // const fData = { ...newMessage, send };
-      console.log("this is new", newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
-    // Cleanup khi component unmount
-    return () => {
-      socket.disconnect();
-    };
-  }, [chatWith]);
-
-  useEffect(() => {
-    // Cuộn xuống cuối cùng của danh sách tin nhắn
+    // console.log("chat with", chatWith);
     if (lastMessageRef.current) {
       lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
   const handleSendMessage = async () => {
+    console.log("newMessage", newMessage);
     if (!newMessage.trim()) return;
 
     const messageData = {
-      idUser: parseInt(idUser), // Thay bằng ID người dùng hiện tại
+      idUser: parseInt(idUser),
       receiverId: parseInt(chatWith.id),
       content: newMessage,
       senderAvatar: mavatar,
     };
-    console.log("vao dat nhe");
-    // Gửi tin nhắn qua socket
     socket.emit("newMess", messageData);
-    console.log("new message", messageData);
-    // Tạm thời thêm tin nhắn vào danh sách (optimistic UI)
-    // setMessages((prevMessages) => [
-    //   ...prevMessages,
-    //   {
-    //     senderId: parseInt(idUser),
-    //     receiverId: parseInt(chatWith.id),
-    //     content: newMessage,
-    //     senderAvatar:
-    //       "https://www.freepngimg.com/thumb/doraemon/80623-area-nobi-doraemon-cartoon-line-nobita.png", // Thay bằng avatar đúng nếu có
-    //     time: new Date().toISOString(), // Tạm thời đặt thời gian hiện tại
-    //   },
-    // ]);
-    setNewMessage(""); // Reset input
+    console.log("new mess ne");
+
+    setNewMessage("");
   };
 
+  // const handleSendMessage2 = async () => {
+  //   const messageData = {
+  //     idUser: parseInt(idUser),
+  //     receiverId: parseInt(chatWith.id),
+  //     content: chatWith.content1,
+  //     senderAvatar: mavatar,
+  //   };
+  //   const messageData2 = {
+  //     idUser: parseInt(idUser),
+  //     receiverId: parseInt(chatWith.id),
+  //     content: chatWith.content2,
+  //     senderAvatar: mavatar,
+  //   };
+  //   socket.emit("newMess", messageData2);
+  //   socket.emit("newMess", messageData);
+  //   // fetchChatHistory();
+  //   console.log("new mess nay nay");
+  // };
+  // useEffect(() => {
+  //   console.log("chat with", chatWith);
+  //   if (chatWith.content1 && chatWith.content2) {
+  //     console.log("co vao day");
+  //     handleSendMessage2();
+  //   }
+  // }, [chatWith]);
+  useEffect(() => {
+    fetchChatHistory();
+    const roomData = {
+      idUser: parseInt(idUser),
+      receiverId: parseInt(chatWith.id),
+    };
+    if (!socket.connected) {
+      socket.connect();
+    }
+    socket.emit("joinRoom", roomData);
+    socket.on("newMess", (newMessage) => {
+      console.log("this is new", newMessage);
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+      if (newMessage.senderId !== parseInt(idUser)) {
+        setNewMessageNotification(true); // Hiển thị chấm đỏ nếu tin nhắn gửi từ người khác
+      }
+    });
+    return () => {
+      socket.disconnect();
+    };
+  }, [chatWith.id]);
+  const isImageURL = (content) => {
+    // Kiểm tra nếu content bắt đầu với "http" hoặc "https"
+    return content.startsWith("http://") || content.startsWith("https://");
+  };
   return (
     <div className="chat-box">
       <div className="chat-header">
@@ -128,7 +138,18 @@ function ChatBox({ chatWith, onClose, mavatar }) {
                 <img src={msg.senderAvatar} alt="avatar" />
               </div>
             )}
-            <div className="message-text">{msg.content}</div>
+
+            <div className="message-text">
+              {isImageURL(msg.content) ? (
+                <img
+                  src={msg.content}
+                  alt="sent-image"
+                  style={{ maxWidth: "200px", borderRadius: "8px" }}
+                />
+              ) : (
+                msg.content
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -153,13 +174,11 @@ function ChatBox({ chatWith, onClose, mavatar }) {
           <MdSend />
         </button>
       </div>
-      {/* <button
-        onClick={() => {
-          ngoc();
-        }}
-      >
-        ÁKHDFKDASF
-      </button> */}
+      {newMessageNotification && (
+        <span className="new-message-notification">
+          {/* <i class="fa-solid fa-bell"></i> */}
+        </span>
+      )}
     </div>
   );
 }
