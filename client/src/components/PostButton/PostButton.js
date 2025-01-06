@@ -33,6 +33,8 @@ const PostButton = ({ onSubmit }) => {
     district: "",
     ward: "",
     gender: "nam",
+    age: 0,
+    work: "sinhvien",
   });
   const updateField = (field, value) => {
     setFormData((prev) => ({
@@ -54,6 +56,8 @@ const PostButton = ({ onSubmit }) => {
       address,
       ward,
       gender,
+      age,
+      work,
     } = formData;
 
     // Kiểm tra xem các trường đã có giá trị chưa
@@ -153,13 +157,15 @@ const PostButton = ({ onSubmit }) => {
   };
 
   const callAPI = async () => {
-    // console.log(formData);
+    console.log("tda",formData);
+    
     await axios
       .post(`${url}/post`, formData, { withCredentials: true })
       .then((response) => {
         // console.log(response);
         if (response.data.errCode === 0) {
           toast.success("Tạo bài viết thành công");
+          setPage(1);
         }
       })
       .catch((err) => {
@@ -177,6 +183,8 @@ const PostButton = ({ onSubmit }) => {
       ward: "",
       address: "",
       gender: "nam",
+      age: 0,
+      work: "sinhvien",
     });
     onSubmit();
     setShowModal(false);
@@ -390,9 +398,7 @@ const PostButton = ({ onSubmit }) => {
               ) : (
                 <>
                   <div className="tag-input-container">
-            
                     <div className="address-input">
-                
                       <Select
                         id="district"
                         options={data.flatMap((item) => item.options)}
@@ -446,6 +452,38 @@ const PostButton = ({ onSubmit }) => {
 
                     {formData.type === "oghep" ? (
                       <>
+                        <div className="form-group">
+                          <input
+                            type="range"
+                            name="age"
+                            min="0"
+                            max="100"
+                            step="1"
+                            value={formData.age}
+                            onChange={handleInputChange}
+                          />
+                          <p style={{ fontSize: "18px" }}>
+                            {formData.age} Tuổi
+                          </p>
+                        </div>
+                        <div className="form-group">
+                          <select
+                            name="work"
+                            value={formData.work}
+                            onChange={handleInputChange}
+                            style={{
+                              width: "100%",
+                              maxWidth: "100%",
+                              fontSize: "18px",
+                            }}
+                          >
+                            <option value="sinhvien">Sinh Viên</option>
+                            <option value="kithuat">Nhân Viên Kĩ Thuật</option>
+                            <option value="vanphong">
+                              Nhân Viên Văn Phòng
+                            </option>
+                          </select>
+                        </div>
                         <div className="form-group">
                           <select
                             name="gender"

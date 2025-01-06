@@ -13,6 +13,8 @@ export const createPostController = async (req, res) => {
     selectedTags,
     type,
     gender,
+    age,
+    work
   } = req.body;
   const body = {
     id: req.idUser,
@@ -27,8 +29,10 @@ export const createPostController = async (req, res) => {
     selectedTags: selectedTags,
     type: type,
     gender: gender,
+    age: parseInt(age),
+    work: work,
   };
-  // console.log("body",body);
+  console.log("body",body);
   try {
     const response = await postService.createPostService(body);
     return res.status(200).json(response);

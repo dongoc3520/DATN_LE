@@ -1,5 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
+
 .btn {
     display: inline-block;
     display: inline;
@@ -199,50 +200,44 @@ input:focus {
 
 
 
-/* Tùy chỉnh cho thẻ select */
 select {
     width: 100%;
-    /* Chiều rộng đầy đủ */
+ 
     max-width: 400px;
-    /* Giới hạn chiều rộng */
+
     padding: 7px;
     font-size: 15px;
     font-family: Arial, sans-serif;
-    /* border: 1px solid #ccc; */
-    /* Viền */
+  
     border-radius: 5px;
-    /* Bo góc */
-    background: #3d76e8;
-    /* color: #ddd; */
+
     cursor: pointer;
     outline: none;
-    /* Loại bỏ viền khi focus */
+  
     transition: all 0.3s ease;
     text-align: center;
-    /* Hiệu ứng chuyển đổi */
+
 }
 
-/* Hiệu ứng hover */
+
 select:hover {
-    /* border-color: #007BFF; */
-    /* Đổi màu viền */
-    background: #346fe7;
-    /* Đổi nền */
+ 
 }
 
-/* Hiệu ứng focus */
+
 select:focus {
-    /* border-color: #007BFF; */
-    /* box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); */
-    background: #346fe7;
-    /* Hiệu ứng đổ bóng */
+
 }
 
-/* Tùy chỉnh các tùy chọn bên trong */
 option {
     padding: 10px;
-    font-size: 15px;
-    background: rgba(0, 0, 0, 0.3);
+    font-size: 17px;
+}
+option:hover{
+    background-color: red;
+}
+.hehehe_ngoc:hover{
+    background-color: red;
 }
 
 select#work {
@@ -256,8 +251,6 @@ select#role {
     margin-bottom: 10px;
 }
 .tag-option_ {
-    /* background-color: #f0f0f0; */
-    border: 1px solid #000000;
     padding: 8px 12px;
     border-radius: 15px;
     margin: 5px;
@@ -265,7 +258,6 @@ select#role {
     cursor: pointer;
     transition: 0.2s;
     text-align: center;
-    /* color: #9f9e9e; */
 }
 
 .imgright{

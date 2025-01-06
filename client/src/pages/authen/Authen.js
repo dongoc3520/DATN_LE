@@ -115,9 +115,11 @@ function Authen() {
       !reg.age ||
       !reg.gender
     ) {
+      console.log("hixxx");
       alert("Cần nhập đủ thông tin");
       return;
     } else if (reg.selectedTags.length < 3 && reg.role === "1") {
+      console.log("hixxx1");
       alert("Cần nhập đủ thông tin");
       return;
     } else if (reg.pass.length < 6) {
@@ -230,7 +232,7 @@ function Authen() {
             >
               <h1 style={{ paddingBottom: "20px" }}>Đăng Ký</h1>
 
-              <form
+              <div
                 onSubmit={(e) => {
                   e.preventDefault(); // Ngăn chặn reload trang
                   handleLogin(); // Gọi hàm login
@@ -393,7 +395,7 @@ function Authen() {
                 <div onClick={handleState} className="registerNow">
                   Đăng nhập ngay
                 </div>
-              </form>
+              </div>
             </div>
           </>
         )}

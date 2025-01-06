@@ -57,12 +57,14 @@
 
 .form-group input,
 .form-group select {
+    background-color: #ddd;
     width: 100%;
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 14px;
 }
+
 
 .image-uploader {
     display: flex;
@@ -237,7 +239,7 @@ textarea:focus {
     border: 1px solid #ccc;
     padding: 10px;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: #f9f9f9 !important;
     min-height: 50px;
 }
 
@@ -268,7 +270,7 @@ textarea:focus {
 }
 
 .tag-option {
-    background-color: #f0f0f0;
+    background-color: #f0f0f0 !important;
     border: 1px solid #ccc;
     padding: 8px 12px;
     border-radius: 15px;

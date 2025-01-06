@@ -56,11 +56,52 @@ header {
 }
 
 .searchPT{
-    flex: 1;
     outline: none;
     border: 1px solid #5200cd;
     padding: 5px;
     font-size: 16px;
+}
+.input_search{
+    /* width: 100px; */
+    position: relative;
+}
+.input_search input{
+    width: 100%;
+    color: #0056b3;
+    padding-left: 10px;
+}
+.input_search i{
+    position: absolute;
+    font-size: 24px;
+    color: #0056b3;
+    right: 10px;
+    top: 6px;
+}
+.user_item{
+    padding: 5px 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.user_item:hover{
+    background: #dbe7f3;
+    /* color: #ddd; */
+}
+.user_item img{
+    border-radius: 50%;
+    
+}
+.user_item span{
+    margin-left: 10px;
+}
+.sub_user_search{
+    position: absolute;
+    top: 37px;
+   
+    width: 100%;
+    background: #fff;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    text-align: left;
 }
 .searchPT:focus {
     outline: none;
@@ -424,4 +465,9 @@ header {
 .recent-messages::-webkit-scrollbar-thumb:hover {
     background-color: #0056b3;
     /* Màu khi di chuột qua thanh cuộn */
+}
+
+.user_avatar {
+    width: 50px;
+    height: 50px;
 }

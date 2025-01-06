@@ -19,6 +19,9 @@ import { DataContext } from "../DataContext";
 const idUser = getCookie("idUser");
 
 function Header({ onReload }) {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
+  const [debouncedQuery, setDebouncedQuery] = useState(query);
   const navigate = useNavigate();
   const socket = io("http://localhost:5555"); // URL server backend của bạn
   const [showLinkBox, setShowLinkBox] = useState(false);
@@ -52,13 +55,12 @@ function Header({ onReload }) {
     };
     socket.emit("newMess", messageData2);
     socket.emit("newMess", messageData);
-    // fetchChatHistory();
     console.log("new mess nay nay");
   };
   const handleMessageItemClick = (user) => {
     console.log(user);
-    setCurrentChat(user); // Hiển thị hộp chat với người đã click
-    setShowMessageBox(false); // Ẩn danh sách tin nhắn
+    setCurrentChat(user);
+    setShowMessageBox(false);
   };
 
   const closeChatBox = () => {
@@ -69,7 +71,6 @@ function Header({ onReload }) {
   const childRef = React.createRef();
   const handleClick = () => {
     console.log("Button clicked in Parent!");
-    // Gọi hàm trong component con
     childRef.current.childFunction();
   };
 
@@ -122,23 +123,13 @@ function Header({ onReload }) {
   }, [showMessageBox]);
 
   useEffect(() => {
-    // console.log("heheheh");
     if (mydata) {
       console.log("data cua toi", mydata);
       setCurrentChat(mydata);
-      // console.log(mydata);
       handleSendMessage2();
       setShowMessageBox(false);
-      // setMydata(null);
     }
   }, [mydata]);
-
-  // useEffect(() => {
-  //   console.log("hix");
-  //   if (!currentChat && mydata) {
-  //     setMydata(null);
-  //   }
-  // }, [currentChat, mydata, setMydata]);
 
   const toggleLinkBox = () => {
     setShowLinkBox(!showLinkBox);
@@ -174,13 +165,81 @@ function Header({ onReload }) {
     };
   }, []);
 
+  const fetchsearch = async () => {
+    try {
+      const body = {
+        search: debouncedQuery,
+      };
+      const response = await axios.post(`${url}/user/search`, body, {
+        withCredentials: true,
+      });
+      setResults([...response.data.data]);
+    } catch (error) {
+      console.error("Lỗi khi gọi API:", error);
+    }
+  };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 300);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [query]);
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      fetchsearch();
+    } else {
+      setResults([]);
+    }
+  }, [debouncedQuery]);
+
+  const handleSwapTab = (mId) => {
+    setResults([]);
+    setQuery("");
+    navigate(`/profile/${mId}`);
+  };
+
   return (
     <>
       <header>
         <Link href="" className="logo">
           <img src={logoImage} alt="Shenlik Tech Logo" />
         </Link>
-        <input className="searchPT" placeholder="" />
+        <div className="input_search" style={{ flex: "1" }}>
+          <input
+            className="searchPT"
+            placeholder="Tên người dùng..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <i class="fa-solid fa-magnifying-glass"></i>
+          {results.length > 0 && (
+            <div className="sub_user_search">
+              {results.map((user) => (
+                <div
+                  className="user_item"
+                  onClick={() => {
+                    handleSwapTab(user.id);
+                  }}
+                >
+                  <img
+                    src={user.avatar} /* Thay bằng link ảnh thật */
+                    alt="User Avatar"
+                    className="user_avatar"
+                  />
+                  <span className="user_name">{user.name}</span>
+                  <span className="user_name" style={{ color: "#0056b3" }}>
+                    @{user.userName}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <ul className="navbarr">
           <Link to="/1" className="nav-link" style={{ color: "#1773ea" }}>
             <i className="fa-solid fa-house" style={{ marginRight: "5px" }}></i>
@@ -200,7 +259,6 @@ function Header({ onReload }) {
         </ul>
 
         <div className="mainn">
-          {/* Tin nhắn */}
           <div
             className="message_soc"
             data-tooltip-id="mess-tooltip"
@@ -259,13 +317,13 @@ function Header({ onReload }) {
                   <i className="fa-solid fa-right-from-bracket"></i>
                   Đăng xuất
                 </div>
-                <button
+                {/* <button
                   onClick={() => {
                     console.log(currentChat);
                   }}
                 >
                   kjasjhdfkads
-                </button>
+                </button> */}
               </div>
             )}
           </div>

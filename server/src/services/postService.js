@@ -15,6 +15,8 @@ export const createPostService = (body) =>
         Ward: body.ward,
         Type: body.type,
         Gender: body.gender,
+        Age: body.age,
+        Work: body.work,
       });
 
       const idPost = newpost.id;

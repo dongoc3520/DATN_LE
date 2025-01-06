@@ -33,7 +33,7 @@ io.on("connection", (socket) => {
     )}`;
 
 
-    console.log("ngoc ne", data);
+    //console.log("ngoc ne", data);
     try {
       const newMess = await Messages.create({
         senderId: UserId,

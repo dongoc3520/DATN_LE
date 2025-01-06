@@ -96,7 +96,7 @@ export const userLoginService = (body) =>
             message: "Đăng nhập thành công",
             token: token,
             idUser: user.id,
-            avatar : user.avatar,
+            avatar: user.avatar,
           });
         }
       }
@@ -370,7 +370,7 @@ export const userGetMessService = (body) =>
         });
         result.push(messages[messages.length - 1]);
       }
-      // // Lấy ra tin nhắn gần nhất giữa bạn và người bạn của mình
+      // Lấy ra tin nhắn gần nhất giữa bạn và người bạn của mình
 
       reslove({
         errCode: 0,
