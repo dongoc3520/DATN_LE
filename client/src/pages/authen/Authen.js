@@ -308,7 +308,7 @@ function Authen() {
                     id="work"
                     value={reg.work}
                     onChange={handleChange}
-                    style={{ maxWidth: "100%", color: "#ddd" }}
+                    style={{ maxWidth: "100%", color: "#333 !important" }}
                   >
                     <option value="sinhvien">Sinh Viên</option>
                     <option value="kithuat">Nhân viên kỹ thuật</option>
@@ -319,7 +319,7 @@ function Authen() {
                     id="gender"
                     value={reg.gender}
                     onChange={handleChange}
-                    style={{ maxWidth: "100%", color: "#ddd" }}
+                    style={{ maxWidth: "100%", color: "#333" }}
                   >
                     <option value="nam">Nam</option>
                     <option value="nu">Nữ</option>
@@ -332,7 +332,7 @@ function Authen() {
                     id="role"
                     value={reg.role}
                     onChange={handleChange}
-                    style={{ maxWidth: "100%", color: "#ddd" }}
+                    style={{ maxWidth: "100%", color: "#333 !important" }}
                   >
                     <option value="1">Người thuê</option>
                     <option value="2">Chủ cho thuê</option>

@@ -32,7 +32,7 @@ export const createPostController = async (req, res) => {
     age: parseInt(age),
     work: work,
   };
-  console.log("body",body);
+ // console.log("body",body);
   try {
     const response = await postService.createPostService(body);
     return res.status(200).json(response);

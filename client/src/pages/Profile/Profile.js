@@ -28,9 +28,11 @@ const Profile = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [profile, setProfile] = useState({
+    work: "",
+    gender: "",
     name: "",
     age: 0,
-    likes: 0,
+    likes: 1000,
     image: "",
     role: "",
   });
@@ -65,9 +67,11 @@ const Profile = () => {
         withCredentials: true,
       });
       setProfile({
+        gender: res.data.user.gender,
+        work: res.data.user.work,
         name: res.data.user.name,
         age: res.data.user.age,
-        likes: 0,
+        likes: 1000,
         image: res.data.user.avatar,
         role: res.data.user.role,
       });
@@ -213,6 +217,8 @@ const Profile = () => {
             )}
 
             <h2 className="profile-name">{profile.name}</h2>
+            <p className="profile-name">Công việc: {profile.work}</p>
+            <p className="profile-name">Giới tính: {profile.gender}</p>
             <p className="profile-age">Tuổi: {profile.age}</p>
             <p className="profile-likes">
               ❤️ <span>{profile.likes}</span> lượt thích

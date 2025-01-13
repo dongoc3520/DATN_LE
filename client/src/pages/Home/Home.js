@@ -183,28 +183,7 @@ function Home() {
     navigate(`/post/${mId}`, { replace: true });
   };
 
-  // const fetchPosts = async (page, id) => {
-  //   // setLoading(true);
-  //   try {
-  //     const response = await axios.get(`${url}/post/posts/home`, {
-  //       params: {
-  //         page: page || 1, // Số trang
-  //         limit: 5, // Số bài viết mỗi trang
-  //         id: id, // Giá trị id (1, 2 hoặc 3)
-  //       },
-  //     });
-
-  //     const { posts, currentPage, totalPages } = response.data;
-  //     console.log("post is", posts);
-  //     setPosts(posts);
-  //     setCurrentPage(currentPage);
-  //     setTotalPages(totalPages);
-  //   } catch (error) {
-  //     console.error("Error fetching posts:", error);
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // };
+ 
   const fetchPosts = async (mpost) => {
     try {
       const response = await axios.get(

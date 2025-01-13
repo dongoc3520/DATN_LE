@@ -115,7 +115,7 @@
     margin-left: 200px;
    
 }
-.home_post_heart i{
+.home_post_heart .he{
 font-size: 20px;
 cursor: pointer;
 padding: 5px;
@@ -124,4 +124,24 @@ border-radius: 5px;
 position: absolute;
 right: 10px;
 bottom: 10px;
+}
+.home_post_heart .hu {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #737171;
+    border-radius: 5px;
+    position: absolute;
+    right: 50px;
+    bottom: 10px;
+}
+.home_post_heart .hi {
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+    border: 1px solid #737171;
+    border-radius: 5px;
+    position: absolute;
+    right: 96px;
+    bottom: 10px;
 }

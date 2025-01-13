@@ -254,25 +254,31 @@ postRouter.get("/posts/home", middlewareLogin, async (req, res) => {
         };
       })
     );
-    // console.log(postsWithImage);
-    // Sắp xếp bài viết theo độ ưu tiên (giới tính trùng > số sở thích trùng)
     const sortedPosts = postsWithImage
       .filter((post) => post) // Lọc các bài viết không phải null
       .sort((a, b) => {
-        // Kiểm tra và so sánh theo giới tính trước
+        // 1. So sánh giới tính (ưu tiên trùng giới tính)
         if (b.post.genderMatch !== a.post.genderMatch) {
-          return b.post.genderMatch - a.post.genderMatch; // Giới tính trùng sẽ ưu tiên hơn
+          return b.post.genderMatch - a.post.genderMatch;
         }
 
-        // Nếu giới tính giống nhau, sắp xếp theo số sở thích trùng
+        // 2. So sánh độ tuổi (gần độ tuổi người dùng hơn sẽ ưu tiên hơn)
+        const ageDifferenceA = Math.abs(user.age - a.post.Age || Infinity);
+        const ageDifferenceB = Math.abs(user.age - b.post.Age || Infinity);
+        if (ageDifferenceA !== ageDifferenceB) {
+          return ageDifferenceA - ageDifferenceB; // Tuổi gần hơn sẽ được ưu tiên
+        }
+
+        // 3. So sánh công việc (ưu tiên nếu công việc giống nhau)
+        if (a.post.Work && b.post.Work && a.post.Work !== b.post.Work) {
+          return a.post.Work === user.work ? -1 : 1; // Ưu tiên công việc trùng với người dùng
+        }
+
+        // 4. So sánh số sở thích trùng
         return b.post.interestMatchCount - a.post.interestMatchCount;
       })
       .map((post) => post.post); // Trả về phần tử bài viết đã sắp xếp
 
-    //console.log(sortedPosts);
-
-    // Trả dữ liệu về client
-    //console.log(sortedPosts);
     res.json({
       posts: sortedPosts,
       currentPage: options.page,
