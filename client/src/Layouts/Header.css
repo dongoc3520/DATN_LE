@@ -471,3 +471,39 @@ header {
     width: 50px;
     height: 50px;
 }
+
+.out{
+ position: fixed;
+ width: 100%;
+ height: 100vh;
+ /* background-color: rgb(63, 83, 110); */
+ z-index: 999999;
+ background-color: rgba(0, 0, 0, 0.7);
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+.out div{
+    background-color: #053b74;
+    width: 450px;
+    /* height: 150px; */
+    padding: 20px;
+    color: #dbe7f3;
+    text-align: center;
+    font-size: 18px;
+    border-radius: 10px;
+}
+.out button{
+    padding: 5px 10px;
+    font-size: 18px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background-color: #ddd;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.out button:hover{
+    background-color: #a8aeb4;
+
+}

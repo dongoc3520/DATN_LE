@@ -23,7 +23,7 @@ function Header({ onReload }) {
   const [results, setResults] = useState([]);
   const [debouncedQuery, setDebouncedQuery] = useState(query);
   const navigate = useNavigate();
-  const socket = io("http://localhost:5555"); // URL server backend của bạn
+  const socket = io(`${url}`); // URL server backend của bạn
   const [showLinkBox, setShowLinkBox] = useState(false);
   const [showMessageBox, setShowMessageBox] = useState(false);
   const { mydata, setMydata } = useContext(DataContext);
@@ -94,9 +94,12 @@ function Header({ onReload }) {
         role: res.data.user.role,
       });
     } catch (err) {
+      //alert("Het han");
+      // console.log("loi nay ");
       console.error(err);
     }
   };
+  const [out, setOut] = useState(false);
   const [fakeMessages, setFakeMessages] = useState([]);
   const fetchRecentMessages = async () => {
     try {
@@ -113,7 +116,11 @@ function Header({ onReload }) {
         console.error("Dữ liệu không hợp lệ hoặc không có bạn bè");
       }
     } catch (error) {
-      console.error("Error fetching posts:", error);
+      if (error.response.data.errCode === 5) {
+        setOut(true);
+      }
+      console.log("Error fetchin", error);
+      //console.error("Error fetching posts:", error);
     }
   };
 
@@ -204,6 +211,13 @@ function Header({ onReload }) {
 
   return (
     <>
+      {out && (
+        <div className="out"><div className="out_text">
+          Tài khoản hết hạn, vui lòng đăng nhập lại
+          <br/>
+          <button onClick={logout}>Đăng nhập lại</button>
+          </div></div>
+      )}
       <header>
         <Link href="" className="logo">
           <img src={logoImage} alt="Shenlik Tech Logo" />
