@@ -313,16 +313,19 @@ header {
     position: absolute;
     height: 100px;
     width: 190px;
-    background: #41a1dd;
+    /* background: #41a1dd; */
+    background-color: #efecec;
     top: 70px;
     margin-right: 150px;
     text-align: left;
     display: flex;
     flex-direction: column;
     justify-content:center;
-    border-radius: 4px;
+
    margin-left: 10px;
-   color: #eee;
+   color: #333;
+box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 8px;
     
 }
 .linkBox i{
@@ -336,7 +339,8 @@ header {
 }
 
 .linkBox div:hover{
-    background: #1765d9;
+    background: #689ff1;
+    color: #ddd;
 }
 
 .linkBox div:hover a{

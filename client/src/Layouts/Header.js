@@ -17,6 +17,7 @@ import io from "socket.io-client"; // Import socket.io-client
 import { DataContext } from "../DataContext";
 
 const idUser = getCookie("idUser");
+const role = getCookie("role");
 
 function Header({ onReload }) {
   const [query, setQuery] = useState("");
@@ -212,11 +213,13 @@ function Header({ onReload }) {
   return (
     <>
       {out && (
-        <div className="out"><div className="out_text">
-          Tài khoản hết hạn, vui lòng đăng nhập lại
-          <br/>
-          <button onClick={logout}>Đăng nhập lại</button>
-          </div></div>
+        <div className="out">
+          <div className="out_text">
+            Tài khoản hết hạn, vui lòng đăng nhập lại
+            <br />
+            <button onClick={logout}>Đăng nhập lại</button>
+          </div>
+        </div>
       )}
       <header>
         <Link href="" className="logo">
@@ -325,7 +328,7 @@ function Header({ onReload }) {
               <div className="linkBox" ref={linkBoxRef}>
                 <div onClick={handleProfileClick}>
                   <i className="fa-solid fa-user"></i>
-                  Trang cá nhân
+                  {role === "99" ? <>Dashboard</> : <>Trang cá nhân</>}
                 </div>
                 <div onClick={logout}>
                   <i className="fa-solid fa-right-from-bracket"></i>

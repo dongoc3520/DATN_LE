@@ -338,7 +338,7 @@ const PostButton = ({ onSubmit }) => {
                         {/* Hiển thị ảnh 360 */}
                       </div>
                       <button className="btn_deleteVR">
-                        <i class="fa-solid fa-trash"></i>
+                        {/* <i class="fa-solid fa-trash"></i> */}
                       </button>
                     </div>
                   )}

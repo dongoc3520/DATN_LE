@@ -75,7 +75,9 @@ function Authen() {
           console.log(response.data);
           toast.success(response.data.message);
           setCookie("token", response.data.token, 30);
+          
           setCookie("idUser", response.data.idUser, 30);
+          setCookie("role", response.data.role, 30);
           setCookie("avatarU", response.data.avatar, 30);
 
           // window.location.reload();

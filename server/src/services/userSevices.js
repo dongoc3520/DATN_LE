@@ -97,6 +97,7 @@ export const userLoginService = (body) =>
             token: token,
             idUser: user.id,
             avatar: user.avatar,
+            role:user.role,
           });
         }
       }

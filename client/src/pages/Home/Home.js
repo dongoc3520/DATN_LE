@@ -35,13 +35,47 @@ function Home() {
     price: "",
     area: "",
   });
+  // const handleSubmit = () => {
+  //   if (!mData.district || !mData.ward || !mData.price || !mData.area) {
+  //     alert("Vui lòng nhập đủ dữ kiện trước khi tìm");
+  //     return;
+  //   }
+  //   const [mminPrice, mmaxPrice] = mData.price.split("-").map(Number);
+  //   const [mminArea, mmaxArea] = mData.area.split("-").map(Number);
+  //   setMyData({
+  //     ...myData,
+  //     page: "1",
+  //     minPrice: mminPrice,
+  //     maxPrice: mmaxPrice,
+  //     minArea: mminArea,
+  //     maxArea: mmaxArea,
+  //     district: mData.district,
+  //     ward: mData.ward,
+  //   });
+  //   setReload(!reload);
+  //   // console.log(myData);
+  // };
+
   const handleSubmit = () => {
-    if (!mData.district || !mData.ward || !mData.price || !mData.area) {
-      alert("Vui lòng nhập đủ dữ kiện trước khi tìm");
-      return;
-    }
-    const [mminPrice, mmaxPrice] = mData.price.split("-").map(Number);
-    const [mminArea, mmaxArea] = mData.area.split("-").map(Number);
+    // Kiểm tra các trường không có giá trị
+    // if (!mData.price || !mData.area) {
+    //   alert("Vui lòng nhập giá và diện tích trước khi tìm");
+    //   return;
+    // }
+
+    // Xử lý price và area nếu có hoặc đặt giá trị mặc định nếu không có
+    const [mminPrice, mmaxPrice] = mData.price
+      ? mData.price.split("-").map(Number)
+      : [0, 10000000];
+    const [mminArea, mmaxArea] = mData.area
+      ? mData.area.split("-").map(Number)
+      : [0, 100];
+
+    // Kiểm tra các trường district, ward có hay không
+    const district = mData.district || "";
+    const ward = mData.ward || "";
+
+    // Cập nhật dữ liệu
     setMyData({
       ...myData,
       page: "1",
@@ -49,12 +83,29 @@ function Home() {
       maxPrice: mmaxPrice,
       minArea: mminArea,
       maxArea: mmaxArea,
-      district: mData.district,
-      ward: mData.ward,
+      district: district, // Nếu không có district thì gửi "" (hoặc có thể để null tùy yêu cầu API)
+      ward: ward, // Tương tự cho ward
     });
+
     setReload(!reload);
-    // console.log(myData);
+    // console.log(myData); // Có thể bỏ hoặc giữ để debug
   };
+
+  const handleCallAPIPrice = (value) => {
+   // console.log(value);
+    setMData({ ...mData, price: value });
+    //console.log(mData);
+   // handleSubmit();
+  };
+  const handleCallAPIAre = (value) => {
+    setMData({ ...mData, area: value });
+  }
+
+  useEffect(() => {
+    // Khi mData thay đổi, gọi handleSubmit
+    handleSubmit();
+  }, [mData]);
+
   const handleSetData = (field, value) => {
     setMData((prevState) => ({
       ...prevState,
@@ -63,18 +114,19 @@ function Home() {
   };
 
   const options = [
-    { id: 1, label: "Dưới 2 triệu", value: "under-2m" },
-    { id: 2, label: "2 - 3 triệu", value: "2-3m" },
-    { id: 3, label: "3 - 4 triệu", value: "3-4m" },
-    { id: 4, label: "4 - 5 triệu", value: "4-5m" },
-    { id: 5, label: "Trên 5 triệu", value: "5m" },
+    { id: 1, label: "Dưới 1 triệu", value: "0-1000000" },
+    { id: 2, label: "1 - 2 triệu", value: "1000000-2000000" },
+    { id: 3, label: "2 - 3 triệu", value: "2000000-3000000" },
+    { id: 4, label: "3 - 4 triệu", value: "3000000-4000000" },
+    { id: 5, label: "4 - 5 triệu", value: "4000000-5000000" },
+    { id: 6, label: "Trên 5 triệu", value: "5000000-10000000" },
   ];
 
   const options2 = [
-    { id: 1, label: "Dưới 20 m2", value: "20m2" },
-    { id: 2, label: "20 - 30 m3", value: "30m2" },
-    { id: 3, label: "30 - 40 m2", value: "40m2" },
-    { id: 4, label: "Trên 40 m2", value: "50m2" },
+    { id: 1, label: "Dưới 35 m2", value: "0-35" },
+    { id: 2, label: "35 - 50 m3", value: "35-50" },
+    { id: 3, label: "50 - 70 m2", value: "50-70" },
+    { id: 4, label: "70 - 100 m2", value: "70-100" },
   ];
   const priceOptions = [
     {
@@ -183,7 +235,6 @@ function Home() {
     navigate(`/post/${mId}`, { replace: true });
   };
 
- 
   const fetchPosts = async (mpost) => {
     try {
       const response = await axios.get(
@@ -362,10 +413,10 @@ function Home() {
           />
         </div>
         <div>
-          <button className="homePage_btn" onClick={handleSubmit}>
+          {/* <button className="homePage_btn" onClick={handleSubmit}>
             <i class="fa-solid fa-magnifying-glass"></i>
             Tìm kiếm
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -410,7 +461,9 @@ function Home() {
                 <div
                   key={option.id}
                   className="card"
-                  // onClick={}
+                  onClick={() => {
+                    handleCallAPIPrice(option.value);
+                  }}
                 >
                   <i class="fa-solid fa-angle-right"></i>
                   {option.label}
@@ -428,7 +481,9 @@ function Home() {
                 <div
                   key={option.id}
                   className="card"
-                  // onClick={}
+                  onClick={()=>{
+                    handleCallAPIAre(option.value);
+                  }}
                 >
                   <i class="fa-solid fa-angle-right"></i>
                   {option.label}

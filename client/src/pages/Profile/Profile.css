@@ -217,3 +217,46 @@
 .pagination span {
     margin: 0 16px;
 }
+
+.dashboard {
+    padding: 20px;
+}
+
+
+
+.statistics-boxes {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.statistics-box {
+    padding: 20px;
+    color: white;
+    border-radius: 8px;
+    width: 200px;
+    text-align: center;
+}
+
+.statistics-box h3 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.statistics-box p {
+    font-size: 16px;
+}
+
+.charts {
+    display: flex;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.chart {
+    width: 50%;
+}
+
+.chart canvas {
+    max-width: 100%;
+}

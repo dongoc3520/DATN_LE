@@ -59,6 +59,8 @@ postRouter.get("/posts/getbyuserid", async (req, res) => {
 });
 // api lấy ra bài viết dựa vào id bài viết
 postRouter.get("/getbyidpost/:id", postController.getPostbyidpostController);
+// api lấy ra bài viết dựa vào type bài viết
+postRouter.get("/gettype/:id", postController.getPostbytypepostController);
 
 //api lấy ra bài viết của mọi người theo cách bình thường, ứng với căn hộ và chung cư mini
 // postRouter.get("/posts/home", async (req, res) => {
@@ -151,14 +153,14 @@ postRouter.get("/posts/home", middlewareLogin, async (req, res) => {
   }
 
   const options = {
-    page: parseInt(page, 10) || 1, // Trang hiện tại
-    paginate: parseInt(limit, 10) || 6, // Số bài viết mỗi trang
-    order: [["createdAt", "DESC"]], // Sắp xếp giảm dần theo createdAt
-    where: {}, // Điều kiện lọc bài viết
+    page: parseInt(page, 10) || 1, 
+    paginate: parseInt(limit, 10) || 6, 
+    order: [["createdAt", "DESC"]], 
+    where: {}, 
     include: {
       model: Users,
       as: "user",
-      attributes: ["id", "avatar", "username", "name", "gender"], // Lấy thông tin người dùng và giới tính
+      attributes: ["id", "avatar", "username", "name", "gender"], 
     },
   };
 
@@ -301,82 +303,72 @@ postRouter.post(
   postController.deletePostController
 );
 
+//api xóa bài viết bởi admin
+postRouter.post(
+  "/remove/:id",
+  postController.deletePostControllerAD
+);
+
 //api update bài viết
 postRouter.post("/update/:id", postController.updatePostbyId);
 
 //api update ảnh VR bài viết
 postRouter.post("/update/img/:id", postController.updatePostimgbyId);
-//updatePostbyId
-// //api lấy tất cả bài viết của tất cả mọi người load ra trang chủ
-// postRouter.get("/posts/home", async (req, res) => {
-//   const { page, limit } = req.query;
-//   const options = {
-//     page: parseInt(page, 10) || 1,
-//     paginate: parseInt(limit, 10) || 3,
-//     order: [["createdAt", "DESC"]],
-//     where: {},
-//     include: {
-//       model: Users,
-//       as: "user",
-//       attributes: ["id", "avatar", "username", "name"],
-//     },
-//   };
 
-//   const { docs, pages, total } = await Posts.paginate(options);
+ // Lấy số liệu thống kê từ cơ sở dữ liệu
+postRouter.get("/statistics", async (req, res) => {
+  try {
+    // Lấy số liệu thống kê từ cơ sở dữ liệu
+    const statistics = await Posts.findAll({
+      attributes: [
+        "Type",
+        [Sequelize.fn("COUNT", Sequelize.col("Type")), "count"],
+        [Sequelize.fn("AVG", Sequelize.col("Price")), "averagePrice"],
+      ],
+      group: ["Type"],
+    });
 
-//   res.json({
-//     posts: docs,
-//     currentPage: options.page,
-//     totalPages: pages,
-//     totalPosts: total,
-//   });
-// });
+    // Cấu trúc kết quả trả về
+    const result = {
+      errCode : 0,
+      apartments: {
+        count: 0,
+        averagePrice: 0,
+      },
+      miniApartments: {
+        count: 0,
+        averagePrice: 0,
+      },
+      sharedRooms: {
+        count: 0,
+        averagePrice: 0,
+      },
+    };
 
-// //api lấy tất cả bài viết của người dùng
-// postRouter.get("/posts", middlewareLogin, async (req, res) => {
-//   const { page, limit } = req.query;
-//   const iduser = req.idUser;
-//   const options = {
-//     page: parseInt(page, 10) || 1,
-//     paginate: parseInt(limit, 10) || 3,
-//     order: [["createdAt", "DESC"]],
-//     where: {
-//       UserId: iduser,
-//     },
-//     include: {
-//       model: Users,
-//       as: "user",
-//       attributes: ["id", "avatar", "username", "name"],
-//     },
-//   };
+    // Map dữ liệu từ kết quả
+    statistics.forEach((stat) => {
+      const type = stat.Type; // Lấy giá trị Type
+      let key;
 
-//   const { docs, pages, total } = await Posts.paginate(options);
+      // Xác định key tương ứng trong `result`
+      if (type === "canho") key = "apartments";
+      else if (type === "chungcu") key = "miniApartments";
+      else if (type === "oghep") key = "sharedRooms";
 
-//   res.json({
-//     errCode: 0,
-//     posts: docs,
-//     currentPage: options.page,
-//     totalPages: pages,
-//     totalPosts: total,
-//   });
-// });
+      // Kiểm tra key hợp lệ và gán giá trị
+      if (key) {
+        result[key].count = parseInt(stat.get("count"), 10) || 0;
+        result[key].averagePrice = parseFloat(stat.get("averagePrice")) || 0;
+      }
+    });
 
-// // api lấy các hình ảnh của trang các nhân
-// postRouter.get("/getimages/:id", middlewareLogin, postController.getimages);
+    // Trả kết quả về client
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("Error fetching post statistics:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+});
 
-// postRouter.get("/:id", middlewareLogin, postController.getPostbyidController);
-
-// //api sửa đổi update bài viết
-// postRouter.post(
-//   "/:id",
-//   middlewareLogin,
-//   postController.updatePostbyidController
-// );
-
-//api tạo bài viết mới
-// postRouter.post("/", middlewareLogin, postController.createPostController);
-
-//api lấy profile
-// postRouter.post("/", middlewareLogin, postController.createPostController);
 
 module.exports = postRouter;

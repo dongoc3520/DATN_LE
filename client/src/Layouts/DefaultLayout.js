@@ -5,8 +5,9 @@ import "./layout.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
-
+import { getCookie } from "../Cookie";
 function DefaultLayout({ children }) {
+  const idUser = getCookie("idUser");
   const [key, setKey] = useState(0);
   const handleCuonLen = () => {
     window.scrollTo({

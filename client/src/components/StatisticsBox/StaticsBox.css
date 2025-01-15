@@ -1,0 +1,7 @@
+.statistics-box{
+    transition: transform 0.2s ease-in-out;
+}
+
+.statistics-box:hover {
+    transform: scale(1.05);
+}

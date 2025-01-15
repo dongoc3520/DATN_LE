@@ -44,6 +44,21 @@ export const createPostController = async (req, res) => {
     });
   }
 };
+//getPostbytypepostController
+
+export const getPostbytypepostController = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const response = await postService.getPostsByTypepostService(id);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(400).json({
+      errCode: -1,
+      message: "Lỗi server",
+      error: error,
+    });
+  }
+};
 
 export const getPostbyidpostController = async (req, res) => {
   const id = req.params.id;
@@ -152,7 +167,25 @@ export const getimages = async (req, res) => {
     });
   }
 };
+//deletePostControllerAD
+export const deletePostControllerAD = async (req, res) => {
 
+  const idPost = req.params.id;
+  const body = {
+    idPost: idPost,
+  };
+  // console.log("this is body", body);
+  try {
+    const response = await postService.deletePostServiceAD(body);
+    return res.status(200).json(response);
+  } catch (error) {
+    return res.status(400).json({
+      errCode: -1,
+      message: "Lỗi server",
+      error: error,
+    });
+  }
+};
 export const deletePostController = async (req, res) => {
   const id = req.idUser;
   const idPost = req.params.id;

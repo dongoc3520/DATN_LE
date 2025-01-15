@@ -303,17 +303,6 @@ const PostPage = () => {
     navigate(`/profile/${post.user.id}`);
   };
   const APIDelete = async () => {
-    // console.log("delete");
-    // console.log(post);
-    //  await axios
-    //    .post(`${url}/post/delete/${post.idPost}`, { withCredentials: true })
-    //    .then((res) => {
-    //      console.log("res is", res);
-    //      navigate(`/profile/${post.user.id}`);
-    //    })
-    //    .catch((err) => {
-    //      console.log(err);
-    //    });
     await axios
       .post(
         `${url}/post/delete/${post.idPost}`,
@@ -325,7 +314,6 @@ const PostPage = () => {
       .then((res) => {
         if (res.data.errCode === 0) {
           navigate(`/profile/${post.user.id}`);
-          //  toast.success("Update thành công!");
         }
       })
       .catch((err) => {

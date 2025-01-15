@@ -14,12 +14,15 @@ import { ClipLoader } from "react-spinners";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
-
+import StatisticsBox from "../../components/StatisticsBox/StatisticsBox";
+import PieChart from "../../components/PieChart/PieChart";
+import BarChart from "../../components/BarChart/BarChart";
 const Profile = () => {
   const navigate = useNavigate();
   const [f, setF] = useState(false);
   const { id } = useParams();
   const idUser = getCookie("idUser");
+  const role = getCookie("role");
   const [isHovered, setIsHovered] = useState(false);
   const [img, setImg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -119,9 +122,54 @@ const Profile = () => {
       console.error("Lỗi khi lấy danh sách bài đăng:", error);
     }
   };
+  const [statistics, setStatistics] = useState({
+    apartments: 0,
+    miniApartments: 0,
+    sharedRooms: 0,
+    averagePriceApartments: 0, // Giá trung bình Căn hộ (VND)
+    averagePriceMiniApartments: 0, // Giá trung bình Chung cư mini (VND)
+    averagePriceSharedRooms: 0, // Giá trung bình Ở ghép (VND)
+  });
+
+  const totalPosts =
+    statistics.apartments + statistics.miniApartments + statistics.sharedRooms;
+
+  // Dữ liệu cho biểu đồ tròn
+  const pieData = [
+    (statistics.apartments / totalPosts) * 100,
+    (statistics.miniApartments / totalPosts) * 100,
+    (statistics.sharedRooms / totalPosts) * 100,
+  ];
+
+  // Dữ liệu cho biểu đồ cột
+  const barData = [
+    statistics.averagePriceApartments,
+    statistics.averagePriceMiniApartments,
+    statistics.averagePriceSharedRooms,
+  ];
+  const getCount = async () => {
+    try {
+      const response = await axios.get(`${url}/post/statistics`);
+      if (response.data.errCode === 0) {
+        console.log(response);
+        const mBody = {
+          apartments: response.data.apartments.count,
+          miniApartments: response.data.miniApartments.count,
+          sharedRooms: response.data.sharedRooms.count,
+          averagePriceApartments: response.data.apartments.averagePrice,
+          averagePriceMiniApartments: response.data.miniApartments.averagePrice,
+          averagePriceSharedRooms: response.data.sharedRooms.averagePrice,
+        };
+        setStatistics(mBody);
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy danh sách bài đăng:", error);
+    }
+  };
   useEffect(() => {
     fetchPosts(currentPage);
     fetchUsers();
+    getCount();
   }, [f, currentPage, id]);
   const handleChildParent = () => {
     setF(!f);
@@ -260,60 +308,106 @@ const Profile = () => {
           )}
         </div>
       </div>
+      {role === "99" && id === idUser ? (
+        <div className="posts-container">
+          <h2 style={{ color: "#1773ea" }}>Dashboard - Quản lý bài đăng</h2>
+          <div className="statistics-boxes" style={{ cursor: "pointer" }}>
+            <StatisticsBox
+              title="Căn hộ"
+              count={statistics.apartments}
+              color="rgb(48 135 58)"
+              type="1"
+            />
+            <StatisticsBox
+              title="Chung cư mini"
+              count={statistics.miniApartments}
+              color="rgb(41 120 173)"
+              type="2"
+            />
+            <StatisticsBox
+              title="Ở ghép"
+              count={statistics.sharedRooms}
+              color="#092756"
+              type="3"
+            />
+          </div>
 
-      <div className="posts-container">
-        <h2>Bài đăng của bạn</h2>
-        <div className="posts-list">
-          {posts.map((post) => (
-            <div
-              key={post.id}
-              className="post-card"
-              onClick={() => {
-                navigate(`/post/${post.id}`);
-              }}
-            >
-              <img src={post.image} alt={post.Title} className="post-image" />
-              <h3 className="post-title">{post.Title}</h3>
-              <div className="post-details" style={{ textAlign: "left" }}>
-                <p className="post-area">
-                  <i class="fa-solid fa-chart-area"></i>Diện tích: {post.Area}{" "}
-                  m²
-                </p>
-                <p className="post-price">
-                  <i class="fa-solid fa-money-bill"></i>Giá: {post.Price} VND
-                </p>
-                <p className="post-area">
-                  <i class="fa-solid fa-location-dot"></i>Địa chỉ:{" "}
-                  {post.Address} m²
-                </p>
-              </div>
+          <div className="charts">
+            <div className="chart">
+              <h2 style={{ color: "#1773ea" }}>Phân bổ bài đăng theo loại</h2>
+              <PieChart data={pieData} />
             </div>
-          ))}
+
+            <div className="chart">
+              <h2 style={{ color: "#1773ea" }}>
+                Giá tiền trung bình theo loại phòng
+              </h2>
+              <BarChart data={barData} />
+            </div>
+          </div>
         </div>
-        {posts.length > 0 ? (
-          <>
-            <div className="pagination">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Trước
-              </button>
-              <span>
-                Trang {currentPage} / {totalPages}
-              </span>
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                Tiếp
-              </button>
+      ) : (
+        <>
+          <div className="posts-container">
+            <h2>Bài đăng của bạn</h2>
+            <div className="posts-list">
+              {posts.map((post) => (
+                <div
+                  key={post.id}
+                  className="post-card"
+                  onClick={() => {
+                    navigate(`/post/${post.id}`);
+                  }}
+                >
+                  <img
+                    src={post.image}
+                    alt={post.Title}
+                    className="post-image"
+                  />
+                  <h3 className="post-title">{post.Title}</h3>
+                  <div className="post-details" style={{ textAlign: "left" }}>
+                    <p className="post-area">
+                      <i class="fa-solid fa-chart-area"></i>Diện tích:{" "}
+                      {post.Area} m²
+                    </p>
+                    <p className="post-price">
+                      <i class="fa-solid fa-money-bill"></i>Giá: {post.Price}{" "}
+                      VND
+                    </p>
+                    <p className="post-area">
+                      <i class="fa-solid fa-location-dot"></i>Địa chỉ:{" "}
+                      {post.Address} m²
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
-          </>
-        ) : (
-          <>Bạn hiện chưa có bài đăng nào</>
-        )}
-      </div>
+            {posts.length > 0 ? (
+              <>
+                <div className="pagination">
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    Trước
+                  </button>
+                  <span>
+                    Trang {currentPage} / {totalPages}
+                  </span>
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Tiếp
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>Bạn hiện chưa có bài đăng nào</>
+            )}
+          </div>
+        </>
+      )}
 
       {showModal && (
         <Modal

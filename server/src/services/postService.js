@@ -52,6 +52,85 @@ export const createPostService = (body) =>
       reject(error);
     }
   });
+//getPostsByTypepostService
+export const getPostsByTypepostService = (id) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      // Xác định Type dựa trên id
+      const typeMap = {
+        1: "canho",
+        2: "chungcu",
+        3: "oghep",
+      };
+
+      const type = typeMap[id];
+      if (!type) {
+        resolve({
+          errCode: 1,
+          errMessage: "Id không hợp lệ!",
+        });
+        return;
+      }
+
+      // Lấy danh sách bài viết theo Type
+      const posts = await Posts.findAll({
+        where: {
+          Type: type,
+        },
+        include: [
+          {
+            model: Users,
+            as: "user",
+            attributes: ["id", "avatar", "name", "phone", "email"],
+          },
+        ],
+        order: [["createdAt", "DESC"]], // Sắp xếp bài viết mới nhất
+      });
+
+      if (!posts || posts.length === 0) {
+        resolve({
+          errCode: 2,
+          errMessage: "Không có bài viết nào!",
+        });
+        return;
+      }
+
+      // Lấy thông tin ảnh cho từng bài viết
+      const enrichedPosts = await Promise.all(
+        posts.map(async (post) => {
+          const images = await Images.findAll({
+            where: {
+              PostId: post.id,
+            },
+            attributes: ["url", "type"],
+          });
+
+          const type2Image =
+            images.find((image) => image.type === "2")?.url || null;
+          const type1Images = images
+            .filter((image) => image.type === "1")
+            .map((image) => image.url);
+
+          return {
+            ...post.dataValues,
+            type2Image,
+            type1Images,
+          };
+        })
+      );
+
+      resolve({
+        errCode: 0,
+        data: enrichedPosts,
+      });
+    } catch (error) {
+      reject({
+        errCode: 500,
+        errMessage: "Lỗi hệ thống!",
+        error: error.message,
+      });
+    }
+  });
 
 export const getPostsByidpostService = (id) =>
   new Promise(async (reslove, reject) => {
@@ -263,6 +342,43 @@ export const updatePostsByIdService = (body) =>
         errCode: 0,
         message: "success",
         bodyId,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+//deletePostServiceAD
+
+export const deletePostServiceAD = (body) =>
+  new Promise(async (reslove, reject) => {
+    const post = await Posts.findOne({
+      where: {
+        id: parseInt(body.idPost),
+      },
+      raw: true,
+    });
+    if (!post) {
+      reslove({
+        errCode: 1,
+        message: "Không tìm thấy bài post của bạn",
+      });
+    }
+    const postDelete = await Posts.destroy({
+      where: {
+        id: parseInt(body.idPost),
+      },
+    });
+    reslove({
+      errCode: 0,
+      message: "success",
+      postDelete,
+    });
+
+    try {
+      reslove({
+        errCode: 0,
+        message: "success",
       });
     } catch (error) {
       reject(error);
