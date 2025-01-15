@@ -19,3 +19,9 @@
 ## Bước 4: chạy cả server và client: npm start
 
 ![Logo](./image/start.jpg)
+
+## Bước 5:
+- Chọc vào cơ sở dữ liệu tạo tài khoản admin
+- tk: admin123
+- pass: 000000
+- role: 99
