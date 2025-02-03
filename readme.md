@@ -8,7 +8,7 @@
 
 ## Bước 2: clone project
 
-- git clone https://github.com/dongoc3520/DATN_LE.git
+- giải nén project
 
 ## Bước 3: mở project với vscode
 
